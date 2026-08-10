@@ -3193,6 +3193,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      operationId: listCustomRoles
+      tags:
+      - Custom Roles
     post:
       summary: Create a new custom role
       requestBody:
@@ -3232,6 +3235,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      operationId: createCustomRole
+      tags:
+      - Custom Roles
   /v3/gum/custom-roles/categories:
     get:
       summary: Get all permission categories
@@ -3254,6 +3260,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      operationId: getCustomRoleCategories
+      tags:
+      - Custom Roles
   /v3/gum/custom-roles/{roleId}:
     get:
       summary: Get a specific custom role by ID
@@ -3284,6 +3293,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      operationId: getCustomRole
+      tags:
+      - Custom Roles
     put:
       summary: Update a custom role
       parameters:
@@ -3331,6 +3343,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      operationId: updateCustomRole
+      tags:
+      - Custom Roles
     delete:
       summary: Delete a custom role
       parameters:
@@ -3362,6 +3377,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      operationId: deleteCustomRole
+      tags:
+      - Custom Roles
 components:
   schemas:
     ASN:

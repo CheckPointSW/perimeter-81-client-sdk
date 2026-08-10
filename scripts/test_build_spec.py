@@ -35,3 +35,29 @@ def test_upstream_lacks_the_security_scheme_the_overlay_adds():
     d = yaml.safe_load(open(ROOT / "api" / "v3.upstream.yaml"))
     assert "securitySchemes" not in d.get("components", {})
     assert "security" not in d
+
+GUM_EXPECTED = {
+    ("/v3/gum/custom-roles", "get"): "listCustomRoles",
+    ("/v3/gum/custom-roles", "post"): "createCustomRole",
+    ("/v3/gum/custom-roles/categories", "get"): "getCustomRoleCategories",
+    ("/v3/gum/custom-roles/{roleId}", "get"): "getCustomRole",
+    ("/v3/gum/custom-roles/{roleId}", "put"): "updateCustomRole",
+    ("/v3/gum/custom-roles/{roleId}", "delete"): "deleteCustomRole",
+}
+
+def test_gum_operations_have_tags_and_operation_ids():
+    d = build()
+    for (path, method), op_id in GUM_EXPECTED.items():
+        op = d["paths"][path][method]
+        assert op.get("operationId") == op_id, (path, method, op.get("operationId"))
+        assert op.get("tags") == ["Custom Roles"], (path, method, op.get("tags"))
+
+def test_no_operation_is_left_untagged():
+    d = build()
+    untagged = [
+        f"{m.upper()} {p}"
+        for p, item in d["paths"].items()
+        for m, op in item.items()
+        if m in ("get", "post", "put", "delete", "patch") and not op.get("tags")
+    ]
+    assert untagged == [], untagged

@@ -40,3 +40,92 @@ entries:
     remove_when: upstream stops declaring authParam on operations
     op: transform
     transform: strip_auth_param
+
+  - id: A2-gum-tags-and-operation-ids
+    reason: >
+      None of the six /v3/gum/custom-roles operations declares a tag or an
+      operationId. openapi-generator therefore emits them into DefaultAPIService
+      with method names derived from the URL path, which are unstable across
+      generator versions. This domain also has zero upstream API-test coverage,
+      so unstable names are especially costly.
+    remove_when: upstream adds tags and operationIds to the gum operations
+    op: set
+    path: [paths, /v3/gum/custom-roles, get, operationId]
+    value: listCustomRoles
+
+  - id: A2b
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles, get, tags]
+    value: [Custom Roles]
+
+  - id: A2c
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles, post, operationId]
+    value: createCustomRole
+
+  - id: A2d
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles, post, tags]
+    value: [Custom Roles]
+
+  - id: A2e
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles/categories, get, operationId]
+    value: getCustomRoleCategories
+
+  - id: A2f
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles/categories, get, tags]
+    value: [Custom Roles]
+
+  - id: A2g
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", get, operationId]
+    value: getCustomRole
+
+  - id: A2h
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", get, tags]
+    value: [Custom Roles]
+
+  - id: A2i
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", put, operationId]
+    value: updateCustomRole
+
+  - id: A2j
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", put, tags]
+    value: [Custom Roles]
+
+  - id: A2k
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", delete, operationId]
+    value: deleteCustomRole
+
+  - id: A2l
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", delete, tags]
+    value: [Custom Roles]
