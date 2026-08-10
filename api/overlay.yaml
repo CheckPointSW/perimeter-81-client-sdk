@@ -1,0 +1,42 @@
+# Corrections applied to api/v3.upstream.yaml to produce api/swagger.yaml.
+#
+# api/v3.upstream.yaml is pristine vendor output — never edit it.
+# api/swagger.yaml is a build product — never edit it either.
+# Every entry below records why it exists and when it can be deleted.
+entries:
+  - id: A1a-restore-bearer-security-scheme
+    reason: >
+      v3 ships an empty components.securitySchemes and no top-level security,
+      unlike v2.3 which declared a bearer/JWT scheme. Without this, generated
+      methods have no notion of authentication.
+    remove_when: upstream restores components.securitySchemes.bearer
+    op: set
+    path: [components, securitySchemes]
+    value:
+      bearer:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+
+  - id: A1b-apply-security-globally
+    reason: >
+      Re-declares bearer auth as a global requirement, matching v2.3, so the
+      generated client applies it centrally instead of per-operation.
+    remove_when: upstream restores a top-level security block
+    op: set
+    path: [security]
+    value:
+      - bearer: []
+
+  - id: A1c-strip-per-operation-auth-param
+    reason: >
+      All 114 v3 operations declare Authorization as a required header parameter
+      via $ref components/parameters/authParam. openapi-generator would turn
+      that into a required .Authorization(string) builder argument on every
+      method, forcing the provider to thread a bearer token through all 92 call
+      sites — a token that lives inside the SDK's own Configuration and is not
+      available at that layer. The SDK would still compile; the symptom is 401s
+      everywhere.
+    remove_when: upstream stops declaring authParam on operations
+    op: transform
+    transform: strip_auth_param

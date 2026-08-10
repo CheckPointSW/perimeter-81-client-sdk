@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 3.0.0
+  version: "3.0.0"
   title: Check Point - SASE Public API
   description: The YAML for Check Points SASE Public API
   contact: {}
@@ -27,6 +27,8 @@ paths:
       description: List all access policy rules
       summary: Get all access policy rules
       operationId: getAccessPolicy
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -73,10 +75,15 @@ paths:
           $ref: '#/components/responses/ValidationError'
       tags:
       - Internet Access Policies
+      parameters:
+      - $ref: '#/components/parameters/authParam'
     delete:
-      description: Delete all access policy rules. Note that all internet traffic will be allowed after deletion.
+      description: Delete all access policy rules. Note that all internet traffic
+        will be allowed after deletion.
       summary: Delete all access policy rules
       operationId: deleteAccessPolicy
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '204':
           description: No content
@@ -93,6 +100,8 @@ paths:
       description: List all HTTPS Inspection policy rules
       summary: Get all HTTPS Inspection policy rules
       operationId: getHttpsInspectionPolicy
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -139,10 +148,14 @@ paths:
           $ref: '#/components/responses/ValidationError'
       tags:
       - Internet Access Policies
+      parameters:
+      - $ref: '#/components/parameters/authParam'
     delete:
       description: Delete all HTTPS Inspection policy rules
       summary: Delete all HTTPS Inspection policy rules
       operationId: deleteHttpsInspectionPolicy
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '204':
           description: No content
@@ -156,9 +169,12 @@ paths:
       - Internet Access Policies
   /v3/ia/status:
     get:
-      description: Get Internet Access Security Enforcement Status. This status indicates whether Internet Access, Threat Prevention, and DLP are enabled or disabled.
+      description: Get Internet Access Security Enforcement Status. This status indicates
+        whether Internet Access, Threat Prevention, and DLP are enabled or disabled.
       summary: Get Internet Access security enforcement status
       operationId: getIAStatus
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -183,7 +199,9 @@ paths:
       tags:
       - Internet Access Policies
     post:
-      description: Update Internet Access Security Enforcement Status.This status indicates whether Internet Access, Threat Prevention, and DLP are enabled or disabled.
+      description: Update Internet Access Security Enforcement Status.This status
+        indicates whether Internet Access, Threat Prevention, and DLP are enabled
+        or disabled.
       summary: Update Internet Access security enforcement status
       operationId: setIAStatus
       requestBody:
@@ -221,11 +239,15 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       tags:
       - Internet Access Policies
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/objects/web-category:
     get:
       description: List all available Web categories
       summary: Get all Web categories
       operationId: getWebCategories
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -246,6 +268,8 @@ paths:
       description: List all available Application Control applications
       summary: Get all applications available in Application Control applications
       operationId: getApplicationControlApplications
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -266,7 +290,8 @@ paths:
       tags:
       - Enhanced Networks
       summary: Get all enhanced networks
-      description: 'Required permissions: `["network:read"]`<br><br>List all enhanced networks'
+      description: 'Required permissions: `["network:read"]`<br><br>List all enhanced
+        networks'
       operationId: getEnhancedNetworks
       responses:
         '200':
@@ -282,11 +307,14 @@ paths:
           $ref: '#/components/responses/401_Unauthorized'
         '403':
           $ref: '#/components/responses/403_Forbidden'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
     post:
       tags:
       - Enhanced Networks
       summary: Create enhanced network
-      description: 'Required permissions: `["network:create"]`<br><br>Create a new enhanced network with regions'
+      description: 'Required permissions: `["network:create"]`<br><br>Create a new
+        enhanced network with regions'
       operationId: createEnhancedNetwork
       requestBody:
         required: true
@@ -305,15 +333,19 @@ paths:
           $ref: '#/components/responses/402_Insufficient_licenses'
         '403':
           $ref: '#/components/responses/403_Forbidden'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/networks/enhanced/{networkId}:
     get:
       tags:
       - Enhanced Networks
       summary: Get enhanced network by ID
-      description: 'Required permissions: `["network:read"]`<br><br>Get a specific enhanced network'
+      description: 'Required permissions: `["network:read"]`<br><br>Get a specific
+        enhanced network'
       operationId: getEnhancedNetwork
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -331,10 +363,12 @@ paths:
       tags:
       - Enhanced Networks
       summary: Update enhanced network
-      description: 'Required permissions: `["network:update"]`<br><br>Update an existing enhanced network'
+      description: 'Required permissions: `["network:update"]`<br><br>Update an existing
+        enhanced network'
       operationId: updateEnhancedNetwork
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -360,10 +394,12 @@ paths:
       tags:
       - Enhanced Networks
       summary: Delete enhanced network
-      description: 'Required permissions: `["network:delete"]`<br><br>Delete an enhanced network and all its resources'
+      description: 'Required permissions: `["network:delete"]`<br><br>Delete an enhanced
+        network and all its resources'
       operationId: deleteEnhancedNetwork
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202_Accepted'
@@ -378,10 +414,12 @@ paths:
       tags:
       - Enhanced Networks
       summary: Get enhanced network health status
-      description: 'Required permissions: `["network:read"]`<br><br>Get health status of all tunnels in the enhanced network.'
+      description: 'Required permissions: `["network:read"]`<br><br>Get health status
+        of all tunnels in the enhanced network.'
       operationId: getEnhancedNetworkHealth
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Health status retrieved successfully
@@ -400,6 +438,8 @@ paths:
       operationId: Enhanced_NetworksControllerV2_getRegions
       summary: List of available Harmony SASE regions that supports enhanced networks
       description: 'Required permissions: `["addon:read"]`<br><br>List of regions.'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -417,7 +457,10 @@ paths:
     get:
       operationId: Enhanced_NetworksControllerV2_3_getNetworkCustomerCertificate
       summary: Get network customer certificate
-      description: 'Required permissions: `["network:read"]`<br><br>Get network customer certificate details.'
+      description: 'Required permissions: `["network:read"]`<br><br>Get network customer
+        certificate details.'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -436,10 +479,12 @@ paths:
       tags:
       - Enhanced Regions
       summary: List regions
-      description: 'Required permissions: `["network:read"]`<br><br>List all regions in an enhanced network'
+      description: 'Required permissions: `["network:read"]`<br><br>List all regions
+        in an enhanced network'
       operationId: listEnhancedRegions
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -457,10 +502,12 @@ paths:
       tags:
       - Enhanced Regions
       summary: Create enhanced region
-      description: 'Required permissions: `["network:create"]`<br><br>Add a new region to an enhanced network'
+      description: 'Required permissions: `["network:create"]`<br><br>Add a new region
+        to an enhanced network'
       operationId: createEnhancedRegion
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -487,11 +534,13 @@ paths:
       tags:
       - Enhanced Regions
       summary: Get region
-      description: 'Required permissions: `["network:read"]`<br><br>Get details of a specific region in an enhanced network'
+      description: 'Required permissions: `["network:read"]`<br><br>Get details of
+        a specific region in an enhanced network'
       operationId: getEnhancedRegion
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/regionId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -511,11 +560,13 @@ paths:
       tags:
       - Enhanced Regions
       summary: Delete enhanced region
-      description: 'Required permissions: `["network:delete"]`<br><br>Remove a region from an enhanced network'
+      description: 'Required permissions: `["network:delete"]`<br><br>Remove a region
+        from an enhanced network'
       operationId: deleteEnhancedRegion
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/regionId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202_Accepted'
@@ -534,11 +585,13 @@ paths:
       tags:
       - Enhanced Regions
       summary: Increase scale units
-      description: 'Required permissions: `["network:update"]`<br><br>Increase the number of scale units in a region'
+      description: 'Required permissions: `["network:update"]`<br><br>Increase the
+        number of scale units in a region'
       operationId: increaseScaleUnit
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/regionId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -565,11 +618,13 @@ paths:
       tags:
       - Enhanced Regions
       summary: Reduce scale units
-      description: 'Required permissions: `["network:update"]`<br><br>Reduce the number of scale units in a region'
+      description: 'Required permissions: `["network:update"]`<br><br>Reduce the number
+        of scale units in a region'
       operationId: reduceScaleUnit
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/regionId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -596,10 +651,12 @@ paths:
       tags:
       - Enhanced Private DNS
       summary: Get network-level private DNS settings
-      description: 'Required permissions: `["network:read"]`<br><br>Get the private DNS configuration for an enhanced network'
+      description: 'Required permissions: `["network:read"]`<br><br>Get the private
+        DNS configuration for an enhanced network'
       operationId: getEnhancedNetworkPrivateDNS
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -621,18 +678,16 @@ paths:
       tags:
       - Enhanced Private DNS
       summary: Update network-level private DNS settings
-      description: 'Required permissions: `["network:update"]`<br><br>Update the private DNS configuration for an enhanced network. This operation
-
-        fully replaces the configuration: always send the complete desired object.
-
-        Any field omitted from `attributes` (such as `searchDomains`) is cleared, not
-
-        preserved — to keep current values, resend the full object returned by GET.
-
-        '
+      description: "Required permissions: `[\"network:update\"]`<br><br>Update the\
+        \ private DNS configuration for an enhanced network. This operation\nfully\
+        \ replaces the configuration: always send the complete desired object.\nAny\
+        \ field omitted from `attributes` (such as `searchDomains`) is cleared, not\n\
+        preserved \u2014 to keep current values, resend the full object returned by\
+        \ GET.\n"
       operationId: updateEnhancedNetworkPrivateDNS
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -661,11 +716,13 @@ paths:
       tags:
       - Enhanced Private DNS
       summary: Get region-level private DNS settings
-      description: 'Required permissions: `["network:read"]`<br><br>Get the private DNS configuration for a specific region in an enhanced network'
+      description: 'Required permissions: `["network:read"]`<br><br>Get the private
+        DNS configuration for a specific region in an enhanced network'
       operationId: getEnhancedRegionPrivateDNS
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/regionId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -687,19 +744,17 @@ paths:
       tags:
       - Enhanced Private DNS
       summary: Update region-level private DNS settings
-      description: 'Required permissions: `["network:update"]`<br><br>Update the private DNS configuration for a region of an enhanced network. This
-
-        operation fully replaces the configuration: always send the complete desired
-
-        object. Any field omitted from `attributes` (such as `searchDomains`) is cleared,
-
-        not preserved — to keep current values, resend the full object returned by GET.
-
-        '
+      description: "Required permissions: `[\"network:update\"]`<br><br>Update the\
+        \ private DNS configuration for a region of an enhanced network. This\noperation\
+        \ fully replaces the configuration: always send the complete desired\nobject.\
+        \ Any field omitted from `attributes` (such as `searchDomains`) is cleared,\n\
+        not preserved \u2014 to keep current values, resend the full object returned\
+        \ by GET.\n"
       operationId: updateEnhancedRegionPrivateDNS
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/regionId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -728,7 +783,8 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Get tunnels for a network
-      description: 'Required permissions: `["network:read"]`<br><br>List all tunnels in a specific enhanced network'
+      description: 'Required permissions: `["network:read"]`<br><br>List all tunnels
+        in a specific enhanced network'
       operationId: getEnhancedRegionTunnelsPerNetwork
       parameters:
       - $ref: '#/components/parameters/networkId'
@@ -744,6 +800,7 @@ paths:
         description: Defines the number of results per page
         schema:
           type: integer
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -779,7 +836,8 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Get tunnels for a region
-      description: 'Required permissions: `["network:read"]`<br><br>List all tunnels in a specific region of an enhanced network'
+      description: 'Required permissions: `["network:read"]`<br><br>List all tunnels
+        in a specific region of an enhanced network'
       operationId: getEnhancedRegionTunnelsPerRegion
       parameters:
       - $ref: '#/components/parameters/networkId'
@@ -796,6 +854,7 @@ paths:
         description: Defines the number of results per page
         schema:
           type: integer
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -831,10 +890,12 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Create dynamic IPSec tunnel
-      description: 'Required permissions: `["network:create"]`<br><br>Create a new dynamic IPSec tunnel in an enhanced network'
+      description: 'Required permissions: `["network:create"]`<br><br>Create a new
+        dynamic IPSec tunnel in an enhanced network'
       operationId: createDynamicTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -861,11 +922,13 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Get dynamic IPSec tunnel
-      description: 'Required permissions: `["network:read"]`<br><br>Get details of a dynamic IPSec tunnel'
+      description: 'Required permissions: `["network:read"]`<br><br>Get details of
+        a dynamic IPSec tunnel'
       operationId: getDynamicTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/dynamicTunnelId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -885,11 +948,13 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Update dynamic IPSec tunnel
-      description: 'Required permissions: `["network:update"]`<br><br>Update a dynamic IPSec tunnel configuration'
+      description: 'Required permissions: `["network:update"]`<br><br>Update a dynamic
+        IPSec tunnel configuration'
       operationId: updateDynamicTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/dynamicTunnelId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -911,11 +976,13 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Delete dynamic IPSec tunnel
-      description: 'Required permissions: `["network:delete"]`<br><br>Delete a dynamic IPSec tunnel'
+      description: 'Required permissions: `["network:delete"]`<br><br>Delete a dynamic
+        IPSec tunnel'
       operationId: deleteDynamicTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/dynamicTunnelId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202_Accepted'
@@ -934,10 +1001,12 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Create static IPSec tunnel
-      description: 'Required permissions: `["network:create"]`<br><br>Create a new static IPSec tunnel in an enhanced network'
+      description: 'Required permissions: `["network:create"]`<br><br>Create a new
+        static IPSec tunnel in an enhanced network'
       operationId: createStaticTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -964,11 +1033,13 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Get static IPSec tunnel
-      description: 'Required permissions: `["network:read"]`<br><br>Get details of a static IPSec tunnel'
+      description: 'Required permissions: `["network:read"]`<br><br>Get details of
+        a static IPSec tunnel'
       operationId: getStaticTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/tunnelId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -986,11 +1057,13 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Update static IPSec tunnel
-      description: 'Required permissions: `["network:update"]`<br><br>Update a static IPSec tunnel configuration'
+      description: 'Required permissions: `["network:update"]`<br><br>Update a static
+        IPSec tunnel configuration'
       operationId: updateStaticTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/tunnelId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1012,11 +1085,13 @@ paths:
       tags:
       - Enhanced Tunnels
       summary: Delete static IPSec tunnel
-      description: 'Required permissions: `["network:delete"]`<br><br>Delete a static IPSec tunnel'
+      description: 'Required permissions: `["network:delete"]`<br><br>Delete a static
+        IPSec tunnel'
       operationId: deleteStaticTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/tunnelId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202_Accepted'
@@ -1035,7 +1110,8 @@ paths:
       tags:
       - Enhanced Route Tables
       summary: Get route table
-      description: 'Required permissions: `["network:read"]`<br><br>Get the complete route table for an enhanced network'
+      description: 'Required permissions: `["network:read"]`<br><br>Get the complete
+        route table for an enhanced network'
       operationId: getEnhancedRouteTable
       parameters:
       - $ref: '#/components/parameters/networkId'
@@ -1051,6 +1127,7 @@ paths:
         description: Defines the number of results per page
         schema:
           type: integer
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -1086,10 +1163,13 @@ paths:
       tags:
       - Enhanced Route Tables
       summary: Create static route
-      description: 'Required permissions: `["network:create"]`<br><br>Create a new static route entry. The selected static tunnel must not already have a route table.'
+      description: 'Required permissions: `["network:create"]`<br><br>Create a new
+        static route entry. The selected static tunnel must not already have a route
+        table.'
       operationId: createStaticRoute
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1114,10 +1194,13 @@ paths:
       tags:
       - Enhanced Route Tables
       summary: Create dynamic route
-      description: 'Required permissions: `["network:create"]`<br><br>Create a new dynamic route entry. The selected dynamic tunnel must not already have a route table.'
+      description: 'Required permissions: `["network:create"]`<br><br>Create a new
+        dynamic route entry. The selected dynamic tunnel must not already have a route
+        table.'
       operationId: createDynamicRoute
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1142,11 +1225,13 @@ paths:
       tags:
       - Enhanced Route Tables
       summary: Get route entry
-      description: 'Required permissions: `["network:read"]`<br><br>Get a specific route entry'
+      description: 'Required permissions: `["network:read"]`<br><br>Get a specific
+        route entry'
       operationId: getRouteEntry
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/routeId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -1164,11 +1249,13 @@ paths:
       tags:
       - Enhanced Route Tables
       summary: Update route entry
-      description: 'Required permissions: `["network:update"]`<br><br>Update a specific route entry. Only non-propagated route tables can be edited.'
+      description: 'Required permissions: `["network:update"]`<br><br>Update a specific
+        route entry. Only non-propagated route tables can be edited.'
       operationId: updateRouteEntry
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/routeId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1192,11 +1279,13 @@ paths:
       tags:
       - Enhanced Route Tables
       summary: Delete route entry
-      description: 'Required permissions: `["network:delete"]`<br><br>Delete a specific route entry. Only non-propagated route tables can be deleted.'
+      description: 'Required permissions: `["network:delete"]`<br><br>Delete a specific
+        route entry. Only non-propagated route tables can be deleted.'
       operationId: deleteRouteEntry
       parameters:
       - $ref: '#/components/parameters/networkId'
       - $ref: '#/components/parameters/routeId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202_Accepted'
@@ -1212,13 +1301,15 @@ paths:
     get:
       operationId: NetworksControllerV2_status
       summary: Get status of asynchronous operations.
-      description: 'Required permissions: `["network:read"]`<br><br>Status of asynchronous operations.'
+      description: 'Required permissions: `["network:read"]`<br><br>Status of asynchronous
+        operations.'
       parameters:
       - name: statusId
         required: true
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -1239,10 +1330,14 @@ paths:
       tags:
       - Networks
       summary: Get split tunneling configuration
-      description: "Required permissions: `[\"network:read\"]`<br><br>Returns current split tunneling settings for a network, including default tunneling mode and routing rules \n(CIDR blocks, address objects). Shows whether traffic bypasses or routes through the cloud gateway.\n"
+      description: "Required permissions: `[\"network:read\"]`<br><br>Returns current\
+        \ split tunneling settings for a network, including default tunneling mode\
+        \ and routing rules \n(CIDR blocks, address objects). Shows whether traffic\
+        \ bypasses or routes through the cloud gateway.\n"
       operationId: getSplitTunnelingConfiguration
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Split tunneling configuration
@@ -1261,14 +1356,19 @@ paths:
       tags:
       - Networks
       summary: Set up split tunneling configuration (async)
-      description: 'Required permissions: `["network:update"]`<br><br>Set up split tunneling configuration for a network asynchronously. Modifies tunnel all mode and exception data.
+      description: 'Required permissions: `["network:update"]`<br><br>Set up split
+        tunneling configuration for a network asynchronously. Modifies tunnel all
+        mode and exception data.
 
 
         **Important validation rules:**
 
-        - Exceptions are only supported in ''out_of_tunnel'' mode. Providing exceptions when defaultTunnelingMode is ''via_tunnel'' will result in a 400 Bad Request error.
+        - Exceptions are only supported in ''out_of_tunnel'' mode. Providing exceptions
+        when defaultTunnelingMode is ''via_tunnel'' will result in a 400 Bad Request
+        error.
 
-        - Addresses cannot be defined in a private network (routing table) and be excluded from ''tunnel all'' at the same time.
+        - Addresses cannot be defined in a private network (routing table) and be
+        excluded from ''tunnel all'' at the same time.
 
         - In case of a contradiction, the addresses will be tunneled.
 
@@ -1279,6 +1379,7 @@ paths:
       operationId: updateSplitTunnelingConfigurationAsync
       parameters:
       - $ref: '#/components/parameters/networkId'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1309,6 +1410,8 @@ paths:
       operationId: Standard_getNetworks
       summary: Get all networks
       description: 'Required permissions: `["network:read"]`<br><br>List all networks'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -1329,6 +1432,8 @@ paths:
       operationId: Standard_NetworksControllerV2_networkCreate
       summary: Create network
       description: 'Required permissions: `["network:create"]`<br><br>Create networks.'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1365,6 +1470,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           description: Request accepted
@@ -1392,6 +1498,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -1417,6 +1524,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1444,7 +1552,8 @@ paths:
     get:
       operationId: Standard_NetworksControllerV2_getNetworkHealth
       summary: Get network health status
-      description: 'Required permissions: `["network:read"]`<br><br>Get health status of all gateways and tunnels in the standard network.'
+      description: 'Required permissions: `["network:read"]`<br><br>Get health status
+        of all gateways and tunnels in the standard network.'
       parameters:
       - name: networkId
         required: true
@@ -1452,6 +1561,7 @@ paths:
         schema:
           type: string
         description: ID of the standard network
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Health status retrieved successfully
@@ -1478,6 +1588,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1508,13 +1619,15 @@ paths:
     delete:
       operationId: Standard_NetworksControllerV2_deleteNetworkInstance
       summary: Remove gateways from network
-      description: 'Required permissions: `["network:update"]`<br><br>Remove gateways from network.'
+      description: 'Required permissions: `["network:update"]`<br><br>Remove gateways
+        from network.'
       parameters:
       - name: networkId
         required: true
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1556,6 +1669,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -1575,13 +1689,15 @@ paths:
     get:
       operationId: Standard_NetworksControllerV2_status
       summary: Get status of asynchronous operations.
-      description: 'Required permissions: `["network:read"]`<br><br>Status of asynchronous operations.'
+      description: 'Required permissions: `["network:read"]`<br><br>Status of asynchronous
+        operations.'
       parameters:
       - name: statusId
         required: true
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -1602,6 +1718,8 @@ paths:
       operationId: Standard_NetworksControllerV2_getRegions
       summary: List of available Harmony SASE regions that support standard networks
       description: 'Required permissions: `["addon:read"]`<br><br>List of regions.'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -1619,13 +1737,15 @@ paths:
     put:
       operationId: Standard_NetworksControllerV2_addNetworkRegion
       summary: Add regions to a network
-      description: 'Required permissions: `["network:update"]`<br><br>Add or update regions to a network.'
+      description: 'Required permissions: `["network:update"]`<br><br>Add or update
+        regions to a network.'
       parameters:
       - name: networkId
         required: true
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1656,13 +1776,16 @@ paths:
     delete:
       operationId: Standard_NetworksControllerV2_deleteNetworkRegion
       summary: Remove regions from network
-      description: 'Required permissions: `["network:delete"]`<br><br>Remove regions from a network. Gateways stay active across any remaining regions within that network. Any gateway left with no associated regions will be deleted automatically.'
+      description: 'Required permissions: `["network:delete"]`<br><br>Remove regions
+        from a network. Gateways stay active across any remaining regions within that
+        network. Any gateway left with no associated regions will be deleted automatically.'
       parameters:
       - name: networkId
         required: true
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1683,7 +1806,7 @@ paths:
         '403':
           description: Forbbiden
         '404':
-          description: 'Region            etwork not found'
+          description: "Region\Network not found"
       tags:
       - Standard Regions
   /v3/networks/standard/{networkId}/regions/{regionId}:
@@ -1702,6 +1825,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -1722,10 +1846,12 @@ paths:
       tags:
       - Standard Private DNS
       summary: Get network-level private DNS settings
-      description: 'Required permissions: `["network:read"]`<br><br>Get the private DNS configuration for a standard network'
+      description: 'Required permissions: `["network:read"]`<br><br>Get the private
+        DNS configuration for a standard network'
       operationId: getStandardNetworkPrivateDNS
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -1748,7 +1874,8 @@ paths:
       tags:
       - Standard Private DNS
       summary: Get region-level private DNS settings
-      description: 'Required permissions: `["network:read"]`<br><br>Get the private DNS configuration for a specific region in a standard network'
+      description: 'Required permissions: `["network:read"]`<br><br>Get the private
+        DNS configuration for a specific region in a standard network'
       operationId: getStandardRegionPrivateDNS
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
@@ -1757,6 +1884,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -1781,6 +1909,7 @@ paths:
       description: 'Required permissions: `["network:create"]`'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1812,6 +1941,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -1834,6 +1964,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1862,6 +1993,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202'
@@ -1881,10 +2013,12 @@ paths:
     get:
       operationId: Standard_getWireguardConfigUrl
       summary: Get Wireguard config download URL
-      description: 'Required permissions: `["network:read"]`<br><br>Get the full WireGuard tunnel config download URL with a short-lived access token.'
+      description: 'Required permissions: `["network:read"]`<br><br>Get the full WireGuard
+        tunnel config download URL with a short-lived access token.'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -1909,6 +2043,7 @@ paths:
       description: 'Required permissions: `["network:create"]`'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -1944,6 +2079,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -1966,6 +2102,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           description: Request accepted
@@ -1990,6 +2127,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202'
@@ -2012,6 +2150,7 @@ paths:
       description: 'Required permissions: `["network:create"]`'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -2043,6 +2182,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -2065,6 +2205,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -2091,6 +2232,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/tunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202'
@@ -2113,6 +2255,7 @@ paths:
       description: 'Required permissions: `["network:create"]`'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -2144,6 +2287,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/haTunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -2166,6 +2310,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/haTunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -2192,6 +2337,7 @@ paths:
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
       - $ref: '#/components/parameters/haTunnelIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '202':
           $ref: '#/components/responses/202'
@@ -2218,6 +2364,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -2268,6 +2415,8 @@ paths:
           $ref: '#/components/responses/403'
       tags:
       - Networks
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/networks/{networkId}/firewall-policy:
     get:
       operationId: getGranularFirewallPolicy
@@ -2279,6 +2428,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Completed successfully
@@ -2306,6 +2456,7 @@ paths:
         in: path
         schema:
           $ref: '#/components/schemas/Alphanumeric'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -2351,6 +2502,8 @@ paths:
           description: Forbidden
       tags:
       - Objects
+      parameters:
+      - $ref: '#/components/parameters/authParam'
     post:
       operationId: postObjectsServices
       summary: Create new Service object
@@ -2381,6 +2534,8 @@ paths:
           description: Forbidden
       tags:
       - Objects
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/objects/services/{objectId}:
     put:
       operationId: putObjectsServices
@@ -2392,6 +2547,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -2413,7 +2569,8 @@ paths:
         '403':
           description: Forbidden
         '409':
-          description: Conflict - You cannot update a service that is associated with one or more policies
+          description: Conflict - You cannot update a service that is associated with
+            one or more policies
       tags:
       - Objects
     delete:
@@ -2426,6 +2583,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '204':
           description: No Content
@@ -2434,7 +2592,8 @@ paths:
         '403':
           description: Forbidden
         '409':
-          description: Conflict - You cannot delete a service that is associated with one or more policies
+          description: Conflict - You cannot delete a service that is associated with
+            one or more policies
       tags:
       - Objects
   /v3/applications:
@@ -2442,7 +2601,8 @@ paths:
       tags:
       - Applications
       summary: Get Applications list
-      description: 'Required permissions: `["application:read"]`<br><br>Retrieves a list of all applications. '
+      description: 'Required permissions: `["application:read"]`<br><br>Retrieves
+        a list of all applications. '
       operationId: getApplications
       parameters:
       - name: name
@@ -2485,10 +2645,12 @@ paths:
       - name: sort
         in: query
         required: false
-        description: Sorts the results based on a specified field and order. Available fields for sorting are name, host and type.
+        description: Sorts the results based on a specified field and order. Available
+          fields for sorting are name, host and type.
         schema:
           type: string
           example: sort[name]=asc
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Applications list retrieved successfully
@@ -2508,7 +2670,8 @@ paths:
       tags:
       - Applications
       summary: Create Application
-      description: 'Required permissions: `["application:create"]`<br><br>Create a new application.'
+      description: 'Required permissions: `["application:create"]`<br><br>Create a
+        new application.'
       operationId: createApplication
       requestBody:
         required: true
@@ -2536,12 +2699,15 @@ paths:
           description: Forbidden
         '500':
           description: Internal Server Error
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/applications/{applicationId}:
     get:
       tags:
       - Applications
       summary: Get Application by ID
-      description: 'Required permissions: `["application:read"]`<br><br>Retrieve detailed information for a specific application by ID.'
+      description: 'Required permissions: `["application:read"]`<br><br>Retrieve detailed
+        information for a specific application by ID.'
       operationId: getApplicationById
       parameters:
       - name: applicationId
@@ -2549,6 +2715,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Application retrieved successfully
@@ -2576,7 +2743,8 @@ paths:
       tags:
       - Applications
       summary: Get status of Application creation process by statusId
-      description: 'Required permissions: `["application:read"]`<br><br>Retrieve the status of the application creation process using `statusId`.'
+      description: 'Required permissions: `["application:read"]`<br><br>Retrieve the
+        status of the application creation process using `statusId`.'
       operationId: getApplicationStatus
       parameters:
       - name: statusId
@@ -2584,6 +2752,7 @@ paths:
         in: path
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Application was created successfully
@@ -2621,6 +2790,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
     get:
       summary: Returns paginated list of groups
       description: Returns paginated list of groups.
@@ -2651,6 +2822,7 @@ paths:
         schema:
           type: string
         description: Sort order
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: List of groups
@@ -2671,6 +2843,7 @@ paths:
         required: true
         schema:
           $ref: '#/components/schemas/EnglishNumericId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Group deleted
@@ -2696,6 +2869,7 @@ paths:
         required: true
         schema:
           $ref: '#/components/schemas/EnglishNumericId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '201':
           description: Member added
@@ -2720,6 +2894,7 @@ paths:
         required: true
         schema:
           $ref: '#/components/schemas/EnglishNumericId'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Member removed
@@ -2749,6 +2924,8 @@ paths:
                 $ref: '#/components/schemas/User'
         '400':
           description: Bad request
+      parameters:
+      - $ref: '#/components/parameters/authParam'
     get:
       summary: Returns paginated list of users
       description: Returns paginated list of users.
@@ -2792,6 +2969,7 @@ paths:
             - asc
             - desc
         description: Sort order using bracket notation, e.g. sort[email]=asc
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: List of users
@@ -2812,6 +2990,7 @@ paths:
         required: true
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: User deleted
@@ -2848,6 +3027,7 @@ paths:
         required: false
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: List of addresses
@@ -2873,6 +3053,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DBAddress'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/objects/addresses/{id}:
     put:
       summary: Update address
@@ -2885,6 +3067,7 @@ paths:
         required: true
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -2910,6 +3093,7 @@ paths:
         required: true
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '204':
           description: Address deleted
@@ -2928,7 +3112,8 @@ paths:
           maxLength: 100
       - name: cpId
         in: query
-        description: Filters the results to include only updatable objects that match the specified Check Point object ID.
+        description: Filters the results to include only updatable objects that match
+          the specified Check Point object ID.
         schema:
           type: array
           maxItems: 100
@@ -2936,7 +3121,8 @@ paths:
             type: string
       - name: type
         in: query
-        description: 'Filters updatable objects by feature category, reflecting differences in object support across categories.
+        description: 'Filters updatable objects by feature category, reflecting differences
+          in object support across categories.
 
           splitTunneling: Objects compatible with Split Tunneling configuration.
 
@@ -2953,7 +3139,8 @@ paths:
         example: splitTunneling
       - name: page
         in: query
-        description: the page number to retrieve from the paginated results. Default is 1.
+        description: the page number to retrieve from the paginated results. Default
+          is 1.
         schema:
           type: integer
           minimum: 1
@@ -2970,6 +3157,7 @@ paths:
         schema:
           type: string
           maxLength: 100
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Successful response with paginated list of updatable objects
@@ -2986,14 +3174,17 @@ paths:
                       properties:
                         type:
                           type: object
-                          description: Filters updatable objects by their feature category based on supported vendors.
+                          description: Filters updatable objects by their feature
+                            category based on supported vendors.
                           properties:
                             splitTunneling:
                               type: boolean
-                              description: Objects compatible with Split Tunneling configuration.
+                              description: Objects compatible with Split Tunneling
+                                configuration.
                             internetAccess:
                               type: boolean
-                              description: Objects compatible with Internet Access policy.
+                              description: Objects compatible with Internet Access
+                                policy.
                           additionalProperties: true
                         cpId:
                           type: string
@@ -3030,7 +3221,8 @@ paths:
                           type: integer
                           minimum: 0
                           maximum: 999999999
-                          description: Number of data objects associated with this updatable object
+                          description: Number of data objects associated with this
+                            updatable object
                       additionalProperties: true
                   page:
                     type: integer
@@ -3093,6 +3285,7 @@ paths:
         required: false
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Success
@@ -3118,6 +3311,7 @@ paths:
         required: false
         schema:
           type: string
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -3171,6 +3365,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumErrorResponse'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/gum/custom-roles:
     get:
       summary: List all custom roles for tenant
@@ -3193,6 +3389,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
     post:
       summary: Create a new custom role
       requestBody:
@@ -3232,6 +3430,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/gum/custom-roles/categories:
     get:
       summary: Get all permission categories
@@ -3254,11 +3454,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumInternalErrorResponse'
+      parameters:
+      - $ref: '#/components/parameters/authParam'
   /v3/gum/custom-roles/{roleId}:
     get:
       summary: Get a specific custom role by ID
       parameters:
       - $ref: '#/components/parameters/CustomRoleIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '200':
           description: Custom role details
@@ -3288,6 +3491,7 @@ paths:
       summary: Update a custom role
       parameters:
       - $ref: '#/components/parameters/CustomRoleIdParam'
+      - $ref: '#/components/parameters/authParam'
       requestBody:
         required: true
         content:
@@ -3335,6 +3539,7 @@ paths:
       summary: Delete a custom role
       parameters:
       - $ref: '#/components/parameters/CustomRoleIdParam'
+      - $ref: '#/components/parameters/authParam'
       responses:
         '204':
           description: Custom role deleted successfully
@@ -3366,7 +3571,9 @@ components:
   schemas:
     ASN:
       type: integer
-      description: Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set.
+      description: Autonomous System Number (ASN) for BGP routing. It will be automatically
+        assigned an ASN once creating the first dynamic tunnel in this network. The
+        network ASN can never be changed once it is set.
       oneOf:
       - minimum: 1
         maximum: 64496
@@ -3435,7 +3642,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Condition'
-          description: Optional time-based conditions, default is an empty array (no time constraints)
+          description: Optional time-based conditions, default is an empty array (no
+            time constraints)
         destinations:
           type: array
           items:
@@ -3451,7 +3659,9 @@ components:
           enum:
           - disabled
           - summaryWithUrls
-          description: 'Logging mode (optional) – If not specified, the service automatically sets the logging mode based on the rule action: Disabled for Allow actions, and SummaryWithUrls for Block and Warning actions'
+          description: "Logging mode (optional) \u2013 If not specified, the service\
+            \ automatically sets the logging mode based on the rule action: Disabled\
+            \ for Allow actions, and SummaryWithUrls for Block and Warning actions"
         status:
           type: string
           enum:
@@ -3477,7 +3687,8 @@ components:
               enum:
               - quantum
               - hsase
-              description: Indicates whether the policy is controlled by Quantum or Hsase
+              description: Indicates whether the policy is controlled by Quantum or
+                Hsase
           additionalProperties: true
       additionalProperties: true
     AccessPolicySource:
@@ -3561,7 +3772,8 @@ components:
       minLength: 1
     ApplicationAlias:
       type: object
-      description: URL alias settings to access the application via a user-friendly URL under your own domain
+      description: URL alias settings to access the application via a user-friendly
+        URL under your own domain
       properties:
         aliasEnabled:
           type: boolean
@@ -3950,7 +4162,8 @@ components:
             $ref: '#/components/schemas/ApplicationAlias'
           displayIconAtLogin:
             type: boolean
-            description: Determines if the application icon is displayed during user login
+            description: Determines if the application icon is displayed during user
+              login
           fqdn:
             type: string
             minLength: 1
@@ -4051,7 +4264,7 @@ components:
           type: string
           description: Application type
           enum:
-          - http
+          - "http"
           - https
           - rdp
           - ssh
@@ -4089,19 +4302,20 @@ components:
           description: Application name
           minLength: 5
           maxLength: 32
-          pattern: ^[^~`()!#$%^&*+=[]\';,/{}|":<>?№@]+$
+          pattern: "^[^~`()!#$%^&*+=[]\\';,/{}|\":<>?\u2116@]+$"
           example: MyApplication
         type:
           type: string
           description: Application type
           enum:
-          - http
+          - "http"
           - https
           - rdp
         network:
           allOf:
           - $ref: '#/components/schemas/Alphanumeric'
-          - description: Application network ID. To get the ID use endpoint '/networks' with [network:read] permission.
+          - description: Application network ID. To get the ID use endpoint '/networks'
+              with [network:read] permission.
           - example: ZwAeo5wqiF
         host:
           oneOf:
@@ -4113,7 +4327,8 @@ components:
           - $ref: '#/components/schemas/IdpPort'
         users:
           type: array
-          description: List of IDs of assigned users. To get the IDs use endpoint '/users' with [user:read] permission.
+          description: List of IDs of assigned users. To get the IDs use endpoint
+            '/users' with [user:read] permission.
           minItems: 1
           example:
           - mWKM26JMc1
@@ -4122,7 +4337,8 @@ components:
             $ref: '#/components/schemas/AlphanumericWithSpace'
         groups:
           type: array
-          description: List of IDs of assigned groups. To get the IDs use endpoint '/groups' with [group:read] permission.
+          description: List of IDs of assigned groups. To get the IDs use endpoint
+            '/groups' with [group:read] permission.
           minItems: 1
           example:
           - mWKM26JMc1
@@ -4279,7 +4495,9 @@ components:
         subnet:
           type: string
           maxLength: 20
-          description: Subnet of the network. Cannot be changed later. Allowed private subnet ranges are 10.0.0.0/12-22, 172.16.0.0/12-22, 192.168.0.0/16-22, or 198.18.0.0/15-22.
+          description: Subnet of the network. Cannot be changed later. Allowed private
+            subnet ranges are 10.0.0.0/12-22, 172.16.0.0/12-22, 192.168.0.0/16-22,
+            or 198.18.0.0/15-22.
           default: 10.255.0.0/16
         name:
           type: string
@@ -4302,7 +4520,8 @@ components:
       properties:
         harmonySaseRegionId:
           type: string
-          description: Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions).
+          description: Harmony SASE region ID, Take id from GET Harmony sases regions
+            endpoint (/networks/enhanced/harmony-sase-regions).
         idle:
           type: boolean
           description: Create the gateway as disabled if true.
@@ -4398,7 +4617,8 @@ components:
         additionalProperties: true
       additionalProperties: true
     CustomDnsResponse:
-      description: Private DNS configuration as returned for standard (CoreV3) networks and regions.
+      description: Private DNS configuration as returned for standard (CoreV3) networks
+        and regions.
       allOf:
       - $ref: '#/components/schemas/CustomDns'
       - type: object
@@ -4424,21 +4644,13 @@ components:
       additionalProperties: true
     CustomDnsUpdate:
       type: object
-      description: 'Request body for updating private DNS (PUT). This is a full replacement:
-
-        always send the complete desired configuration. Any field omitted from
-
-        `attributes` is cleared, not preserved — to keep current values, resend the
-
-        full object returned by the corresponding GET endpoint. `attributes` is
-
-        required. When `enabled` is `true`, `attributes.servers` must contain at
-
-        least one entry. Requests that violate these rules are rejected with
-
-        422 Unprocessable Entity.
-
-        '
+      description: "Request body for updating private DNS (PUT). This is a full replacement:\n\
+        always send the complete desired configuration. Any field omitted from\n`attributes`\
+        \ is cleared, not preserved \u2014 to keep current values, resend the\nfull\
+        \ object returned by the corresponding GET endpoint. `attributes` is\nrequired.\
+        \ When `enabled` is `true`, `attributes.servers` must contain at\nleast one\
+        \ entry. Requests that violate these rules are rejected with\n422 Unprocessable\
+        \ Entity.\n"
       required:
       - enabled
       - attributes
@@ -4451,7 +4663,8 @@ components:
       additionalProperties: true
     CustomDnsUpdateAttributes:
       type: object
-      description: 'Private DNS attributes for update (PUT) requests. Both `servers` and
+      description: 'Private DNS attributes for update (PUT) requests. Both `servers`
+        and
 
         `searchDomains` are required (send `searchDomains: []` if you have none).
 
@@ -4470,7 +4683,8 @@ components:
           maxItems: 4
           items:
             $ref: '#/components/schemas/CustomDnsServer'
-          description: Private DNS servers. Required, and must contain at least one entry when enabled is true.
+          description: Private DNS servers. Required, and must contain at least one
+            entry when enabled is true.
         searchDomains:
           type: array
           uniqueItems: true
@@ -4478,7 +4692,9 @@ components:
           items:
             type: string
             format: hostname
-          description: DNS search domains. Required — send an empty array if you have none. Omitting it on update is rejected with 400; a non-empty value fully replaces any existing search domains.
+          description: "DNS search domains. Required \u2014 send an empty array if\
+            \ you have none. Omitting it on update is rejected with 400; a non-empty\
+            \ value fully replaces any existing search domains."
         dnsPolicy:
           $ref: '#/components/schemas/DnsPolicy'
       additionalProperties: true
@@ -4497,7 +4713,8 @@ components:
             $ref: '#/components/schemas/CategoryEntry'
         CPRoleId:
           type: string
-          description: Identifier of the associated CPM role (pending value until role creation in CPM completes)
+          description: Identifier of the associated CPM role (pending value until
+            role creation in CPM completes)
         createdAt:
           type: string
           format: date-time
@@ -4529,7 +4746,9 @@ components:
             subnet:
               type: string
               maxLength: 20
-              description: Subnet of the network. Cannot be changed later. Allowed private subnet ranges are 10.0.0.0/12-22, 172.16.0.0/12-22, 192.168.0.0/16-22, or 198.18.0.0/15-22.
+              description: Subnet of the network. Cannot be changed later. Allowed
+                private subnet ranges are 10.0.0.0/12-22, 172.16.0.0/12-22, 192.168.0.0/16-22,
+                or 198.18.0.0/15-22.
               default: 10.255.0.0/16
             name:
               type: string
@@ -4622,7 +4841,8 @@ components:
               forwardDNSUpdate:
                 type: boolean
                 readOnly: true
-                description: Indicates whether DNS updates (RFC 2136) are forwarded to the private DNS servers
+                description: Indicates whether DNS updates (RFC 2136) are forwarded
+                  to the private DNS servers
             additionalProperties: true
         additionalProperties: true
       additionalProperties: true
@@ -4935,7 +5155,8 @@ components:
       properties:
         harmonySaseRegionId:
           type: string
-          description: Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions).
+          description: Harmony SASE region ID, Take id from GET Harmony sases regions
+            endpoint (/networks/enhanced/harmony-sase-regions).
         scaleUnits:
           allOf:
           - $ref: '#/components/schemas/ScaleUnitsCount'
@@ -5023,7 +5244,8 @@ components:
             description: Enhanced tunnel ID
           haTunnelID:
             type: string
-            description: Enhanced dynamic tunnel group ID (or tunnel ID for static tunnel)
+            description: Enhanced dynamic tunnel group ID (or tunnel ID for static
+              tunnel)
           dpdAction:
             type: string
             description: Enhanced tunnel DPDTime actions.
@@ -5106,7 +5328,8 @@ components:
           description: Indicates whether the policy is enabled.
         allowed:
           type: boolean
-          description: Defines the default policy action. When true, traffic is allowed; when false, traffic is blocked.
+          description: Defines the default policy action. When true, traffic is allowed;
+            when false, traffic is blocked.
         id:
           allOf:
           - $ref: '#/components/schemas/Alphanumeric'
@@ -5133,10 +5356,12 @@ components:
           description: Name of the policy rule.
         enabled:
           type: boolean
-          description: Enables or disables the rule on the firewall. When set to true, the rule is active; when false, the rule is inactive.
+          description: Enables or disables the rule on the firewall. When set to true,
+            the rule is active; when false, the rule is inactive.
         allowed:
           type: boolean
-          description: Determines the rule action. When set to true, traffic is allowed; when false, traffic is blocked.
+          description: Determines the rule action. When set to true, traffic is allowed;
+            when false, traffic is blocked.
         sources:
           $ref: '#/components/schemas/SourcesAndDestinations'
         destinations:
@@ -5215,7 +5440,9 @@ components:
         - policyLoggingEnabled
         - policyRules
         additionalProperties: true
-      description: Firewall policy for the granular /networks/{networkId}/firewall-policy endpoint, where policy-level logging (policyLoggingEnabled) is required and each rule requires logEnabled.
+      description: Firewall policy for the granular /networks/{networkId}/firewall-policy
+        endpoint, where policy-level logging (policyLoggingEnabled) is required and
+        each rule requires logEnabled.
       additionalProperties: true
     GranularFirewallPolicyRule:
       allOf:
@@ -5228,7 +5455,8 @@ components:
         required:
         - logEnabled
         additionalProperties: true
-      description: Firewall policy rule for the granular /networks/{networkId}/firewall-policy endpoint, where per-rule logging (logEnabled) is required.
+      description: Firewall policy rule for the granular /networks/{networkId}/firewall-policy
+        endpoint, where per-rule logging (logEnabled) is required.
       additionalProperties: true
     Group:
       type: object
@@ -5431,7 +5659,8 @@ components:
               enum:
               - quantum
               - hsase
-              description: Indicates whether the policy is controlled by Quantum or Hsase
+              description: Indicates whether the policy is controlled by Quantum or
+                Hsase
             bypassRules:
               type: array
               items:
@@ -5442,7 +5671,11 @@ components:
               - bypass
               - inspect
               - inspectNoDecrypt
-              description: 'Default action for traffic not matched by any explicit bypass rule (the cleanup rule). Included in the response only when the tenant has the Inspection Policy feature enabled; when the feature is off the field is omitted entirely. Defaults to "inspect" when the tenant has the feature enabled but hasn''t configured a specific value.
+              description: 'Default action for traffic not matched by any explicit
+                bypass rule (the cleanup rule). Included in the response only when
+                the tenant has the Inspection Policy feature enabled; when the feature
+                is off the field is omitted entirely. Defaults to "inspect" when the
+                tenant has the feature enabled but hasn''t configured a specific value.
 
                 '
           additionalProperties: true
@@ -5465,14 +5698,20 @@ components:
               enum:
               - quantum
               - hsase
-              description: Indicates whether the policy is controlled by Quantum or Hsase
+              description: Indicates whether the policy is controlled by Quantum or
+                Hsase
             cleanupBypassRuleDefaultAction:
               type: string
               enum:
               - bypass
               - inspect
               - inspectNoDecrypt
-              description: 'Echoes the persisted cleanup default action after the upsert so callers don''t need a follow-up GET. Included in the response only when the tenant has the Inspection Policy feature enabled; when the feature is off the field is omitted entirely. Defaults to "inspect" when the tenant has the feature enabled but hasn''t configured a specific value.
+              description: 'Echoes the persisted cleanup default action after the
+                upsert so callers don''t need a follow-up GET. Included in the response
+                only when the tenant has the Inspection Policy feature enabled; when
+                the feature is off the field is omitted entirely. Defaults to "inspect"
+                when the tenant has the feature enabled but hasn''t configured a specific
+                value.
 
                 '
           additionalProperties: true
@@ -5568,13 +5807,19 @@ components:
           - bypass
           - inspect
           - inspectNoDecrypt
-          description: 'Bypass or HTTPS Inspection action (optional, default: ''bypass''). ''inspect'' is always valid for ''sites'' appliedOn. When the Inspection Policy feature is enabled, ''inspect'' is also valid on ''agents'' and ''both''. ''inspectNoDecrypt'' requires the Inspection Policy feature and is only valid on ''agents'' appliedOn (rejected on ''sites'' and ''both'' regardless of the feature).'
+          description: 'Bypass or HTTPS Inspection action (optional, default: ''bypass'').
+            ''inspect'' is always valid for ''sites'' appliedOn. When the Inspection
+            Policy feature is enabled, ''inspect'' is also valid on ''agents'' and
+            ''both''. ''inspectNoDecrypt'' requires the Inspection Policy feature
+            and is only valid on ''agents'' appliedOn (rejected on ''sites'' and ''both''
+            regardless of the feature).'
         log:
           type: string
           enum:
           - disabled
           - summaryWithUrls
-          description: HTTPS Inspection logging (optional) is disabled by default and is supported only for rules applied to agents
+          description: HTTPS Inspection logging (optional) is disabled by default
+            and is supported only for rules applied to agents
         status:
           type: string
           enum:
@@ -6472,7 +6717,8 @@ components:
             $ref: '#/components/schemas/PortNumber'
       additionalProperties: true
     ObjectServiceProtocolOptionsICMPrequest:
-      description: -1 means 'any', the rest of the values are the RFC default ICMP parameters
+      description: -1 means 'any', the rest of the values are the RFC default ICMP
+        parameters
       type: integer
       enum:
       - -1
@@ -6490,7 +6736,8 @@ components:
       - 42
       - 43
     ObjectServiceProtocolOptionsICMPresponse:
-      description: -1 means 'any', the rest of the values are the RFC default ICMP parameters
+      description: -1 means 'any', the rest of the values are the RFC default ICMP
+        parameters
       type: object
       properties:
         code:
@@ -6656,7 +6903,9 @@ components:
           type: integer
         secretAccessKey:
           type: string
-          description: Secret access key to download OpenVPN configuration file. This key will be shown only once in the response for security reasons. Make sure to store it securely.
+          description: Secret access key to download OpenVPN configuration file. This
+            key will be shown only once in the response for security reasons. Make
+            sure to store it securely.
       additionalProperties: true
     OpenVPNTunnel:
       allOf:
@@ -6673,14 +6922,16 @@ components:
           type: string
         secretAccessKey:
           type: string
-          description: Secret access key for the OpenVPN tunnel. This is only the hashed value. The original value will not be retrievable after creation.
+          description: Secret access key for the OpenVPN tunnel. This is only the
+            hashed value. The original value will not be retrievable after creation.
       additionalProperties: true
     Passphrase:
       type: string
       pattern: ^[$a-zA-Z1-9_\/\.][$a-zA-Z0-9_\/\.]{7,101}$
     PeakBandwidth:
       type: integer
-      description: Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps.
+      description: Expected peak throughput of the tunnel communication in Mbps. Typical
+        connection will be of 1000Mbps.
       minimum: 10
       maximum: 8000
       default: 1000
@@ -6905,7 +7156,8 @@ components:
       - policy
     ScaleUnitsCount:
       type: integer
-      description: 'Number of scale units for the region. Scale units determine the capacity and performance level of the enhanced region.
+      description: 'Number of scale units for the region. Scale units determine the
+        capacity and performance level of the enhanced region.
 
         Higher values provide greater throughput and connection capacity.
 
@@ -6917,7 +7169,8 @@ components:
       properties:
         unitType:
           type: string
-          description: Type of scale unit. Standard units provide basic capacity, while cloudSecurity units offer enhanced security features.
+          description: Type of scale unit. Standard units provide basic capacity,
+            while cloudSecurity units offer enhanced security features.
           enum:
           - standard
           - cloudSecurity
@@ -6942,7 +7195,10 @@ components:
       properties:
         defaultTunnelingMode:
           type: string
-          description: "via_tunnel: Tunnel all internet traffic via Cloud, except the destinations listed in exceptData.\nout_of_tunnel: Do not tunnel internet traffic via Cloud, except the destinations listed in exceptData \n(i.e., only these destinations will be tunnelled).\n"
+          description: "via_tunnel: Tunnel all internet traffic via Cloud, except\
+            \ the destinations listed in exceptData.\nout_of_tunnel: Do not tunnel\
+            \ internet traffic via Cloud, except the destinations listed in exceptData\
+            \ \n(i.e., only these destinations will be tunnelled).\n"
           example: via_tunnel
         exceptData:
           $ref: '#/components/schemas/SplitTunnelingData'
@@ -6978,11 +7234,37 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SplitTunnelingException'
-          description: "Subnet exceptions within included ranges that bypass the tunnel.\n\n**Important:** Exceptions are only supported in 'out_of_tunnel' mode. If provided when defaultTunnelingMode is 'via_tunnel', \nthe request will be rejected with a 400 Bad Request error.\n\nBehavior in 'out_of_tunnel' mode:\n- New exceptions are validated against allowed ranges (from included destinations)\n- Saved exceptions are filtered according to actual allowed ranges\n- Results are merged and deduplicated\n- Empty array will be merged with existing exceptions and will not remove saved exceptions by itself\n- If included destinations are removed from the payload and there are saved exceptions related to those subnets, \n  these exceptions will also be removed from the saved data\n- If omitted, exceptions value remains unchanged\n"
+          description: "Subnet exceptions within included ranges that bypass the tunnel.\n\
+            \n**Important:** Exceptions are only supported in 'out_of_tunnel' mode.\
+            \ If provided when defaultTunnelingMode is 'via_tunnel', \nthe request\
+            \ will be rejected with a 400 Bad Request error.\n\nBehavior in 'out_of_tunnel'\
+            \ mode:\n- New exceptions are validated against allowed ranges (from included\
+            \ destinations)\n- Saved exceptions are filtered according to actual allowed\
+            \ ranges\n- Results are merged and deduplicated\n- Empty array will be\
+            \ merged with existing exceptions and will not remove saved exceptions\
+            \ by itself\n- If included destinations are removed from the payload and\
+            \ there are saved exceptions related to those subnets, \n  these exceptions\
+            \ will also be removed from the saved data\n- If omitted, exceptions value\
+            \ remains unchanged\n"
       additionalProperties: true
     SplitTunnelingException:
       type: object
-      description: "Subnet exception entry that can override the default tunnel behavior\nfor specific IPs or CIDR ranges inside the encryption domain.\n\n**Important:** Exceptions are only supported in 'out_of_tunnel' mode. If provided when defaultTunnelingMode is 'via_tunnel',\nthe request will be rejected with a 400 Bad Request error.\n\nThe destination must be in CIDR notation (e.g. 10.1.2.0/24 for a subnet,\n10.1.2.3/32 for a single IP).\n\nValidation Rules (out_of_tunnel mode only):\n- Exception destination must be within at least one of the allowed included destinations\n- Exception destination cannot be equal to any allowed included destination\n- Exception destination cannot be bigger (more general) than any allowed included destination\n- Exceptions in the request payload that violate these rules cause a 400 Bad Request; only stored exceptions are automatically filtered during processing\n\nException Lifecycle (out_of_tunnel mode only):\n- When included destinations are removed from the configuration, any saved exceptions that fall\n  outside the remaining allowed ranges are automatically removed\n- Exceptions are merged with existing saved exceptions and deduplicated by destination\n"
+      description: "Subnet exception entry that can override the default tunnel behavior\n\
+        for specific IPs or CIDR ranges inside the encryption domain.\n\n**Important:**\
+        \ Exceptions are only supported in 'out_of_tunnel' mode. If provided when\
+        \ defaultTunnelingMode is 'via_tunnel',\nthe request will be rejected with\
+        \ a 400 Bad Request error.\n\nThe destination must be in CIDR notation (e.g.\
+        \ 10.1.2.0/24 for a subnet,\n10.1.2.3/32 for a single IP).\n\nValidation Rules\
+        \ (out_of_tunnel mode only):\n- Exception destination must be within at least\
+        \ one of the allowed included destinations\n- Exception destination cannot\
+        \ be equal to any allowed included destination\n- Exception destination cannot\
+        \ be bigger (more general) than any allowed included destination\n- Exceptions\
+        \ in the request payload that violate these rules cause a 400 Bad Request;\
+        \ only stored exceptions are automatically filtered during processing\n\n\
+        Exception Lifecycle (out_of_tunnel mode only):\n- When included destinations\
+        \ are removed from the configuration, any saved exceptions that fall\n  outside\
+        \ the remaining allowed ranges are automatically removed\n- Exceptions are\
+        \ merged with existing saved exceptions and deduplicated by destination\n"
       properties:
         type:
           type: string
@@ -7062,7 +7344,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StandardHealthCheck'
-          description: List of health checks for standard networks (includes gateways and tunnels)
+          description: List of health checks for standard networks (includes gateways
+            and tunnels)
       required:
       - data
       additionalProperties: true
@@ -7284,7 +7567,8 @@ components:
           nullable: true
           minItems: 1
           maxItems: 3
-          description: Custom phone numbers (1-3 items when phoneSupportType is 'custom', null otherwise)
+          description: Custom phone numbers (1-3 items when phoneSupportType is 'custom',
+            null otherwise)
           items:
             $ref: '#/components/schemas/SupportPhoneNumber'
         userGuidesEnabled:
@@ -7320,7 +7604,8 @@ components:
           type: string
           minLength: 1
           maxLength: 18
-          description: Label or description for the phone number (e.g., "US Support", "Emergency")
+          description: Label or description for the phone number (e.g., "US Support",
+            "Emergency")
         phoneNumber:
           type: string
           description: Phone number in international or local format
@@ -7333,15 +7618,18 @@ components:
           enum:
           - psk
           - cert
-          description: Authentication type for tunnel (psk for pre-shared key, cert for certificate)
+          description: Authentication type for tunnel (psk for pre-shared key, cert
+            for certificate)
         passphrase:
           type: string
           minLength: 8
           maxLength: 64
-          description: Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk.
+          description: Pre-shared key for tunnel authentication (8-64 characters).
+            Required when authType is psk.
         customerRootCA:
           type: string
-          description: Customer root certificate authority. Required when authType is cert.
+          description: Customer root certificate authority. Required when authType
+            is cert.
       additionalProperties: true
     TunnelName:
       type: string
@@ -7378,7 +7666,8 @@ components:
               enum:
               - quantum
               - hsase
-              description: Indicates whether the policy is controlled by Quantum or Hsase
+              description: Indicates whether the policy is controlled by Quantum or
+                Hsase
           additionalProperties: true
       example:
         status: 200
@@ -7498,9 +7787,13 @@ components:
           - bypass
           - inspect
           - inspectNoDecrypt
-          description: 'Optional. Default action for traffic not matched by any explicit bypass rule (the cleanup rule). Per-tenant setting — scope-agnostic. Accepted only when the tenant has the Inspection Policy feature enabled; otherwise the request is rejected with 422 VALIDATION_CLEANUP_ACTION_NOT_ALLOWED. Semantics: ''inspect'' (default) applies full HTTPS inspection to unmatched traffic; ''inspectNoDecrypt'' inspects without decrypting on the agent path; ''bypass'' causes unmatched traffic to skip HTTPS inspection entirely.
-
-            '
+          description: "Optional. Default action for traffic not matched by any explicit\
+            \ bypass rule (the cleanup rule). Per-tenant setting \u2014 scope-agnostic.\
+            \ Accepted only when the tenant has the Inspection Policy feature enabled;\
+            \ otherwise the request is rejected with 422 VALIDATION_CLEANUP_ACTION_NOT_ALLOWED.\
+            \ Semantics: 'inspect' (default) applies full HTTPS inspection to unmatched\
+            \ traffic; 'inspectNoDecrypt' inspects without decrypting on the agent\
+            \ path; 'bypass' causes unmatched traffic to skip HTTPS inspection entirely.\n"
       additionalProperties: true
     User:
       type: object
@@ -7517,7 +7810,8 @@ components:
           description: Reference ID to `Role`.
         roles:
           type: array
-          description: Friendly names of the roles assigned to the user (built-in and custom).
+          description: Friendly names of the roles assigned to the user (built-in
+            and custom).
           items:
             type: string
         idProviderGroups:
@@ -7693,7 +7987,8 @@ components:
         properties:
           headers:
             type: object
-            description: Application specific headers. Keys must not contain . and $
+            description: Application specific headers. Keys must not contain . and
+              $
             pattern: ^[^.$]+$
             example:
               X-Custom-Header: value
@@ -7723,7 +8018,8 @@ components:
         wireguardConfigUrl:
           type: string
           format: url
-          description: Full download URL for the WireGuard tunnel configuration, containing a short-lived token.
+          description: Full download URL for the WireGuard tunnel configuration, containing
+            a short-lived token.
       required:
       - wireguardConfigUrl
       additionalProperties: true
@@ -7846,7 +8142,7 @@ components:
         pattern: ^[a-zA-Z0-9]{3,25}$
   responses:
     Unauthorized:
-      description: Unauthorized
+      description: "Unauthorized"
       content:
         application/json:
           schema:
@@ -7863,7 +8159,7 @@ components:
                 example: 401
             additionalProperties: true
     Forbidden:
-      description: Forbidden
+      description: "Forbidden"
       content:
         application/json:
           schema:
@@ -7880,7 +8176,7 @@ components:
                 example: 403
             additionalProperties: true
     InternalServerError:
-      description: Internal Server Error
+      description: "Internal Server Error"
       content:
         application/json:
           schema:
@@ -7897,7 +8193,7 @@ components:
                 example: 500
             additionalProperties: true
     BadRequest:
-      description: Bad Request
+      description: "Bad Request"
       content:
         application/json:
           schema:
@@ -7914,67 +8210,67 @@ components:
                 example: 400
             additionalProperties: true
     ValidationError:
-      description: Validation Error
+      description: "Validation Error"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/IAErrorResponse'
     '202':
-      description: Request accepted
+      description: "Request accepted"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/AsyncOperationResponse'
     '401':
-      description: Unauthorized
+      description: "Unauthorized"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     '402':
-      description: Insufficient licenses
+      description: "Insufficient licenses"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     '403':
-      description: Forbidden
+      description: "Forbidden"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     '404':
-      description: Resource not found
+      description: "Resource not found"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     '422':
-      description: Unprocessable entity
+      description: "Unprocessable entity"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     401_Unauthorized:
-      description: Unauthorized
+      description: "Unauthorized"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     403_Forbidden:
-      description: Forbidden
+      description: "Forbidden"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     202_Accepted:
-      description: Request accepted
+      description: "Request accepted"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/AsyncOperationResponse'
     429_TooManyRequests:
-      description: Too many concurrent operations on this network
+      description: "Too many concurrent operations on this network"
       content:
         application/json:
           schema:
@@ -7985,7 +8281,8 @@ components:
                 example: 429
               message:
                 type: string
-                example: 'Rate limit exceeded for network abc123. Active operations: 5, Limit: 5. Please try again later.'
+                example: 'Rate limit exceeded for network abc123. Active operations:
+                  5, Limit: 5. Please try again later.'
               error:
                 type: string
                 example: Too Many Requests
@@ -7997,31 +8294,31 @@ components:
                 example: abc123
             additionalProperties: true
     400_BadRequest:
-      description: Bad Request
+      description: "Bad Request"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     402_Insufficient_licenses:
-      description: Insufficient licenses
+      description: "Insufficient licenses"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     404_NotFound:
-      description: Resource not found
+      description: "Resource not found"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     409_Conflict:
-      description: Conflict
+      description: "Conflict"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     409_SplitTunnelingConflict:
-      description: Conflict - Issues with updatable objects in split tunneling configuration
+      description: "Conflict - Issues with updatable objects in split tunneling configuration"
       content:
         application/json:
           schema:
@@ -8044,7 +8341,8 @@ components:
           examples:
             unsupported_updatable_object:
               summary: Unsupported updatable object
-              description: One or more updatable objects are not supported for split tunneling
+              description: One or more updatable objects are not supported for split
+                tunneling
               value:
                 status: 409
                 message: UNSUPPORTED_UPDATABLE_OBJECT
@@ -8063,70 +8361,69 @@ components:
                   notExistingCpIds:
                   - foobar
     422_UnprocessableEntity:
-      description: Unprocessable entity
+      description: "Unprocessable entity"
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
   parameters:
+    authParam:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
     networkId:
-      name: networkId
+      name: "networkId"
       in: path
       required: true
       schema:
         type: string
     regionId:
-      name: regionId
+      name: "regionId"
       in: path
       required: true
       schema:
         type: string
     tunnelId:
-      name: tunnelId
+      name: "tunnelId"
       in: path
       required: true
       schema:
         type: string
     dynamicTunnelId:
-      name: dynamicTunnelId
+      name: "dynamicTunnelId"
       in: path
       required: true
       schema:
         type: string
     routeId:
-      name: routeId
+      name: "routeId"
       in: path
       required: true
       schema:
         type: string
     networkIdParam:
-      name: networkId
+      name: "networkId"
       in: path
       required: true
       schema:
         type: string
     tunnelIdParam:
-      name: tunnelId
+      name: "tunnelId"
       in: path
       required: true
       schema:
         type: string
     haTunnelIdParam:
-      name: haTunnelId
+      name: "haTunnelId"
       in: path
       required: true
       schema:
         type: string
     CustomRoleIdParam:
-      name: roleId
+      name: "roleId"
       in: path
       required: true
       schema:
         type: string
-  securitySchemes:
-    bearer:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-security:
-- bearer: []
