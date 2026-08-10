@@ -6,9 +6,9 @@
 entries:
   - id: A1a-restore-bearer-security-scheme
     reason: >
-      v3 ships an empty components.securitySchemes and no top-level security,
-      unlike v2.3 which declared a bearer/JWT scheme. Without this, generated
-      methods have no notion of authentication.
+      v3 declares no components.securitySchemes at all (the key is absent, not
+      empty) and no top-level security, unlike v2.3 which declared a bearer/JWT
+      scheme. Without this, generated methods have no notion of authentication.
     remove_when: upstream restores components.securitySchemes.bearer
     op: set
     path: [components, securitySchemes]

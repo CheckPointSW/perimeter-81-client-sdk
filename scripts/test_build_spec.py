@@ -27,6 +27,11 @@ def test_no_operation_declares_the_auth_param():
                     offenders.append(f"{method.upper()} {path}")
     assert offenders == [], offenders
 
-def test_upstream_is_untouched():
+def test_upstream_lacks_the_security_scheme_the_overlay_adds():
+    """The upstream spec declares no securitySchemes at all — the key is ABSENT,
+    not present-but-empty — and no top-level security. That is the defect A1
+    corrects, so asserting it here also proves build_spec.py never mutates the
+    upstream file."""
     d = yaml.safe_load(open(ROOT / "api" / "v3.upstream.yaml"))
-    assert d["components"]["securitySchemes"] == {}
+    assert "securitySchemes" not in d.get("components", {})
+    assert "security" not in d
