@@ -179,13 +179,52 @@ entries:
       the ASN is server-assigned once the first dynamic tunnel is created
       and is never supplied by the caller, so every real create request
       (which omits it) fails generator-side required-field validation
-      (P81-124405). The audit found the sibling schemas IPSecRedundantTunnel
-      and NetworkTunnelIpsecRedundant already carry an empty required list
-      upstream, so only this schema needs an entry.
+      (P81-124405).
     remove_when: upstream drops p81ASN from IPSecSharedSettingsCreate.required
     op: set
     path: [components, schemas, IPSecSharedSettingsCreate, required]
     value: []
+
+  - id: A6-ipsec-redundant-tunnel-not-required
+    reason: >
+      Fix round 1 correction: the first audit pass checked only
+      IPSecRedundantTunnel's own top-level `required` (empty) and missed
+      that it inherits `passphrase` and `remoteID` as required via
+      allOf -> IPSecRedundantTunnelPayload -> IPSecRedundantTunnelDetails,
+      recording a false ALREADY-FIXED. The wire never echoes passphrase back
+      on Read and may omit remoteID (P81-124405). IPSecRedundantTunnel is
+      the GET-response shape, reached only via
+      IPSecRedundantTunnels.tunnel1/tunnel2 — editing
+      IPSecRedundantTunnelDetails.required directly would also loosen the
+      *create* request body (CreateIPSecRedundantPayload.tunnel1/tunnel2 ->
+      IPSecRedundantTunnelPayload directly, where passphrase genuinely is
+      supplied by the caller), so the transform flattens
+      IPSecRedundantTunnel's own allOf composition into a standalone object
+      with a trimmed required list, decoupled from the shared ancestor
+      schemas the create path still uses.
+    remove_when: upstream stops requiring passphrase/remoteID on the GET redundant-tunnel response
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: IPSecRedundantTunnel
+      required: [p81GWInternalIP, remoteGWInternalIP, remotePublicIP, remoteASN, gatewayID]
+
+  - id: A6-network-tunnel-ipsec-redundant-not-required
+    reason: >
+      Fix round 1 correction: the first audit pass checked only
+      NetworkTunnelIpsecRedundant's own top-level `required` (empty) and
+      missed that its own inline allOf branch declares rightASN,
+      rightPrivateIP, and leftPrivateIP required alongside haTunnelID,
+      recording a false ALREADY-FIXED. The list-network response (the only
+      place this schema is used) omits all three; only haTunnelID is always
+      present there (P81-124405). That branch is a private inline object
+      literal, not a shared named schema, so trimming its required list in
+      place cannot affect any other schema.
+    remove_when: upstream drops rightASN/rightPrivateIP/leftPrivateIP from NetworkTunnelIpsecRedundant's required list
+    op: transform
+    transform: trim_network_tunnel_ipsec_redundant_required
+    params:
+      drop: [rightASN, rightPrivateIP, leftPrivateIP]
 
   - id: A10-enhanced-health-check-meta-not-required
     reason: >
@@ -199,6 +238,20 @@ entries:
     op: set
     path: [components, schemas, EnhancedHealthCheckMeta, required]
     value: []
+
+  - id: A8-rename-peak-bandwidth
+    reason: >
+      Fix round 1 correction: the first audit pass checked only each
+      schema's top-level `properties` and missed that peakBandwidth is
+      declared inside allOf branches of EnhancedTunnelBase (feeding
+      EnhancedTunnel, a live response schema) and StaticTunnelCreate (a
+      request body), recording a false ALREADY-FIXED. The live API's field
+      name is peakBandwidthMbps, not peakBandwidth. The transform walks
+      allOf/oneOf/anyOf branches within each named schema, since a
+      top-level-only rename would find nothing.
+    remove_when: upstream renames peakBandwidth to peakBandwidthMbps itself
+    op: transform
+    transform: rename_peak_bandwidth
 
   - id: A11-objects-services-response-obj-id
     reason: >

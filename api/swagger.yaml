@@ -5077,8 +5077,6 @@ components:
               type: string
             minItems: 1
             description: Remote gateway subnets
-          peakBandwidth:
-            $ref: '#/components/schemas/PeakBandwidth'
           keyExchange:
             type: string
             description: IKE version for key exchange
@@ -5090,6 +5088,8 @@ components:
             $ref: '#/components/schemas/IPSecAdvancedSettingsV2_3'
           routingType:
             $ref: '#/components/schemas/RoutingType'
+          peakBandwidthMbps:
+            $ref: '#/components/schemas/PeakBandwidth'
         additionalProperties: true
       required:
       - regionID
@@ -5882,29 +5882,40 @@ components:
       - $ref: '#/components/schemas/IPSecPhaseCommonV2_3'
       additionalProperties: true
     IPSecRedundantTunnel:
-      allOf:
-      - $ref: '#/components/schemas/IPSecRedundantTunnelPayload'
-      - type: object
-        properties:
-          tunnelID:
-            type: string
-        additionalProperties: true
+      type: object
+      properties:
+        passphrase: &id001
+          $ref: '#/components/schemas/CreatePassphrase'
+        p81GWInternalIP: &id002
+          $ref: '#/components/schemas/IP'
+        remoteGWInternalIP: &id003
+          $ref: '#/components/schemas/IP'
+        remotePublicIP: &id004
+          $ref: '#/components/schemas/IP'
+        remoteASN: &id005
+          $ref: '#/components/schemas/RemoteASN'
+        remoteID: &id006
+          $ref: '#/components/schemas/remoteID'
+        gatewayID: &id007
+          type: string
+        tunnelID:
+          type: string
+      required:
+      - p81GWInternalIP
+      - remoteGWInternalIP
+      - remotePublicIP
+      - remoteASN
+      - gatewayID
       additionalProperties: true
     IPSecRedundantTunnelDetails:
       type: object
       properties:
-        passphrase:
-          $ref: '#/components/schemas/CreatePassphrase'
-        p81GWInternalIP:
-          $ref: '#/components/schemas/IP'
-        remoteGWInternalIP:
-          $ref: '#/components/schemas/IP'
-        remotePublicIP:
-          $ref: '#/components/schemas/IP'
-        remoteASN:
-          $ref: '#/components/schemas/RemoteASN'
-        remoteID:
-          $ref: '#/components/schemas/remoteID'
+        passphrase: *id001
+        p81GWInternalIP: *id002
+        remoteGWInternalIP: *id003
+        remotePublicIP: *id004
+        remoteASN: *id005
+        remoteID: *id006
       required:
       - passphrase
       - p81GWInternalIP
@@ -5918,8 +5929,7 @@ components:
       - $ref: '#/components/schemas/IPSecRedundantTunnelDetails'
       - type: object
         properties:
-          gatewayID:
-            type: string
+          gatewayID: *id007
         required:
         - gatewayID
         additionalProperties: true
@@ -6394,9 +6404,6 @@ components:
             $ref: '#/components/schemas/IP'
         required:
         - haTunnelID
-        - rightASN
-        - rightPrivateIP
-        - leftPrivateIP
         additionalProperties: true
       additionalProperties: true
     NetworkTunnelIpsecSingle:
@@ -7112,8 +7119,6 @@ components:
               type: string
             minItems: 1
             description: Remote gateway subnets
-          peakBandwidth:
-            $ref: '#/components/schemas/PeakBandwidth'
           keyExchange:
             type: string
             description: IKE version for key exchange
@@ -7147,6 +7152,8 @@ components:
             $ref: '#/components/schemas/NetworkFeaturesCreate'
           routingType:
             $ref: '#/components/schemas/RoutingType'
+          peakBandwidthMbps:
+            $ref: '#/components/schemas/PeakBandwidth'
         required:
         - regionID
         - tunnelName
