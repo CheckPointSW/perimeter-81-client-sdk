@@ -61,3 +61,34 @@ def test_no_operation_is_left_untagged():
         if m in ("get", "post", "put", "delete", "patch") and not op.get("tags")
     ]
     assert untagged == [], untagged
+
+def test_carried_forward_patches_are_applied():
+    """One assertion per CONFIRMED row in api/AUDIT-2026-08-10.md.
+    Delete an assertion only when its overlay entry is deleted.
+
+    A6's other two schemas (IPSecRedundantTunnel, NetworkTunnelIpsecRedundant),
+    A8 (peakBandwidth), and A9 (ASN/RemoteASN) came back ALREADY-FIXED in the
+    audit, so they have no overlay entry and no assertion here."""
+    d = build()
+    s = d["components"]["schemas"]
+    # A4
+    disc = d["paths"]["/v3/applications/{applicationId}"]["get"]["responses"]["200"][
+        "content"]["application/json"]["schema"].get("discriminator")
+    assert disc == {
+        "propertyName": "type",
+        "mapping": {
+            "http": "#/components/schemas/HttpApplication",
+            "https": "#/components/schemas/HttpsApplication",
+            "rdp": "#/components/schemas/RdpApplication",
+            "ssh": "#/components/schemas/SshApplication",
+            "vnc": "#/components/schemas/VncApplication",
+        },
+    }
+    # A5
+    assert "authEnabled" not in (s["ApplicationAuth"].get("required") or [])
+    # A6
+    assert "p81ASN" not in (s["IPSecSharedSettingsCreate"].get("required") or [])
+    # A10
+    assert s["EnhancedHealthCheckMeta"].get("required") == []
+    # A11
+    assert "id" in s["ObjectsServicesResponseObj"]["properties"]

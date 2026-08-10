@@ -129,3 +129,87 @@ entries:
     op: set
     path: [paths, "/v3/gum/custom-roles/{roleId}", delete, tags]
     value: [Custom Roles]
+
+  # --- Carried forward from v2.3 hand-patches, re-audited 2026-08-10 against
+  # v3.upstream.yaml. See api/AUDIT-2026-08-10.md for the full audit record,
+  # including the candidates that turned out ALREADY-FIXED and therefore have
+  # no entry here (A6's other two schemas, A8, A9), and A3 (DEFERRED).
+
+  - id: A4-application-get-discriminator
+    reason: >
+      GET /v3/applications/{applicationId} 200 response is an inline oneOf
+      across the five Application variants (HttpApplication,
+      HttpsApplication, RdpApplication, SshApplication, VncApplication) with
+      no discriminator. openapi-generator emits a try-each-and-count-matches
+      UnmarshalJSON; the five variants inherit identical required properties
+      from CommonApplication and carry no distinguishing validation, so
+      every real response matches all five and decoding fails with "data
+      matches more than one schema in oneOf". v2.3 replaced the generated
+      decoder by hand (P81-126016) to dispatch on the `type` field instead.
+      This schema is inline in the path item rather than a named component,
+      so the discriminator is set directly on that inline schema.
+    remove_when: upstream adds a discriminator (propertyName "type") to this oneOf itself
+    op: set
+    path: [paths, "/v3/applications/{applicationId}", get, responses, "200", content, application/json, schema, discriminator]
+    value:
+      propertyName: type
+      mapping:
+        http: '#/components/schemas/HttpApplication'
+        https: '#/components/schemas/HttpsApplication'
+        rdp: '#/components/schemas/RdpApplication'
+        ssh: '#/components/schemas/SshApplication'
+        vnc: '#/components/schemas/VncApplication'
+
+  - id: A5-application-auth-not-required
+    reason: >
+      ApplicationAuth.authEnabled is declared required, but the server omits
+      it entirely on Read responses (bare `"auth": {}`), so strict decoding
+      of every Application read fails with "no value given for required
+      property authEnabled" even after the oneOf above is dispatched
+      correctly. v2.3 patched this by hand (P81-126016) by emptying the
+      generated required-field check.
+    remove_when: upstream stops requiring authEnabled on ApplicationAuth, or documents that Read responses always include it
+    op: set
+    path: [components, schemas, ApplicationAuth, required]
+    value: []
+
+  - id: A6-ipsec-shared-settings-create-p81asn-not-required
+    reason: >
+      IPSecSharedSettingsCreate.p81ASN is declared required on create, but
+      the ASN is server-assigned once the first dynamic tunnel is created
+      and is never supplied by the caller, so every real create request
+      (which omits it) fails generator-side required-field validation
+      (P81-124405). The audit found the sibling schemas IPSecRedundantTunnel
+      and NetworkTunnelIpsecRedundant already carry an empty required list
+      upstream, so only this schema needs an entry.
+    remove_when: upstream drops p81ASN from IPSecSharedSettingsCreate.required
+    op: set
+    path: [components, schemas, IPSecSharedSettingsCreate, required]
+    value: []
+
+  - id: A10-enhanced-health-check-meta-not-required
+    reason: >
+      EnhancedHealthCheckMeta declares networkId, tunnelName, tunnelId, and
+      regionId all required, but the public API omits tunnelId and regionId
+      for tunnels that have not yet completed a health probe, so strict
+      decoding fails with "no value given for required property tunnelId"
+      on any network with a freshly attached tunnel (P81-123406 / BUG-25).
+      Only networkId and tunnelName are actually always present on the wire.
+    remove_when: upstream narrows EnhancedHealthCheckMeta.required to the fields that are always present, or always populates tunnelId/regionId
+    op: set
+    path: [components, schemas, EnhancedHealthCheckMeta, required]
+    value: []
+
+  - id: A11-objects-services-response-obj-id
+    reason: >
+      ObjectsServicesResponseObj is missing the id field that
+      GET/PUT /v3/objects/services actually return on every service object,
+      so callers have no way to reference the object they just created or
+      fetched without falling back to name-based lookups.
+    remove_when: upstream adds id to ObjectsServicesResponseObj.properties
+    op: merge
+    path: [components, schemas, ObjectsServicesResponseObj, properties]
+    value:
+      id:
+        type: string
+        description: Unique identifier of the service object.

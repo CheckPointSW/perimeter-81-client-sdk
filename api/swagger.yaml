@@ -2561,6 +2561,14 @@ paths:
                 - $ref: '#/components/schemas/RdpApplication'
                 - $ref: '#/components/schemas/SshApplication'
                 - $ref: '#/components/schemas/VncApplication'
+                discriminator:
+                  propertyName: type
+                  mapping:
+                    http: '#/components/schemas/HttpApplication'
+                    https: '#/components/schemas/HttpsApplication'
+                    rdp: '#/components/schemas/RdpApplication'
+                    ssh: '#/components/schemas/SshApplication'
+                    vnc: '#/components/schemas/VncApplication'
         '400':
           description: Bad Request
         '401':
@@ -3608,8 +3616,7 @@ components:
           type: string
           pattern: ^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]*\.[a-zA-Z0-9]{2,11}?$
           example: domain.com
-      required:
-      - authEnabled
+      required: []
       additionalProperties: true
     ApplicationControlApplication:
       type: object
@@ -4809,11 +4816,7 @@ components:
         regionId:
           type: string
           description: ID of the region where the tunnel is deployed
-      required:
-      - networkId
-      - tunnelName
-      - tunnelId
-      - regionId
+      required: []
       additionalProperties: true
     EnhancedHealthCheckType:
       type: string
@@ -5991,8 +5994,7 @@ components:
           p81ASN:
             $ref: '#/components/schemas/RemoteASN'
         additionalProperties: true
-      required:
-      - p81ASN
+      required: []
       additionalProperties: true
     IPSecSingleDetails:
       allOf:
@@ -6661,6 +6663,9 @@ components:
           items:
             $ref: '#/components/schemas/ObjectsServicesProtocolResponseObj'
           type: array
+        id:
+          type: string
+          description: Unique identifier of the service object.
       required:
       - name
       - protocols
