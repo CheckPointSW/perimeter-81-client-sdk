@@ -5,6 +5,7 @@
 # Local template overrides live in templates/ and take precedence over the
 # generator's embedded templates; anything not overridden falls back to stock.
 set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 REQUIRED_GENERATOR_VERSION="7.24.0"
 actual="$(openapi-generator version)"
@@ -18,9 +19,16 @@ python3 scripts/build_spec.py
 
 # disallowAdditionalPropertiesIfNotPresent=false makes an absent `additionalProperties`
 # mean "unconstrained" (the spec-compliant reading). That suppresses the per-model strict
-# decoder in model_simple.mustache, so the API's undocumented fields no longer cause
-# deserialisation failures — and avoids overriding a 573-line template to achieve it.
-# The oneOf decode path is NOT covered by this flag; templates/utils.mustache handles it.
+# decoder in model_simple.mustache for every schema that does not explicitly set
+# `additionalProperties: false`, so the API's undocumented fields no longer cause
+# deserialisation failures on response models — and avoids overriding a 573-line template.
+#
+# Two deliberate gaps, both benign:
+#   * The oneOf decode path is not covered by this flag; templates/utils.mustache handles it.
+#   * SupportOptionsRequest sets `additionalProperties: false` explicitly, so the flag leaves
+#     it strictly decoded. It is a request-only schema (PUT body; responses use
+#     SupportOptionsResponse), so its decoder is never exercised against an API payload.
+#     Overriding an explicit spec statement here would contradict intent for no benefit.
 openapi-generator generate \
   -i api/swagger.yaml \
   -g go \
