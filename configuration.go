@@ -19,6 +19,8 @@ const (
 	BaseURLEU = "https://api.eu.sase.checkpoint.com/api/rest"
 	BaseURLAU = "https://api.au.sase.checkpoint.com/api/rest"
 	BaseURLIN = "https://api.in.sase.checkpoint.com/api/rest"
+	// BaseURLCA is the Canada region endpoint, introduced in API v3.
+	BaseURLCA = "https://api.ca.sase.checkpoint.com/api/rest"
 )
 
 // APIKey provides API key based authentication to a request passed via context using ContextAPIKey
@@ -42,7 +44,7 @@ func NewConfiguration(apiKey string, basePath string) *Configuration {
 	cfg := &Configuration{
 		BasePath:      basePath,
 		DefaultHeader: make(map[string]string),
-		UserAgent:     "Swagger-Codegen/2.3.0/go",
+		UserAgent:     "CheckPointSW-terraform-provider-checkpointsase/3.0.0/go",
 		ApiKey:        APIKey{Key: apiKey},
 	}
 	return cfg

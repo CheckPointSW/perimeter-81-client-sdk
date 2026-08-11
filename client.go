@@ -539,12 +539,22 @@ func CacheExpires(r *http.Response) time.Time {
 	return expires
 }
 
+// authorizeURL builds the token-exchange endpoint for a given API base URL.
+//
+// v2.3 used {base-without-/rest}/v1/auth/authorize. v3 documents
+// POST /v3/auth/authorize served from the /api/rest base, so the historical
+// "/rest" strip must NOT be applied. This file is listed in
+// .openapi-generator-ignore, so codegen will never update it — keep it in sync
+// with api/swagger.yaml by hand.
+func authorizeURL(baseURL string) string {
+	return strings.TrimSuffix(baseURL, "/") + "/v3/auth/authorize"
+}
+
 // GetBearerTokenFromApiKey obtains a bearer token using an API key.
 func (c *APIClient) GetBearerTokenFromApiKey(apiKey string, baseUrl string) (bearerTokenData *TokenData, err error) {
 
 	// create path and map variables
-	baseUrl = strings.Replace(baseUrl, "/rest", "", -1)
-	localVarPath := baseUrl + "/v1/auth/authorize"
+	localVarPath := authorizeURL(baseUrl)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
