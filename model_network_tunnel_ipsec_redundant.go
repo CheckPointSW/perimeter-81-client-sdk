@@ -55,7 +55,8 @@ type NetworkTunnelIpsecRedundant struct {
 	LeftSubnets []string `json:"leftSubnets"`
 	RightSubnets []string `json:"rightSubnets"`
 	HaTunnelID NetworkHaTunnelID `json:"haTunnelID"`
-	RightASN *ASN `json:"rightASN,omitempty"`
+	// Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set.
+	RightASN *int32 `json:"rightASN,omitempty"`
 	RightPrivateIP *string `json:"rightPrivateIP,omitempty"`
 	LeftPrivateIP *string `json:"leftPrivateIP,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -691,9 +692,9 @@ func (o *NetworkTunnelIpsecRedundant) SetHaTunnelID(v NetworkHaTunnelID) {
 }
 
 // GetRightASN returns the RightASN field value if set, zero value otherwise.
-func (o *NetworkTunnelIpsecRedundant) GetRightASN() ASN {
+func (o *NetworkTunnelIpsecRedundant) GetRightASN() int32 {
 	if o == nil || IsNil(o.RightASN) {
-		var ret ASN
+		var ret int32
 		return ret
 	}
 	return *o.RightASN
@@ -701,7 +702,7 @@ func (o *NetworkTunnelIpsecRedundant) GetRightASN() ASN {
 
 // GetRightASNOk returns a tuple with the RightASN field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *NetworkTunnelIpsecRedundant) GetRightASNOk() (*ASN, bool) {
+func (o *NetworkTunnelIpsecRedundant) GetRightASNOk() (*int32, bool) {
 	if o == nil || IsNil(o.RightASN) {
 		return nil, false
 	}
@@ -717,8 +718,8 @@ func (o *NetworkTunnelIpsecRedundant) HasRightASN() bool {
 	return false
 }
 
-// SetRightASN gets a reference to the given ASN and assigns it to the RightASN field.
-func (o *NetworkTunnelIpsecRedundant) SetRightASN(v ASN) {
+// SetRightASN gets a reference to the given int32 and assigns it to the RightASN field.
+func (o *NetworkTunnelIpsecRedundant) SetRightASN(v int32) {
 	o.RightASN = &v
 }
 

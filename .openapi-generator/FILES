@@ -20,7 +20,6 @@ api_standard_regions.go
 api_standard_route_tables.go
 api_standard_tunnels.go
 api_team.go
-docs/ASN.md
 docs/AccessPolicyDestination.md
 docs/AccessPolicyRule.md
 docs/AccessPolicyRulesGetResponse.md
@@ -243,7 +242,6 @@ docs/RdpAttributes.md
 docs/RdpAttributesMaxConnections.md
 docs/RdpCreateApplication.md
 docs/Region.md
-docs/RemoteASN.md
 docs/RemoteID.md
 docs/RemoveInstancePayload.md
 docs/RemoveRegionDTO.md
@@ -321,7 +319,6 @@ model_applications_list_object.go
 model_applications_list_object_all_of_network.go
 model_applications_list_object_all_of_port.go
 model_applications_list_paginated_response.go
-model_asn.go
 model_async_operation_response.go
 model_async_operation_result.go
 model_async_operation_status.go
@@ -511,7 +508,6 @@ model_rdp_attributes.go
 model_rdp_attributes_max_connections.go
 model_rdp_create_application.go
 model_region.go
-model_remote_asn.go
 model_remote_id.go
 model_remove_instance_payload.go
 model_remove_region_dto.go

@@ -33,7 +33,7 @@ Name | Type | Description | Notes
 **LeftSubnets** | **[]string** |  | 
 **RightSubnets** | **[]string** |  | 
 **HaTunnelID** | [**NetworkHaTunnelID**](NetworkHaTunnelID.md) |  | 
-**RightASN** | Pointer to [**ASN**](ASN.md) |  | [optional] 
+**RightASN** | Pointer to **int32** | Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set. | [optional] 
 **RightPrivateIP** | Pointer to **string** |  | [optional] 
 **LeftPrivateIP** | Pointer to **string** |  | [optional] 
 
@@ -643,20 +643,20 @@ SetHaTunnelID sets HaTunnelID field to given value.
 
 ### GetRightASN
 
-`func (o *NetworkTunnel) GetRightASN() ASN`
+`func (o *NetworkTunnel) GetRightASN() int32`
 
 GetRightASN returns the RightASN field if non-nil, zero value otherwise.
 
 ### GetRightASNOk
 
-`func (o *NetworkTunnel) GetRightASNOk() (*ASN, bool)`
+`func (o *NetworkTunnel) GetRightASNOk() (*int32, bool)`
 
 GetRightASNOk returns a tuple with the RightASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRightASN
 
-`func (o *NetworkTunnel) SetRightASN(v ASN)`
+`func (o *NetworkTunnel) SetRightASN(v int32)`
 
 SetRightASN sets RightASN field to given value.
 

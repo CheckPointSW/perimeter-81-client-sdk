@@ -4,16 +4,16 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Protocol** | **string** |  | 
-**ValueType** | **string** |  | 
-**Value** | **[]int32** |  | 
-**ProtocolOptions** | [**ObjectServiceProtocolOptionsICMPresponse**](ObjectServiceProtocolOptionsICMPresponse.md) |  | 
+**Protocol** | **string** | Protocol name — tcp, udp, or icmp. | 
+**ValueType** | Pointer to **string** | Port-value shape for tcp/udp entries (single, range, or list). Absent for icmp.  | [optional] 
+**Value** | Pointer to **[]int32** | Port number(s) for tcp/udp entries. Absent for icmp. | [optional] 
+**ProtocolOptions** | Pointer to [**ObjectServiceProtocolOptionsICMPresponse**](ObjectServiceProtocolOptionsICMPresponse.md) |  | [optional] 
 
 ## Methods
 
 ### NewObjectsServicesProtocolResponseObj
 
-`func NewObjectsServicesProtocolResponseObj(protocol string, valueType string, value []int32, protocolOptions ObjectServiceProtocolOptionsICMPresponse, ) *ObjectsServicesProtocolResponseObj`
+`func NewObjectsServicesProtocolResponseObj(protocol string, ) *ObjectsServicesProtocolResponseObj`
 
 NewObjectsServicesProtocolResponseObj instantiates a new ObjectsServicesProtocolResponseObj object
 This constructor will assign default values to properties that have it defined,
@@ -67,6 +67,11 @@ and a boolean to check if the value has been set.
 
 SetValueType sets ValueType field to given value.
 
+### HasValueType
+
+`func (o *ObjectsServicesProtocolResponseObj) HasValueType() bool`
+
+HasValueType returns a boolean if a field has been set.
 
 ### GetValue
 
@@ -87,6 +92,11 @@ and a boolean to check if the value has been set.
 
 SetValue sets Value field to given value.
 
+### HasValue
+
+`func (o *ObjectsServicesProtocolResponseObj) HasValue() bool`
+
+HasValue returns a boolean if a field has been set.
 
 ### GetProtocolOptions
 
@@ -107,6 +117,11 @@ and a boolean to check if the value has been set.
 
 SetProtocolOptions sets ProtocolOptions field to given value.
 
+### HasProtocolOptions
+
+`func (o *ObjectsServicesProtocolResponseObj) HasProtocolOptions() bool`
+
+HasProtocolOptions returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

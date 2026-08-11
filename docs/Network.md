@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **IsDefault** | **bool** | Indicates that the network is default. | 
 **Id** | **string** | Unique ID. | 
 **TenantId** | **string** | ID of the tenant. | 
-**Asn** | Pointer to [**ASN**](ASN.md) |  | [optional] 
+**Asn** | Pointer to **int32** | Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set. | [optional] 
 **Regions** | [**[]NetworkRegion**](NetworkRegion.md) | Network regions list. | 
 
 ## Methods
@@ -264,20 +264,20 @@ SetTenantId sets TenantId field to given value.
 
 ### GetAsn
 
-`func (o *Network) GetAsn() ASN`
+`func (o *Network) GetAsn() int32`
 
 GetAsn returns the Asn field if non-nil, zero value otherwise.
 
 ### GetAsnOk
 
-`func (o *Network) GetAsnOk() (*ASN, bool)`
+`func (o *Network) GetAsnOk() (*int32, bool)`
 
 GetAsnOk returns a tuple with the Asn field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAsn
 
-`func (o *Network) SetAsn(v ASN)`
+`func (o *Network) SetAsn(v int32)`
 
 SetAsn sets Asn field to given value.
 

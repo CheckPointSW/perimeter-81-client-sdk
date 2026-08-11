@@ -6399,7 +6399,7 @@ components:
           p81GWInternalIP: p81GWInternalIP
           remoteGWInternalIP: remoteGWInternalIP
           remotePublicIP: remotePublicIP
-          remoteASN: null
+          remoteASN: 0
           remoteID: null
           gatewayID: gatewayID
         tunnel2:
@@ -6407,7 +6407,7 @@ components:
           p81GWInternalIP: p81GWInternalIP
           remoteGWInternalIP: remoteGWInternalIP
           remotePublicIP: remotePublicIP
-          remoteASN: null
+          remoteASN: 0
           remoteID: null
           gatewayID: gatewayID
         sharedSettings:
@@ -6435,8 +6435,8 @@ components:
             - 3des
             - 3des
             dh:
-            - 0
-            - 0
+            - 6
+            - 6
           phase2:
             auth:
             - md5
@@ -6445,8 +6445,8 @@ components:
             - 3des
             - 3des
             dh:
-            - 0
-            - 0
+            - 6
+            - 6
       properties:
         tunnelName:
           description: The name of the tunnel
@@ -6488,7 +6488,7 @@ components:
         remoteGatewaySubnets:
         - remoteGatewaySubnets
         - remoteGatewaySubnets
-        p81ASN: null
+        p81ASN: 1
         features:
           symmetricInnerMesh:
             enabled: false
@@ -6505,8 +6505,8 @@ components:
           - 3des
           - 3des
           dh:
-          - 0
-          - 0
+          - 6
+          - 6
         phase2:
           auth:
           - md5
@@ -6515,8 +6515,8 @@ components:
           - 3des
           - 3des
           dh:
-          - 0
-          - 0
+          - 6
+          - 6
         passphrase: null
         remotePublicIP: null
         remoteID: null
@@ -7167,7 +7167,7 @@ components:
           remoteGatewaySubnets:
           - remoteGatewaySubnets
           - remoteGatewaySubnets
-          p81ASN: null
+          p81ASN: 0
           features:
             cloudSecurity:
               enabled: false
@@ -7404,7 +7404,7 @@ components:
           remoteGatewaySubnets:
           - remoteGatewaySubnets
           - remoteGatewaySubnets
-          p81ASN: null
+          p81ASN: 0
           features:
             cloudSecurity:
               enabled: false
@@ -7573,7 +7573,7 @@ components:
         remoteGatewaySubnets:
         - remoteGatewaySubnets
         - remoteGatewaySubnets
-        p81ASN: null
+        p81ASN: 0
         features:
           cloudSecurity:
             enabled: false
@@ -7602,7 +7602,7 @@ components:
         remoteGatewaySubnets:
         - remoteGatewaySubnets
         - remoteGatewaySubnets
-        p81ASN: null
+        p81ASN: 0
         features:
           cloudSecurity:
             enabled: false
@@ -8769,8 +8769,8 @@ components:
           - 3des
           - 3des
           dh:
-          - 0
-          - 0
+          - 6
+          - 6
         phase2:
           auth:
           - md5
@@ -8779,8 +8779,8 @@ components:
           - 3des
           - 3des
           dh:
-          - 0
-          - 0
+          - 6
+          - 6
       properties:
         keyExchange:
           enum:
@@ -8994,8 +8994,8 @@ components:
         - 3des
         - 3des
         dh:
-        - 0
-        - 0
+        - 6
+        - 6
     IPSecPhaseConfigV2_3:
       additionalProperties: true
       allOf:
@@ -9018,7 +9018,7 @@ components:
         p81GWInternalIP: p81GWInternalIP
         remoteGWInternalIP: remoteGWInternalIP
         remotePublicIP: remotePublicIP
-        remoteASN: null
+        remoteASN: 0
         remoteID: null
         gatewayID: gatewayID
         tunnelID: tunnelID
@@ -9036,7 +9036,7 @@ components:
           format: ipv4
           type: string
         remoteASN:
-          $ref: "#/components/schemas/RemoteASN"
+          type: integer
         remoteID:
           $ref: "#/components/schemas/remoteID"
         gatewayID:
@@ -9066,7 +9066,7 @@ components:
           format: ipv4
           type: string
         remoteASN:
-          $ref: "#/components/schemas/RemoteASN"
+          type: integer
         remoteID:
           $ref: "#/components/schemas/remoteID"
       required:
@@ -9093,7 +9093,7 @@ components:
         p81GWInternalIP: p81GWInternalIP
         remoteGWInternalIP: remoteGWInternalIP
         remotePublicIP: remotePublicIP
-        remoteASN: null
+        remoteASN: 0
         remoteID: null
         gatewayID: gatewayID
     IPSecRedundantTunnelUpdatePayload:
@@ -9112,7 +9112,7 @@ components:
         p81GWInternalIP: p81GWInternalIP
         remoteGWInternalIP: remoteGWInternalIP
         remotePublicIP: remotePublicIP
-        remoteASN: null
+        remoteASN: 0
         remoteID: null
         gatewayID: gatewayID
         tunnelId: tunnelId
@@ -9145,7 +9145,7 @@ components:
           p81GWInternalIP: p81GWInternalIP
           remoteGWInternalIP: remoteGWInternalIP
           remotePublicIP: remotePublicIP
-          remoteASN: null
+          remoteASN: 0
           remoteID: null
           gatewayID: gatewayID
           tunnelID: tunnelID
@@ -9154,7 +9154,7 @@ components:
           p81GWInternalIP: p81GWInternalIP
           remoteGWInternalIP: remoteGWInternalIP
           remotePublicIP: remotePublicIP
-          remoteASN: null
+          remoteASN: 0
           remoteID: null
           gatewayID: gatewayID
           tunnelID: tunnelID
@@ -9165,7 +9165,7 @@ components:
           remoteGatewaySubnets:
           - remoteGatewaySubnets
           - remoteGatewaySubnets
-          p81ASN: null
+          p81ASN: 6
           features:
             symmetricInnerMesh:
               enabled: false
@@ -9183,8 +9183,8 @@ components:
             - 3des
             - 3des
             dh:
-            - 0
-            - 0
+            - 6
+            - 6
           phase2:
             auth:
             - md5
@@ -9193,8 +9193,8 @@ components:
             - 3des
             - 3des
             dh:
-            - 0
-            - 0
+            - 6
+            - 6
     IPSecSharedSettings:
       additionalProperties: true
       example:
@@ -9204,7 +9204,7 @@ components:
         remoteGatewaySubnets:
         - remoteGatewaySubnets
         - remoteGatewaySubnets
-        p81ASN: null
+        p81ASN: 6
         features:
           symmetricInnerMesh:
             enabled: false
@@ -9222,7 +9222,7 @@ components:
           type: array
           uniqueItems: true
         p81ASN:
-          $ref: "#/components/schemas/RemoteASN"
+          type: integer
         features:
           $ref: "#/components/schemas/IPSecSharedSettings_features"
       required:
@@ -9281,8 +9281,8 @@ components:
           - 3des
           - 3des
           dh:
-          - 0
-          - 0
+          - 6
+          - 6
         phase2:
           auth:
           - md5
@@ -9291,15 +9291,15 @@ components:
           - 3des
           - 3des
           dh:
-          - 0
-          - 0
+          - 6
+          - 6
         p81GatewaySubnets:
         - p81GatewaySubnets
         - p81GatewaySubnets
         remoteGatewaySubnets:
         - remoteGatewaySubnets
         - remoteGatewaySubnets
-        p81ASN: null
+        p81ASN: 0
         features:
           symmetricInnerMesh:
             enabled: false
@@ -9334,7 +9334,7 @@ components:
         remoteGatewaySubnets:
         - remoteGatewaySubnets
         - remoteGatewaySubnets
-        p81ASN: null
+        p81ASN: 6
         features:
           symmetricInnerMesh:
             enabled: false
@@ -9351,8 +9351,8 @@ components:
           - 3des
           - 3des
           dh:
-          - 0
-          - 0
+          - 6
+          - 6
         phase2:
           auth:
           - md5
@@ -9361,8 +9361,8 @@ components:
           - 3des
           - 3des
           dh:
-          - 0
-          - 0
+          - 6
+          - 6
         passphrase: null
         remotePublicIP: null
         remoteID: null
@@ -10195,6 +10195,9 @@ components:
         description: Extended Echo Request
       - code: 43
         description: Extended Echo Reply
+      example:
+        code: 0
+        description: description
       properties:
         code:
           type: integer
@@ -10237,8 +10240,6 @@ components:
       type: object
     ObjectServiceProtocolTCPUDP:
       additionalProperties: true
-      example:
-        protocol: tcp
       oneOf:
       - $ref: "#/components/schemas/ObjectServiceProtocolSingle"
       - $ref: "#/components/schemas/ObjectServiceProtocolRange"
@@ -10279,21 +10280,83 @@ components:
       - totalPage
       type: object
     ObjectsServicesProtocolRequestObj:
-      anyOf:
-      - $ref: "#/components/schemas/ObjectServiceProtocolTCPUDP"
-      - $ref: "#/components/schemas/ObjectServiceProtocolICMPRequest"
+      additionalProperties: true
+      description: |
+        One protocol entry in the request body for POST/PUT /v3/objects/services. tcp/udp entries carry valueType + value; icmp entries carry protocolOptions instead.
+      example:
+        protocol: protocol
+        valueType: valueType
+        value:
+        - null
+        - null
+        protocolOptions: 0
+      properties:
+        protocol:
+          description: "Protocol name — tcp, udp, or icmp."
+          type: string
+        valueType:
+          description: |
+            Port-value shape for tcp/udp entries (single, range, or list). Absent for icmp.
+          type: string
+        value:
+          description: Port number(s) for tcp/udp entries. Absent for icmp.
+          items:
+            $ref: "#/components/schemas/PortNumber"
+          type: array
+        protocolOptions:
+          $ref: "#/components/schemas/ObjectServiceProtocolOptionsICMPrequest"
+      required:
+      - protocol
+      type: object
     ObjectsServicesProtocolResponseObj:
-      anyOf:
-      - $ref: "#/components/schemas/ObjectServiceProtocolTCPUDP"
-      - $ref: "#/components/schemas/ObjectServiceProtocolICMPResponse"
+      additionalProperties: true
+      description: |
+        One protocol entry in the response returned by GET /v3/objects/services. tcp/udp entries carry valueType + value; icmp entries carry protocolOptions instead.
+      example:
+        protocol: protocol
+        valueType: valueType
+        value:
+        - null
+        - null
+        protocolOptions:
+          code: 0
+          description: description
+      properties:
+        protocol:
+          description: "Protocol name — tcp, udp, or icmp."
+          type: string
+        valueType:
+          description: |
+            Port-value shape for tcp/udp entries (single, range, or list). Absent for icmp.
+          type: string
+        value:
+          description: Port number(s) for tcp/udp entries. Absent for icmp.
+          items:
+            $ref: "#/components/schemas/PortNumber"
+          type: array
+        protocolOptions:
+          $ref: "#/components/schemas/ObjectServiceProtocolOptionsICMPresponse"
+      required:
+      - protocol
+      type: object
     ObjectsServicesRequestObj:
       additionalProperties: true
       example:
         name: name
         description: description
         protocols:
-        - protocol: tcp
-        - protocol: tcp
+        - protocol: protocol
+          valueType: valueType
+          value:
+          - null
+          - null
+          protocolOptions: 0
+        - protocol: protocol
+          valueType: valueType
+          value:
+          - null
+          - null
+          protocolOptions: 0
       properties:
         name:
           description: The name of the Objects
@@ -10329,26 +10392,68 @@ components:
         - name: name
           description: description
           protocols:
-          - protocol: tcp
-          - protocol: tcp
+          - protocol: protocol
+            valueType: valueType
+            value:
+            - null
+            - null
+            protocolOptions:
+              code: 0
+              description: description
+          - protocol: protocol
+            valueType: valueType
+            value:
+            - null
+            - null
+            protocolOptions:
+              code: 0
+              description: description
           id: id
         - name: name
           description: description
           protocols:
-          - protocol: tcp
-          - protocol: tcp
+          - protocol: protocol
+            valueType: valueType
+            value:
+            - null
+            - null
+            protocolOptions:
+              code: 0
+              description: description
+          - protocol: protocol
+            valueType: valueType
+            value:
+            - null
+            - null
+            protocolOptions:
+              code: 0
+              description: description
           id: id
-        page: 40.041409523050575
-        totalPage: 301.37280915352017
-        itemsTotal: 73.29064902514726
+        page: 301.37280915352017
+        totalPage: 73.29064902514726
+        itemsTotal: 298.1066958341591
     ObjectsServicesResponseObj:
       additionalProperties: true
       example:
         name: name
         description: description
         protocols:
-        - protocol: tcp
-        - protocol: tcp
+        - protocol: protocol
+          valueType: valueType
+          value:
+          - null
+          - null
+          protocolOptions:
+            code: 0
+            description: description
+        - protocol: protocol
+          valueType: valueType
+          value:
+          - null
+          - null
+          protocolOptions:
+            code: 0
+            description: description
         id: id
       properties:
         name:
@@ -11557,7 +11662,7 @@ components:
           p81GWInternalIP: p81GWInternalIP
           remoteGWInternalIP: remoteGWInternalIP
           remotePublicIP: remotePublicIP
-          remoteASN: null
+          remoteASN: 0
           remoteID: null
           gatewayID: gatewayID
           tunnelId: tunnelId
@@ -11566,7 +11671,7 @@ components:
           p81GWInternalIP: p81GWInternalIP
           remoteGWInternalIP: remoteGWInternalIP
           remotePublicIP: remotePublicIP
-          remoteASN: null
+          remoteASN: 0
           remoteID: null
           gatewayID: gatewayID
           tunnelId: tunnelId
@@ -11577,7 +11682,7 @@ components:
           remoteGatewaySubnets:
           - remoteGatewaySubnets
           - remoteGatewaySubnets
-          p81ASN: null
+          p81ASN: 6
           features:
             symmetricInnerMesh:
               enabled: false
@@ -11595,8 +11700,8 @@ components:
             - 3des
             - 3des
             dh:
-            - 0
-            - 0
+            - 6
+            - 6
           phase2:
             auth:
             - md5
@@ -11605,8 +11710,8 @@ components:
             - 3des
             - 3des
             dh:
-            - 0
-            - 0
+            - 6
+            - 6
       properties:
         tunnel1:
           $ref: "#/components/schemas/IPSecRedundantTunnelUpdatePayload"
@@ -12716,8 +12821,22 @@ components:
         name: name
         description: description
         protocols:
-        - protocol: tcp
-        - protocol: tcp
+        - protocol: protocol
+          valueType: valueType
+          value:
+          - null
+          - null
+          protocolOptions:
+            code: 0
+            description: description
+        - protocol: protocol
+          valueType: valueType
+          value:
+          - null
+          - null
+          protocolOptions:
+            code: 0
+            description: description
     createApplication_request:
       oneOf:
       - $ref: "#/components/schemas/HttpCreateApplication"

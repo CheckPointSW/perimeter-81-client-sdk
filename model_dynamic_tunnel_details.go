@@ -34,7 +34,8 @@ type DynamicTunnelDetails struct {
 	RemoteGWInternalIP string `json:"remoteGWInternalIP"`
 	// Remote gateway public IP address
 	RemotePublicIP string `json:"remotePublicIP"`
-	RemoteASN ASN `json:"remoteASN"`
+	// Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set.
+	RemoteASN int32 `json:"remoteASN"`
 	// Remote gateway ID
 	RemoteID string `json:"remoteID"`
 	RoutingType RoutingType `json:"routingType"`
@@ -47,7 +48,7 @@ type _DynamicTunnelDetails DynamicTunnelDetails
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN ASN, remoteID string, routingType RoutingType) *DynamicTunnelDetails {
+func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string, routingType RoutingType) *DynamicTunnelDetails {
 	this := DynamicTunnelDetails{}
 	this.AuthType = authType
 	this.RegionID = regionID
@@ -255,9 +256,9 @@ func (o *DynamicTunnelDetails) SetRemotePublicIP(v string) {
 }
 
 // GetRemoteASN returns the RemoteASN field value
-func (o *DynamicTunnelDetails) GetRemoteASN() ASN {
+func (o *DynamicTunnelDetails) GetRemoteASN() int32 {
 	if o == nil {
-		var ret ASN
+		var ret int32
 		return ret
 	}
 
@@ -266,7 +267,7 @@ func (o *DynamicTunnelDetails) GetRemoteASN() ASN {
 
 // GetRemoteASNOk returns a tuple with the RemoteASN field value
 // and a boolean to check if the value has been set.
-func (o *DynamicTunnelDetails) GetRemoteASNOk() (*ASN, bool) {
+func (o *DynamicTunnelDetails) GetRemoteASNOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -274,7 +275,7 @@ func (o *DynamicTunnelDetails) GetRemoteASNOk() (*ASN, bool) {
 }
 
 // SetRemoteASN sets field value
-func (o *DynamicTunnelDetails) SetRemoteASN(v ASN) {
+func (o *DynamicTunnelDetails) SetRemoteASN(v int32) {
 	o.RemoteASN = v
 }
 

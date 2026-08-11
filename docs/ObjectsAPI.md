@@ -562,7 +562,7 @@ import (
 )
 
 func main() {
-	objectsServicesRequestObj := *openapiclient.NewObjectsServicesRequestObj("Name_example", []openapiclient.ObjectsServicesProtocolRequestObj{*openapiclient.NewObjectsServicesProtocolRequestObj("Protocol_example", "ValueType_example", []int32{int32(123)}, openapiclient.ObjectServiceProtocolOptionsICMPrequest(-1))}) // ObjectsServicesRequestObj | 
+	objectsServicesRequestObj := *openapiclient.NewObjectsServicesRequestObj("Name_example", []openapiclient.ObjectsServicesProtocolRequestObj{*openapiclient.NewObjectsServicesProtocolRequestObj("Protocol_example")}) // ObjectsServicesRequestObj | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -629,7 +629,7 @@ import (
 
 func main() {
 	objectId := "objectId_example" // string | 
-	objectsServicesRequestObj := *openapiclient.NewObjectsServicesRequestObj("Name_example", []openapiclient.ObjectsServicesProtocolRequestObj{*openapiclient.NewObjectsServicesProtocolRequestObj("Protocol_example", "ValueType_example", []int32{int32(123)}, openapiclient.ObjectServiceProtocolOptionsICMPrequest(-1))}) // ObjectsServicesRequestObj | 
+	objectsServicesRequestObj := *openapiclient.NewObjectsServicesRequestObj("Name_example", []openapiclient.ObjectsServicesProtocolRequestObj{*openapiclient.NewObjectsServicesProtocolRequestObj("Protocol_example")}) // ObjectsServicesRequestObj | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

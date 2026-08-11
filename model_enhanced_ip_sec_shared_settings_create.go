@@ -22,9 +22,9 @@ var _ MappedNullable = &EnhancedIPSecSharedSettingsCreate{}
 type EnhancedIPSecSharedSettingsCreate struct {
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
-	P81ASN *RemoteASN `json:"p81ASN,omitempty"`
+	P81ASN *int32 `json:"p81ASN,omitempty"`
 	Features NetworkFeaturesCreate `json:"features"`
-	LeftASN RemoteASN `json:"leftASN"`
+	LeftASN int32 `json:"leftASN"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -34,7 +34,7 @@ type _EnhancedIPSecSharedSettingsCreate EnhancedIPSecSharedSettingsCreate
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEnhancedIPSecSharedSettingsCreate(p81GatewaySubnets []string, remoteGatewaySubnets []string, features NetworkFeaturesCreate, leftASN RemoteASN) *EnhancedIPSecSharedSettingsCreate {
+func NewEnhancedIPSecSharedSettingsCreate(p81GatewaySubnets []string, remoteGatewaySubnets []string, features NetworkFeaturesCreate, leftASN int32) *EnhancedIPSecSharedSettingsCreate {
 	this := EnhancedIPSecSharedSettingsCreate{}
 	this.P81GatewaySubnets = p81GatewaySubnets
 	this.RemoteGatewaySubnets = remoteGatewaySubnets
@@ -100,9 +100,9 @@ func (o *EnhancedIPSecSharedSettingsCreate) SetRemoteGatewaySubnets(v []string) 
 }
 
 // GetP81ASN returns the P81ASN field value if set, zero value otherwise.
-func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASN() RemoteASN {
+func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASN() int32 {
 	if o == nil || IsNil(o.P81ASN) {
-		var ret RemoteASN
+		var ret int32
 		return ret
 	}
 	return *o.P81ASN
@@ -110,7 +110,7 @@ func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASN() RemoteASN {
 
 // GetP81ASNOk returns a tuple with the P81ASN field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASNOk() (*RemoteASN, bool) {
+func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASNOk() (*int32, bool) {
 	if o == nil || IsNil(o.P81ASN) {
 		return nil, false
 	}
@@ -126,8 +126,8 @@ func (o *EnhancedIPSecSharedSettingsCreate) HasP81ASN() bool {
 	return false
 }
 
-// SetP81ASN gets a reference to the given RemoteASN and assigns it to the P81ASN field.
-func (o *EnhancedIPSecSharedSettingsCreate) SetP81ASN(v RemoteASN) {
+// SetP81ASN gets a reference to the given int32 and assigns it to the P81ASN field.
+func (o *EnhancedIPSecSharedSettingsCreate) SetP81ASN(v int32) {
 	o.P81ASN = &v
 }
 
@@ -156,9 +156,9 @@ func (o *EnhancedIPSecSharedSettingsCreate) SetFeatures(v NetworkFeaturesCreate)
 }
 
 // GetLeftASN returns the LeftASN field value
-func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASN() RemoteASN {
+func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASN() int32 {
 	if o == nil {
-		var ret RemoteASN
+		var ret int32
 		return ret
 	}
 
@@ -167,7 +167,7 @@ func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASN() RemoteASN {
 
 // GetLeftASNOk returns a tuple with the LeftASN field value
 // and a boolean to check if the value has been set.
-func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASNOk() (*RemoteASN, bool) {
+func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASNOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -175,7 +175,7 @@ func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASNOk() (*RemoteASN, bool) {
 }
 
 // SetLeftASN sets field value
-func (o *EnhancedIPSecSharedSettingsCreate) SetLeftASN(v RemoteASN) {
+func (o *EnhancedIPSecSharedSettingsCreate) SetLeftASN(v int32) {
 	o.LeftASN = v
 }
 

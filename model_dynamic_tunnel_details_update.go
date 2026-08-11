@@ -27,7 +27,8 @@ type DynamicTunnelDetailsUpdate struct {
 	CustomerRootCA *string `json:"customerRootCA,omitempty"`
 	// Remote gateway public IP address
 	RemotePublicIP *string `json:"remotePublicIP,omitempty"`
-	RemoteASN *ASN `json:"remoteASN,omitempty"`
+	// Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set.
+	RemoteASN *int32 `json:"remoteASN,omitempty"`
 	// Remote gateway ID
 	RemoteID *string `json:"remoteID,omitempty"`
 	RoutingType *RoutingTypeUpdate `json:"routingType,omitempty"`
@@ -182,9 +183,9 @@ func (o *DynamicTunnelDetailsUpdate) SetRemotePublicIP(v string) {
 }
 
 // GetRemoteASN returns the RemoteASN field value if set, zero value otherwise.
-func (o *DynamicTunnelDetailsUpdate) GetRemoteASN() ASN {
+func (o *DynamicTunnelDetailsUpdate) GetRemoteASN() int32 {
 	if o == nil || IsNil(o.RemoteASN) {
-		var ret ASN
+		var ret int32
 		return ret
 	}
 	return *o.RemoteASN
@@ -192,7 +193,7 @@ func (o *DynamicTunnelDetailsUpdate) GetRemoteASN() ASN {
 
 // GetRemoteASNOk returns a tuple with the RemoteASN field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DynamicTunnelDetailsUpdate) GetRemoteASNOk() (*ASN, bool) {
+func (o *DynamicTunnelDetailsUpdate) GetRemoteASNOk() (*int32, bool) {
 	if o == nil || IsNil(o.RemoteASN) {
 		return nil, false
 	}
@@ -208,8 +209,8 @@ func (o *DynamicTunnelDetailsUpdate) HasRemoteASN() bool {
 	return false
 }
 
-// SetRemoteASN gets a reference to the given ASN and assigns it to the RemoteASN field.
-func (o *DynamicTunnelDetailsUpdate) SetRemoteASN(v ASN) {
+// SetRemoteASN gets a reference to the given int32 and assigns it to the RemoteASN field.
+func (o *DynamicTunnelDetailsUpdate) SetRemoteASN(v int32) {
 	o.RemoteASN = &v
 }
 

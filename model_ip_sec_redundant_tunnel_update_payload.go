@@ -24,7 +24,7 @@ type IPSecRedundantTunnelUpdatePayload struct {
 	P81GWInternalIP string `json:"p81GWInternalIP"`
 	RemoteGWInternalIP string `json:"remoteGWInternalIP"`
 	RemotePublicIP string `json:"remotePublicIP"`
-	RemoteASN RemoteASN `json:"remoteASN"`
+	RemoteASN int32 `json:"remoteASN"`
 	RemoteID RemoteID `json:"remoteID"`
 	GatewayID string `json:"gatewayID"`
 	TunnelId string `json:"tunnelId"`
@@ -37,7 +37,7 @@ type _IPSecRedundantTunnelUpdatePayload IPSecRedundantTunnelUpdatePayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIPSecRedundantTunnelUpdatePayload(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN RemoteASN, remoteID RemoteID, gatewayID string, tunnelId string) *IPSecRedundantTunnelUpdatePayload {
+func NewIPSecRedundantTunnelUpdatePayload(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID RemoteID, gatewayID string, tunnelId string) *IPSecRedundantTunnelUpdatePayload {
 	this := IPSecRedundantTunnelUpdatePayload{}
 	this.Passphrase = passphrase
 	this.P81GWInternalIP = p81GWInternalIP
@@ -155,9 +155,9 @@ func (o *IPSecRedundantTunnelUpdatePayload) SetRemotePublicIP(v string) {
 }
 
 // GetRemoteASN returns the RemoteASN field value
-func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASN() RemoteASN {
+func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASN() int32 {
 	if o == nil {
-		var ret RemoteASN
+		var ret int32
 		return ret
 	}
 
@@ -166,7 +166,7 @@ func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASN() RemoteASN {
 
 // GetRemoteASNOk returns a tuple with the RemoteASN field value
 // and a boolean to check if the value has been set.
-func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASNOk() (*RemoteASN, bool) {
+func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASNOk() (*int32, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -174,7 +174,7 @@ func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASNOk() (*RemoteASN, bool) 
 }
 
 // SetRemoteASN sets field value
-func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteASN(v RemoteASN) {
+func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteASN(v int32) {
 	o.RemoteASN = v
 }
 

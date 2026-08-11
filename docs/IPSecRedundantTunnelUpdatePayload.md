@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **P81GWInternalIP** | **string** |  | 
 **RemoteGWInternalIP** | **string** |  | 
 **RemotePublicIP** | **string** |  | 
-**RemoteASN** | [**RemoteASN**](RemoteASN.md) |  | 
+**RemoteASN** | **int32** |  | 
 **RemoteID** | [**RemoteID**](RemoteID.md) |  | 
 **GatewayID** | **string** |  | 
 **TunnelId** | **string** |  | 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewIPSecRedundantTunnelUpdatePayload
 
-`func NewIPSecRedundantTunnelUpdatePayload(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN RemoteASN, remoteID RemoteID, gatewayID string, tunnelId string, ) *IPSecRedundantTunnelUpdatePayload`
+`func NewIPSecRedundantTunnelUpdatePayload(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID RemoteID, gatewayID string, tunnelId string, ) *IPSecRedundantTunnelUpdatePayload`
 
 NewIPSecRedundantTunnelUpdatePayload instantiates a new IPSecRedundantTunnelUpdatePayload object
 This constructor will assign default values to properties that have it defined,
@@ -114,20 +114,20 @@ SetRemotePublicIP sets RemotePublicIP field to given value.
 
 ### GetRemoteASN
 
-`func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASN() RemoteASN`
+`func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASN() int32`
 
 GetRemoteASN returns the RemoteASN field if non-nil, zero value otherwise.
 
 ### GetRemoteASNOk
 
-`func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASNOk() (*RemoteASN, bool)`
+`func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteASNOk() (*int32, bool)`
 
 GetRemoteASNOk returns a tuple with the RemoteASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteASN
 
-`func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteASN(v RemoteASN)`
+`func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteASN(v int32)`
 
 SetRemoteASN sets RemoteASN field to given value.
 

@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **P81GWInternalIP** | **string** | Harmony Sase gateway internal IP address | 
 **RemoteGWInternalIP** | **string** | Remote gateway internal IP address | 
 **RemotePublicIP** | **string** | Remote gateway public IP address | 
-**RemoteASN** | [**ASN**](ASN.md) |  | 
+**RemoteASN** | **int32** | Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set. | 
 **RemoteID** | **string** | Remote gateway ID | 
 **RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTINGTYPE_ROUTE]
 
@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 
 ### NewDynamicTunnelDetails
 
-`func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN ASN, remoteID string, routingType RoutingType, ) *DynamicTunnelDetails`
+`func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string, routingType RoutingType, ) *DynamicTunnelDetails`
 
 NewDynamicTunnelDetails instantiates a new DynamicTunnelDetails object
 This constructor will assign default values to properties that have it defined,
@@ -186,20 +186,20 @@ SetRemotePublicIP sets RemotePublicIP field to given value.
 
 ### GetRemoteASN
 
-`func (o *DynamicTunnelDetails) GetRemoteASN() ASN`
+`func (o *DynamicTunnelDetails) GetRemoteASN() int32`
 
 GetRemoteASN returns the RemoteASN field if non-nil, zero value otherwise.
 
 ### GetRemoteASNOk
 
-`func (o *DynamicTunnelDetails) GetRemoteASNOk() (*ASN, bool)`
+`func (o *DynamicTunnelDetails) GetRemoteASNOk() (*int32, bool)`
 
 GetRemoteASNOk returns a tuple with the RemoteASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteASN
 
-`func (o *DynamicTunnelDetails) SetRemoteASN(v ASN)`
+`func (o *DynamicTunnelDetails) SetRemoteASN(v int32)`
 
 SetRemoteASN sets RemoteASN field to given value.
 

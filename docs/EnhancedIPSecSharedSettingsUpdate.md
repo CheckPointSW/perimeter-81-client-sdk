@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **P81GatewaySubnets** | **[]string** |  | 
 **RemoteGatewaySubnets** | **[]string** |  | 
-**P81ASN** | Pointer to [**RemoteASN**](RemoteASN.md) |  | [optional] 
+**P81ASN** | Pointer to **int32** |  | [optional] 
 **Features** | Pointer to [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | [optional] 
 
 ## Methods
@@ -70,20 +70,20 @@ SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
 ### GetP81ASN
 
-`func (o *EnhancedIPSecSharedSettingsUpdate) GetP81ASN() RemoteASN`
+`func (o *EnhancedIPSecSharedSettingsUpdate) GetP81ASN() int32`
 
 GetP81ASN returns the P81ASN field if non-nil, zero value otherwise.
 
 ### GetP81ASNOk
 
-`func (o *EnhancedIPSecSharedSettingsUpdate) GetP81ASNOk() (*RemoteASN, bool)`
+`func (o *EnhancedIPSecSharedSettingsUpdate) GetP81ASNOk() (*int32, bool)`
 
 GetP81ASNOk returns a tuple with the P81ASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetP81ASN
 
-`func (o *EnhancedIPSecSharedSettingsUpdate) SetP81ASN(v RemoteASN)`
+`func (o *EnhancedIPSecSharedSettingsUpdate) SetP81ASN(v int32)`
 
 SetP81ASN sets P81ASN field to given value.
 

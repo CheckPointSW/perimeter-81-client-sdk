@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk. | [optional] 
 **CustomerRootCA** | Pointer to **string** | Customer root certificate authority. Required when authType is cert. | [optional] 
 **RemotePublicIP** | Pointer to **string** | Remote gateway public IP address | [optional] 
-**RemoteASN** | Pointer to [**ASN**](ASN.md) |  | [optional] 
+**RemoteASN** | Pointer to **int32** | Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set. | [optional] 
 **RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
 **RoutingType** | Pointer to [**RoutingTypeUpdate**](RoutingTypeUpdate.md) |  | [optional] 
 **Id** | **string** |  | 
@@ -134,20 +134,20 @@ HasRemotePublicIP returns a boolean if a field has been set.
 
 ### GetRemoteASN
 
-`func (o *DynamicTunnelUpdateUpdateTunnelsInner) GetRemoteASN() ASN`
+`func (o *DynamicTunnelUpdateUpdateTunnelsInner) GetRemoteASN() int32`
 
 GetRemoteASN returns the RemoteASN field if non-nil, zero value otherwise.
 
 ### GetRemoteASNOk
 
-`func (o *DynamicTunnelUpdateUpdateTunnelsInner) GetRemoteASNOk() (*ASN, bool)`
+`func (o *DynamicTunnelUpdateUpdateTunnelsInner) GetRemoteASNOk() (*int32, bool)`
 
 GetRemoteASNOk returns a tuple with the RemoteASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteASN
 
-`func (o *DynamicTunnelUpdateUpdateTunnelsInner) SetRemoteASN(v ASN)`
+`func (o *DynamicTunnelUpdateUpdateTunnelsInner) SetRemoteASN(v int32)`
 
 SetRemoteASN sets RemoteASN field to given value.
 

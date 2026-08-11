@@ -42,7 +42,8 @@ type UpdatedNetwork struct {
 	Id string `json:"id"`
 	// ID of the tenant.
 	TenantId string `json:"tenantId"`
-	Asn *ASN `json:"asn,omitempty"`
+	// Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set.
+	Asn *int32 `json:"asn,omitempty"`
 	// Network regions id list.
 	Regions []string `json:"regions"`
 	AdditionalProperties map[string]interface{}
@@ -351,9 +352,9 @@ func (o *UpdatedNetwork) SetTenantId(v string) {
 }
 
 // GetAsn returns the Asn field value if set, zero value otherwise.
-func (o *UpdatedNetwork) GetAsn() ASN {
+func (o *UpdatedNetwork) GetAsn() int32 {
 	if o == nil || IsNil(o.Asn) {
-		var ret ASN
+		var ret int32
 		return ret
 	}
 	return *o.Asn
@@ -361,7 +362,7 @@ func (o *UpdatedNetwork) GetAsn() ASN {
 
 // GetAsnOk returns a tuple with the Asn field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdatedNetwork) GetAsnOk() (*ASN, bool) {
+func (o *UpdatedNetwork) GetAsnOk() (*int32, bool) {
 	if o == nil || IsNil(o.Asn) {
 		return nil, false
 	}
@@ -377,8 +378,8 @@ func (o *UpdatedNetwork) HasAsn() bool {
 	return false
 }
 
-// SetAsn gets a reference to the given ASN and assigns it to the Asn field.
-func (o *UpdatedNetwork) SetAsn(v ASN) {
+// SetAsn gets a reference to the given int32 and assigns it to the Asn field.
+func (o *UpdatedNetwork) SetAsn(v int32) {
 	o.Asn = &v
 }
 

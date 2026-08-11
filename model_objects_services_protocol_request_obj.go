@@ -15,58 +15,233 @@ import (
 	"fmt"
 )
 
+// checks if the ObjectsServicesProtocolRequestObj type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ObjectsServicesProtocolRequestObj{}
 
-// ObjectsServicesProtocolRequestObj struct for ObjectsServicesProtocolRequestObj
+// ObjectsServicesProtocolRequestObj One protocol entry in the request body for POST/PUT /v3/objects/services. tcp/udp entries carry valueType + value; icmp entries carry protocolOptions instead. 
 type ObjectsServicesProtocolRequestObj struct {
-	ObjectServiceProtocolICMPRequest *ObjectServiceProtocolICMPRequest
-	ObjectServiceProtocolTCPUDP *ObjectServiceProtocolTCPUDP
+	// Protocol name — tcp, udp, or icmp.
+	Protocol string `json:"protocol"`
+	// Port-value shape for tcp/udp entries (single, range, or list). Absent for icmp. 
+	ValueType *string `json:"valueType,omitempty"`
+	// Port number(s) for tcp/udp entries. Absent for icmp.
+	Value []int32 `json:"value,omitempty"`
+	ProtocolOptions *ObjectServiceProtocolOptionsICMPrequest `json:"protocolOptions,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
-// Unmarshal JSON data into any of the pointers in the struct
-func (dst *ObjectsServicesProtocolRequestObj) UnmarshalJSON(data []byte) error {
-	var err error
-	// try to unmarshal JSON data into ObjectServiceProtocolICMPRequest
-	err = json.Unmarshal(data, &dst.ObjectServiceProtocolICMPRequest);
-	if err == nil {
-		jsonObjectServiceProtocolICMPRequest, _ := json.Marshal(dst.ObjectServiceProtocolICMPRequest)
-		if string(jsonObjectServiceProtocolICMPRequest) == "{}" { // empty struct
-			dst.ObjectServiceProtocolICMPRequest = nil
-		} else {
-			return nil // data stored in dst.ObjectServiceProtocolICMPRequest, return on the first match
+type _ObjectsServicesProtocolRequestObj ObjectsServicesProtocolRequestObj
+
+// NewObjectsServicesProtocolRequestObj instantiates a new ObjectsServicesProtocolRequestObj object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewObjectsServicesProtocolRequestObj(protocol string) *ObjectsServicesProtocolRequestObj {
+	this := ObjectsServicesProtocolRequestObj{}
+	this.Protocol = protocol
+	return &this
+}
+
+// NewObjectsServicesProtocolRequestObjWithDefaults instantiates a new ObjectsServicesProtocolRequestObj object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewObjectsServicesProtocolRequestObjWithDefaults() *ObjectsServicesProtocolRequestObj {
+	this := ObjectsServicesProtocolRequestObj{}
+	return &this
+}
+
+// GetProtocol returns the Protocol field value
+func (o *ObjectsServicesProtocolRequestObj) GetProtocol() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Protocol
+}
+
+// GetProtocolOk returns a tuple with the Protocol field value
+// and a boolean to check if the value has been set.
+func (o *ObjectsServicesProtocolRequestObj) GetProtocolOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Protocol, true
+}
+
+// SetProtocol sets field value
+func (o *ObjectsServicesProtocolRequestObj) SetProtocol(v string) {
+	o.Protocol = v
+}
+
+// GetValueType returns the ValueType field value if set, zero value otherwise.
+func (o *ObjectsServicesProtocolRequestObj) GetValueType() string {
+	if o == nil || IsNil(o.ValueType) {
+		var ret string
+		return ret
+	}
+	return *o.ValueType
+}
+
+// GetValueTypeOk returns a tuple with the ValueType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ObjectsServicesProtocolRequestObj) GetValueTypeOk() (*string, bool) {
+	if o == nil || IsNil(o.ValueType) {
+		return nil, false
+	}
+	return o.ValueType, true
+}
+
+// HasValueType returns a boolean if a field has been set.
+func (o *ObjectsServicesProtocolRequestObj) HasValueType() bool {
+	if o != nil && !IsNil(o.ValueType) {
+		return true
+	}
+
+	return false
+}
+
+// SetValueType gets a reference to the given string and assigns it to the ValueType field.
+func (o *ObjectsServicesProtocolRequestObj) SetValueType(v string) {
+	o.ValueType = &v
+}
+
+// GetValue returns the Value field value if set, zero value otherwise.
+func (o *ObjectsServicesProtocolRequestObj) GetValue() []int32 {
+	if o == nil || IsNil(o.Value) {
+		var ret []int32
+		return ret
+	}
+	return o.Value
+}
+
+// GetValueOk returns a tuple with the Value field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ObjectsServicesProtocolRequestObj) GetValueOk() ([]int32, bool) {
+	if o == nil || IsNil(o.Value) {
+		return nil, false
+	}
+	return o.Value, true
+}
+
+// HasValue returns a boolean if a field has been set.
+func (o *ObjectsServicesProtocolRequestObj) HasValue() bool {
+	if o != nil && !IsNil(o.Value) {
+		return true
+	}
+
+	return false
+}
+
+// SetValue gets a reference to the given []int32 and assigns it to the Value field.
+func (o *ObjectsServicesProtocolRequestObj) SetValue(v []int32) {
+	o.Value = v
+}
+
+// GetProtocolOptions returns the ProtocolOptions field value if set, zero value otherwise.
+func (o *ObjectsServicesProtocolRequestObj) GetProtocolOptions() ObjectServiceProtocolOptionsICMPrequest {
+	if o == nil || IsNil(o.ProtocolOptions) {
+		var ret ObjectServiceProtocolOptionsICMPrequest
+		return ret
+	}
+	return *o.ProtocolOptions
+}
+
+// GetProtocolOptionsOk returns a tuple with the ProtocolOptions field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ObjectsServicesProtocolRequestObj) GetProtocolOptionsOk() (*ObjectServiceProtocolOptionsICMPrequest, bool) {
+	if o == nil || IsNil(o.ProtocolOptions) {
+		return nil, false
+	}
+	return o.ProtocolOptions, true
+}
+
+// HasProtocolOptions returns a boolean if a field has been set.
+func (o *ObjectsServicesProtocolRequestObj) HasProtocolOptions() bool {
+	if o != nil && !IsNil(o.ProtocolOptions) {
+		return true
+	}
+
+	return false
+}
+
+// SetProtocolOptions gets a reference to the given ObjectServiceProtocolOptionsICMPrequest and assigns it to the ProtocolOptions field.
+func (o *ObjectsServicesProtocolRequestObj) SetProtocolOptions(v ObjectServiceProtocolOptionsICMPrequest) {
+	o.ProtocolOptions = &v
+}
+
+func (o ObjectsServicesProtocolRequestObj) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o ObjectsServicesProtocolRequestObj) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["protocol"] = o.Protocol
+	if !IsNil(o.ValueType) {
+		toSerialize["valueType"] = o.ValueType
+	}
+	if !IsNil(o.Value) {
+		toSerialize["value"] = o.Value
+	}
+	if !IsNil(o.ProtocolOptions) {
+		toSerialize["protocolOptions"] = o.ProtocolOptions
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
+	return toSerialize, nil
+}
+
+func (o *ObjectsServicesProtocolRequestObj) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"protocol",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
-	} else {
-		dst.ObjectServiceProtocolICMPRequest = nil
 	}
 
-	// try to unmarshal JSON data into ObjectServiceProtocolTCPUDP
-	err = json.Unmarshal(data, &dst.ObjectServiceProtocolTCPUDP);
-	if err == nil {
-		jsonObjectServiceProtocolTCPUDP, _ := json.Marshal(dst.ObjectServiceProtocolTCPUDP)
-		if string(jsonObjectServiceProtocolTCPUDP) == "{}" { // empty struct
-			dst.ObjectServiceProtocolTCPUDP = nil
-		} else {
-			return nil // data stored in dst.ObjectServiceProtocolTCPUDP, return on the first match
-		}
-	} else {
-		dst.ObjectServiceProtocolTCPUDP = nil
+	varObjectsServicesProtocolRequestObj := _ObjectsServicesProtocolRequestObj{}
+
+	err = json.Unmarshal(data, &varObjectsServicesProtocolRequestObj)
+
+	if err != nil {
+		return err
 	}
 
-	return fmt.Errorf("data failed to match schemas in anyOf(ObjectsServicesProtocolRequestObj)")
+	*o = ObjectsServicesProtocolRequestObj(varObjectsServicesProtocolRequestObj)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "protocol")
+		delete(additionalProperties, "valueType")
+		delete(additionalProperties, "value")
+		delete(additionalProperties, "protocolOptions")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
-
-// Marshal data from the first non-nil pointers in the struct to JSON
-func (src ObjectsServicesProtocolRequestObj) MarshalJSON() ([]byte, error) {
-	if src.ObjectServiceProtocolICMPRequest != nil {
-		return json.Marshal(&src.ObjectServiceProtocolICMPRequest)
-	}
-
-	if src.ObjectServiceProtocolTCPUDP != nil {
-		return json.Marshal(&src.ObjectServiceProtocolTCPUDP)
-	}
-
-	return nil, nil // no data in anyOf schemas
-}
-
 
 type NullableObjectsServicesProtocolRequestObj struct {
 	value *ObjectsServicesProtocolRequestObj

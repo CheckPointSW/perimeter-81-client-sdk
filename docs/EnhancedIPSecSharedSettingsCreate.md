@@ -6,15 +6,15 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **P81GatewaySubnets** | **[]string** |  | 
 **RemoteGatewaySubnets** | **[]string** |  | 
-**P81ASN** | Pointer to [**RemoteASN**](RemoteASN.md) |  | [optional] 
+**P81ASN** | Pointer to **int32** |  | [optional] 
 **Features** | [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | 
-**LeftASN** | [**RemoteASN**](RemoteASN.md) |  | 
+**LeftASN** | **int32** |  | 
 
 ## Methods
 
 ### NewEnhancedIPSecSharedSettingsCreate
 
-`func NewEnhancedIPSecSharedSettingsCreate(p81GatewaySubnets []string, remoteGatewaySubnets []string, features NetworkFeaturesCreate, leftASN RemoteASN, ) *EnhancedIPSecSharedSettingsCreate`
+`func NewEnhancedIPSecSharedSettingsCreate(p81GatewaySubnets []string, remoteGatewaySubnets []string, features NetworkFeaturesCreate, leftASN int32, ) *EnhancedIPSecSharedSettingsCreate`
 
 NewEnhancedIPSecSharedSettingsCreate instantiates a new EnhancedIPSecSharedSettingsCreate object
 This constructor will assign default values to properties that have it defined,
@@ -71,20 +71,20 @@ SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
 ### GetP81ASN
 
-`func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASN() RemoteASN`
+`func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASN() int32`
 
 GetP81ASN returns the P81ASN field if non-nil, zero value otherwise.
 
 ### GetP81ASNOk
 
-`func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASNOk() (*RemoteASN, bool)`
+`func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASNOk() (*int32, bool)`
 
 GetP81ASNOk returns a tuple with the P81ASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetP81ASN
 
-`func (o *EnhancedIPSecSharedSettingsCreate) SetP81ASN(v RemoteASN)`
+`func (o *EnhancedIPSecSharedSettingsCreate) SetP81ASN(v int32)`
 
 SetP81ASN sets P81ASN field to given value.
 
@@ -116,20 +116,20 @@ SetFeatures sets Features field to given value.
 
 ### GetLeftASN
 
-`func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASN() RemoteASN`
+`func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASN() int32`
 
 GetLeftASN returns the LeftASN field if non-nil, zero value otherwise.
 
 ### GetLeftASNOk
 
-`func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASNOk() (*RemoteASN, bool)`
+`func (o *EnhancedIPSecSharedSettingsCreate) GetLeftASNOk() (*int32, bool)`
 
 GetLeftASNOk returns a tuple with the LeftASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetLeftASN
 
-`func (o *EnhancedIPSecSharedSettingsCreate) SetLeftASN(v RemoteASN)`
+`func (o *EnhancedIPSecSharedSettingsCreate) SetLeftASN(v int32)`
 
 SetLeftASN sets LeftASN field to given value.
 

@@ -29,7 +29,7 @@ type IPSecSingleTunnel struct {
 	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]*$"`
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
-	P81ASN *RemoteASN `json:"p81ASN,omitempty"`
+	P81ASN *int32 `json:"p81ASN,omitempty"`
 	Features *IPSecSharedSettingsFeatures `json:"features,omitempty"`
 	KeyExchange string `json:"keyExchange"`
 	IkeLifeTime string `json:"ikeLifeTime" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
@@ -207,9 +207,9 @@ func (o *IPSecSingleTunnel) SetRemoteGatewaySubnets(v []string) {
 }
 
 // GetP81ASN returns the P81ASN field value if set, zero value otherwise.
-func (o *IPSecSingleTunnel) GetP81ASN() RemoteASN {
+func (o *IPSecSingleTunnel) GetP81ASN() int32 {
 	if o == nil || IsNil(o.P81ASN) {
-		var ret RemoteASN
+		var ret int32
 		return ret
 	}
 	return *o.P81ASN
@@ -217,7 +217,7 @@ func (o *IPSecSingleTunnel) GetP81ASN() RemoteASN {
 
 // GetP81ASNOk returns a tuple with the P81ASN field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *IPSecSingleTunnel) GetP81ASNOk() (*RemoteASN, bool) {
+func (o *IPSecSingleTunnel) GetP81ASNOk() (*int32, bool) {
 	if o == nil || IsNil(o.P81ASN) {
 		return nil, false
 	}
@@ -233,8 +233,8 @@ func (o *IPSecSingleTunnel) HasP81ASN() bool {
 	return false
 }
 
-// SetP81ASN gets a reference to the given RemoteASN and assigns it to the P81ASN field.
-func (o *IPSecSingleTunnel) SetP81ASN(v RemoteASN) {
+// SetP81ASN gets a reference to the given int32 and assigns it to the P81ASN field.
+func (o *IPSecSingleTunnel) SetP81ASN(v int32) {
 	o.P81ASN = &v
 }
 
