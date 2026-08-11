@@ -29,6 +29,34 @@ python3 scripts/build_spec.py
 #     it strictly decoded. It is a request-only schema (PUT body; responses use
 #     SupportOptionsResponse), so its decoder is never exercised against an API payload.
 #     Overriding an explicit spec statement here would contradict intent for no benefit.
+#
+# useOneOfDiscriminatorLookup=true is what makes overlay A4 (application GET
+# discriminator) effective. Without it, model_oneof.mustache always emits the
+# try-every-variant decoder regardless of whether the schema declares a
+# discriminator, so the Application GET 200 decoder stays exactly the
+# try-each-and-count-matches shape that caused OPEN-04 in v2.3 ("data matches
+# more than one schema in oneOf") — A4 would be a no-op corrections entry. With
+# the flag on, that decoder switches on `type` as intended.
+# The cost: this flag is generator-wide, so it also swaps "exactly one match"
+# validation for first-match-wins across the SDK's other 13 oneOf models.
+# Measured, that cost is small: most of the 13 are type-disjoint primitive
+# unions (e.g. ApplicationPort.value, FixedHost.value, RemoteID,
+# RdpAttributes.maxConnections, NetworkIpsecBase.rightID, both `port`
+# variants, `host`) where a JSON scalar is either a string or a number,
+# never both — "more than one match" could never fire, so nothing is lost.
+# The remaining object unions (CommonCreateApplication, CreateApplicationRequest,
+# ObjectServiceProtocolTCPUDP, SourcesAndDestinations) move from strict
+# matching to first-match-wins. ObjectServiceProtocolTCPUDP is one of the 21
+# files v2.3 had to hand-patch specifically because strict oneOf matching
+# failed on it, so first-match-wins is closer to already-shipped, already-
+# validated production behaviour than the strict alternative. CommonCreateApplication/
+# CreateApplicationRequest are request-only shapes serialized outbound, so
+# their UnmarshalJSON is essentially never exercised against a real payload.
+# SourcesAndDestinations is the one residual case with real (if small)
+# mis-selection potential: it's a genuine object union that appears in
+# firewall-policy response shapes, not just requests — Phase 4's
+# firewall/SWG work should test it rather than assume first-match-wins picks
+# the right variant.
 # --git-user-id/--git-repo-id: without these the Go generator falls back to the
 # literal placeholders GIT_USER_ID/GIT_REPO_ID for the module path baked into
 # test/*_test.go and README.md. go.mod itself is unaffected (it is protected by
@@ -43,7 +71,7 @@ openapi-generator generate \
   -t templates \
   --git-user-id=CheckPointSW \
   --git-repo-id=perimeter-81-client-sdk/v3 \
-  --additional-properties=packageName=perimeter81sdk,disallowAdditionalPropertiesIfNotPresent=false \
+  --additional-properties=packageName=perimeter81sdk,disallowAdditionalPropertiesIfNotPresent=false,useOneOfDiscriminatorLookup=true \
   --skip-validate-spec
 
 go mod tidy
@@ -54,11 +82,16 @@ go build ./...
 # instead of outside it, so for any oneOf schema with N>=2 variants it emits N
 # copies of the same if/err-else block, and vet flags copies 2..N as dead code
 # (e.g. model_get_application_by_id_200_response.go, whose 5-variant oneOf is
-# the A4 discriminator target). The duplicated code is inert, not a defect in
-# our spec or overlay, and the fix lives in openapi-generator's own template —
-# not something to patch by hand-editing generated output, and not something to
-# fix via a local model_oneof.mustache override here: that template is the exact
-# mechanism the A4 discriminator finding depends on, so it must be regenerated
-# stock and inspected as-is, not modified for an unrelated cosmetic vet warning.
+# the A4 discriminator target). This dead code is generator-emitted, not
+# hand-written, so `go vet`'s unreachable check has little value here — it
+# would only ever flag output from this one upstream template bug, never a
+# mistake a contributor made. It is not fixed by hand-editing the generated
+# .go output (regeneration would wipe the edit) and deliberately not fixed by
+# adding a local model_oneof.mustache override here either: that template is
+# the exact mechanism the A4 discriminator finding depends on
+# (useOneOfDiscriminatorLookup=true above), so it must be regenerated stock
+# and inspected as-is, not modified for an unrelated cosmetic vet warning.
+# Remove this flag once openapi-generator ships a fixed model_oneof.mustache
+# (moves the "no match" branch outside the {{#oneOf}} loop) — check on upgrade.
 go vet -unreachable=false ./...
 echo "SDK regenerated successfully"

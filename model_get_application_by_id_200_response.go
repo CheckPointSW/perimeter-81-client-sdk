@@ -13,7 +13,6 @@ package perimeter81sdk
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // GetApplicationById200Response - struct for GetApplicationById200Response
@@ -64,130 +63,74 @@ func VncApplicationAsGetApplicationById200Response(v *VncApplication) GetApplica
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *GetApplicationById200Response) UnmarshalJSON(data []byte) error {
 	var err error
-	match := 0
-	// try to unmarshal data into HttpApplication
-	err = newStrictDecoder(data).Decode(&dst.HttpApplication)
-	if err == nil {
-		jsonHttpApplication, _ := json.Marshal(dst.HttpApplication)
-		if string(jsonHttpApplication) == "{}" { // empty struct
+	// use discriminator value to speed up the lookup
+	var jsonDict map[string]interface{}
+	err = newStrictDecoder(data).Decode(&jsonDict)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal JSON into map for the discriminator lookup")
+	}
+
+	// check if the discriminator value is 'http'
+	if jsonDict["type"] == "http" {
+		// try to unmarshal JSON data into HttpApplication
+		err = json.Unmarshal(data, &dst.HttpApplication)
+		if err == nil {
+			return nil // data stored in dst.HttpApplication, return on the first match
+		} else {
 			dst.HttpApplication = nil
-		} else {
-			if err = validator.Validate(dst.HttpApplication); err != nil {
-				dst.HttpApplication = nil
-			} else {
-				match++
-			}
+			return fmt.Errorf("failed to unmarshal GetApplicationById200Response as HttpApplication: %s", err.Error())
 		}
-	} else {
-		dst.HttpApplication = nil
 	}
 
-	// try to unmarshal data into HttpsApplication
-	err = newStrictDecoder(data).Decode(&dst.HttpsApplication)
-	if err == nil {
-		jsonHttpsApplication, _ := json.Marshal(dst.HttpsApplication)
-		if string(jsonHttpsApplication) == "{}" { // empty struct
+	// check if the discriminator value is 'https'
+	if jsonDict["type"] == "https" {
+		// try to unmarshal JSON data into HttpsApplication
+		err = json.Unmarshal(data, &dst.HttpsApplication)
+		if err == nil {
+			return nil // data stored in dst.HttpsApplication, return on the first match
+		} else {
 			dst.HttpsApplication = nil
-		} else {
-			if err = validator.Validate(dst.HttpsApplication); err != nil {
-				dst.HttpsApplication = nil
-			} else {
-				match++
-			}
+			return fmt.Errorf("failed to unmarshal GetApplicationById200Response as HttpsApplication: %s", err.Error())
 		}
-	} else {
-		dst.HttpsApplication = nil
 	}
 
-	// try to unmarshal data into RdpApplication
-	err = newStrictDecoder(data).Decode(&dst.RdpApplication)
-	if err == nil {
-		jsonRdpApplication, _ := json.Marshal(dst.RdpApplication)
-		if string(jsonRdpApplication) == "{}" { // empty struct
+	// check if the discriminator value is 'rdp'
+	if jsonDict["type"] == "rdp" {
+		// try to unmarshal JSON data into RdpApplication
+		err = json.Unmarshal(data, &dst.RdpApplication)
+		if err == nil {
+			return nil // data stored in dst.RdpApplication, return on the first match
+		} else {
 			dst.RdpApplication = nil
-		} else {
-			if err = validator.Validate(dst.RdpApplication); err != nil {
-				dst.RdpApplication = nil
-			} else {
-				match++
-			}
+			return fmt.Errorf("failed to unmarshal GetApplicationById200Response as RdpApplication: %s", err.Error())
 		}
-	} else {
-		dst.RdpApplication = nil
 	}
 
-	// try to unmarshal data into SshApplication
-	err = newStrictDecoder(data).Decode(&dst.SshApplication)
-	if err == nil {
-		jsonSshApplication, _ := json.Marshal(dst.SshApplication)
-		if string(jsonSshApplication) == "{}" { // empty struct
+	// check if the discriminator value is 'ssh'
+	if jsonDict["type"] == "ssh" {
+		// try to unmarshal JSON data into SshApplication
+		err = json.Unmarshal(data, &dst.SshApplication)
+		if err == nil {
+			return nil // data stored in dst.SshApplication, return on the first match
+		} else {
 			dst.SshApplication = nil
-		} else {
-			if err = validator.Validate(dst.SshApplication); err != nil {
-				dst.SshApplication = nil
-			} else {
-				match++
-			}
+			return fmt.Errorf("failed to unmarshal GetApplicationById200Response as SshApplication: %s", err.Error())
 		}
-	} else {
-		dst.SshApplication = nil
 	}
 
-	// try to unmarshal data into VncApplication
-	err = newStrictDecoder(data).Decode(&dst.VncApplication)
-	if err == nil {
-		jsonVncApplication, _ := json.Marshal(dst.VncApplication)
-		if string(jsonVncApplication) == "{}" { // empty struct
+	// check if the discriminator value is 'vnc'
+	if jsonDict["type"] == "vnc" {
+		// try to unmarshal JSON data into VncApplication
+		err = json.Unmarshal(data, &dst.VncApplication)
+		if err == nil {
+			return nil // data stored in dst.VncApplication, return on the first match
+		} else {
 			dst.VncApplication = nil
-		} else {
-			if err = validator.Validate(dst.VncApplication); err != nil {
-				dst.VncApplication = nil
-			} else {
-				match++
-			}
+			return fmt.Errorf("failed to unmarshal GetApplicationById200Response as VncApplication: %s", err.Error())
 		}
-	} else {
-		dst.VncApplication = nil
 	}
 
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.HttpApplication = nil
-		dst.HttpsApplication = nil
-		dst.RdpApplication = nil
-		dst.SshApplication = nil
-		dst.VncApplication = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(GetApplicationById200Response)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-        if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response): %v", err)
-        } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response)")
-        }
-        if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response): %v", err)
-        } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response)")
-        }
-        if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response): %v", err)
-        } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response)")
-        }
-        if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response): %v", err)
-        } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response)")
-        }
-        if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response): %v", err)
-        } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(GetApplicationById200Response)")
-        }
-	}
+	return nil
 }
 
 // Marshal data from the first non-nil pointers in the struct to JSON

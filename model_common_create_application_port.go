@@ -13,7 +13,6 @@ package perimeter81sdk
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // CommonCreateApplicationPort - struct for CommonCreateApplicationPort
@@ -42,34 +41,26 @@ func (dst *CommonCreateApplicationPort) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into FixedPort
-	err = newStrictDecoder(data).Decode(&dst.FixedPort)
+	err = json.Unmarshal(data, &dst.FixedPort)
 	if err == nil {
 		jsonFixedPort, _ := json.Marshal(dst.FixedPort)
 		if string(jsonFixedPort) == "{}" { // empty struct
 			dst.FixedPort = nil
 		} else {
-			if err = validator.Validate(dst.FixedPort); err != nil {
-				dst.FixedPort = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.FixedPort = nil
 	}
 
 	// try to unmarshal data into IdpPort
-	err = newStrictDecoder(data).Decode(&dst.IdpPort)
+	err = json.Unmarshal(data, &dst.IdpPort)
 	if err == nil {
 		jsonIdpPort, _ := json.Marshal(dst.IdpPort)
 		if string(jsonIdpPort) == "{}" { // empty struct
 			dst.IdpPort = nil
 		} else {
-			if err = validator.Validate(dst.IdpPort); err != nil {
-				dst.IdpPort = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.IdpPort = nil
@@ -85,14 +76,14 @@ func (dst *CommonCreateApplicationPort) UnmarshalJSON(data []byte) error {
 		return nil // exactly one match
 	} else { // no match
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationPort): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationPort): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationPort)")
+           return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationPort)")
         }
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationPort): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationPort): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationPort)")
+           return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationPort)")
         }
 	}
 }

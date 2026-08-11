@@ -13,7 +13,6 @@ package perimeter81sdk
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // CreateApplicationRequest - struct for CreateApplicationRequest
@@ -50,51 +49,39 @@ func (dst *CreateApplicationRequest) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into HttpCreateApplication
-	err = newStrictDecoder(data).Decode(&dst.HttpCreateApplication)
+	err = json.Unmarshal(data, &dst.HttpCreateApplication)
 	if err == nil {
 		jsonHttpCreateApplication, _ := json.Marshal(dst.HttpCreateApplication)
 		if string(jsonHttpCreateApplication) == "{}" { // empty struct
 			dst.HttpCreateApplication = nil
 		} else {
-			if err = validator.Validate(dst.HttpCreateApplication); err != nil {
-				dst.HttpCreateApplication = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.HttpCreateApplication = nil
 	}
 
 	// try to unmarshal data into HttpsCreateApplication
-	err = newStrictDecoder(data).Decode(&dst.HttpsCreateApplication)
+	err = json.Unmarshal(data, &dst.HttpsCreateApplication)
 	if err == nil {
 		jsonHttpsCreateApplication, _ := json.Marshal(dst.HttpsCreateApplication)
 		if string(jsonHttpsCreateApplication) == "{}" { // empty struct
 			dst.HttpsCreateApplication = nil
 		} else {
-			if err = validator.Validate(dst.HttpsCreateApplication); err != nil {
-				dst.HttpsCreateApplication = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.HttpsCreateApplication = nil
 	}
 
 	// try to unmarshal data into RdpCreateApplication
-	err = newStrictDecoder(data).Decode(&dst.RdpCreateApplication)
+	err = json.Unmarshal(data, &dst.RdpCreateApplication)
 	if err == nil {
 		jsonRdpCreateApplication, _ := json.Marshal(dst.RdpCreateApplication)
 		if string(jsonRdpCreateApplication) == "{}" { // empty struct
 			dst.RdpCreateApplication = nil
 		} else {
-			if err = validator.Validate(dst.RdpCreateApplication); err != nil {
-				dst.RdpCreateApplication = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.RdpCreateApplication = nil
@@ -111,19 +98,19 @@ func (dst *CreateApplicationRequest) UnmarshalJSON(data []byte) error {
 		return nil // exactly one match
 	} else { // no match
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest)")
+           return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest)")
         }
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest)")
+           return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest)")
         }
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest)")
+           return fmt.Errorf("data failed to match schemas in oneOf(CreateApplicationRequest)")
         }
 	}
 }

@@ -13,7 +13,6 @@ package perimeter81sdk
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // ObjectServiceProtocolTCPUDP - struct for ObjectServiceProtocolTCPUDP
@@ -50,51 +49,39 @@ func (dst *ObjectServiceProtocolTCPUDP) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into ObjectServiceProtocolList
-	err = newStrictDecoder(data).Decode(&dst.ObjectServiceProtocolList)
+	err = json.Unmarshal(data, &dst.ObjectServiceProtocolList)
 	if err == nil {
 		jsonObjectServiceProtocolList, _ := json.Marshal(dst.ObjectServiceProtocolList)
 		if string(jsonObjectServiceProtocolList) == "{}" { // empty struct
 			dst.ObjectServiceProtocolList = nil
 		} else {
-			if err = validator.Validate(dst.ObjectServiceProtocolList); err != nil {
-				dst.ObjectServiceProtocolList = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.ObjectServiceProtocolList = nil
 	}
 
 	// try to unmarshal data into ObjectServiceProtocolRange
-	err = newStrictDecoder(data).Decode(&dst.ObjectServiceProtocolRange)
+	err = json.Unmarshal(data, &dst.ObjectServiceProtocolRange)
 	if err == nil {
 		jsonObjectServiceProtocolRange, _ := json.Marshal(dst.ObjectServiceProtocolRange)
 		if string(jsonObjectServiceProtocolRange) == "{}" { // empty struct
 			dst.ObjectServiceProtocolRange = nil
 		} else {
-			if err = validator.Validate(dst.ObjectServiceProtocolRange); err != nil {
-				dst.ObjectServiceProtocolRange = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.ObjectServiceProtocolRange = nil
 	}
 
 	// try to unmarshal data into ObjectServiceProtocolSingle
-	err = newStrictDecoder(data).Decode(&dst.ObjectServiceProtocolSingle)
+	err = json.Unmarshal(data, &dst.ObjectServiceProtocolSingle)
 	if err == nil {
 		jsonObjectServiceProtocolSingle, _ := json.Marshal(dst.ObjectServiceProtocolSingle)
 		if string(jsonObjectServiceProtocolSingle) == "{}" { // empty struct
 			dst.ObjectServiceProtocolSingle = nil
 		} else {
-			if err = validator.Validate(dst.ObjectServiceProtocolSingle); err != nil {
-				dst.ObjectServiceProtocolSingle = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.ObjectServiceProtocolSingle = nil
@@ -111,19 +98,19 @@ func (dst *ObjectServiceProtocolTCPUDP) UnmarshalJSON(data []byte) error {
 		return nil // exactly one match
 	} else { // no match
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
+           return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
         }
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
+           return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
         }
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
+           return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
         }
 	}
 }

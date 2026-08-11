@@ -13,7 +13,6 @@ package perimeter81sdk
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // CommonCreateApplicationHost - struct for CommonCreateApplicationHost
@@ -42,34 +41,26 @@ func (dst *CommonCreateApplicationHost) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into FixedHost
-	err = newStrictDecoder(data).Decode(&dst.FixedHost)
+	err = json.Unmarshal(data, &dst.FixedHost)
 	if err == nil {
 		jsonFixedHost, _ := json.Marshal(dst.FixedHost)
 		if string(jsonFixedHost) == "{}" { // empty struct
 			dst.FixedHost = nil
 		} else {
-			if err = validator.Validate(dst.FixedHost); err != nil {
-				dst.FixedHost = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.FixedHost = nil
 	}
 
 	// try to unmarshal data into IdpHost
-	err = newStrictDecoder(data).Decode(&dst.IdpHost)
+	err = json.Unmarshal(data, &dst.IdpHost)
 	if err == nil {
 		jsonIdpHost, _ := json.Marshal(dst.IdpHost)
 		if string(jsonIdpHost) == "{}" { // empty struct
 			dst.IdpHost = nil
 		} else {
-			if err = validator.Validate(dst.IdpHost); err != nil {
-				dst.IdpHost = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.IdpHost = nil
@@ -85,14 +76,14 @@ func (dst *CommonCreateApplicationHost) UnmarshalJSON(data []byte) error {
 		return nil // exactly one match
 	} else { // no match
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationHost): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationHost): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationHost)")
+           return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationHost)")
         }
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationHost): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationHost): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationHost)")
+           return fmt.Errorf("data failed to match schemas in oneOf(CommonCreateApplicationHost)")
         }
 	}
 }

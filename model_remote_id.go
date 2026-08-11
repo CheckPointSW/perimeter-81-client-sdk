@@ -13,7 +13,6 @@ package perimeter81sdk
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // RemoteID - struct for RemoteID
@@ -34,17 +33,13 @@ func (dst *RemoteID) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into String
-	err = newStrictDecoder(data).Decode(&dst.String)
+	err = json.Unmarshal(data, &dst.String)
 	if err == nil {
 		jsonString, _ := json.Marshal(dst.String)
 		if string(jsonString) == "{}" { // empty struct
 			dst.String = nil
 		} else {
-			if err = validator.Validate(dst.String); err != nil {
-				dst.String = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.String = nil
@@ -59,9 +54,9 @@ func (dst *RemoteID) UnmarshalJSON(data []byte) error {
 		return nil // exactly one match
 	} else { // no match
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(RemoteID): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(RemoteID): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(RemoteID)")
+           return fmt.Errorf("data failed to match schemas in oneOf(RemoteID)")
         }
 	}
 }

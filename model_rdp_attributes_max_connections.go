@@ -13,7 +13,6 @@ package perimeter81sdk
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // RdpAttributesMaxConnections - struct for RdpAttributesMaxConnections
@@ -34,17 +33,13 @@ func (dst *RdpAttributesMaxConnections) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into Int32
-	err = newStrictDecoder(data).Decode(&dst.Int32)
+	err = json.Unmarshal(data, &dst.Int32)
 	if err == nil {
 		jsonInt32, _ := json.Marshal(dst.Int32)
 		if string(jsonInt32) == "{}" { // empty struct
 			dst.Int32 = nil
 		} else {
-			if err = validator.Validate(dst.Int32); err != nil {
-				dst.Int32 = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.Int32 = nil
@@ -59,9 +54,9 @@ func (dst *RdpAttributesMaxConnections) UnmarshalJSON(data []byte) error {
 		return nil // exactly one match
 	} else { // no match
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(RdpAttributesMaxConnections): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(RdpAttributesMaxConnections): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(RdpAttributesMaxConnections)")
+           return fmt.Errorf("data failed to match schemas in oneOf(RdpAttributesMaxConnections)")
         }
 	}
 }

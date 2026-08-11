@@ -13,7 +13,6 @@ package perimeter81sdk
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/validator.v2"
 )
 
 // ApplicationPortValue - struct for ApplicationPortValue
@@ -42,34 +41,26 @@ func (dst *ApplicationPortValue) UnmarshalJSON(data []byte) error {
 	var err error
 	match := 0
 	// try to unmarshal data into Int32
-	err = newStrictDecoder(data).Decode(&dst.Int32)
+	err = json.Unmarshal(data, &dst.Int32)
 	if err == nil {
 		jsonInt32, _ := json.Marshal(dst.Int32)
 		if string(jsonInt32) == "{}" { // empty struct
 			dst.Int32 = nil
 		} else {
-			if err = validator.Validate(dst.Int32); err != nil {
-				dst.Int32 = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.Int32 = nil
 	}
 
 	// try to unmarshal data into String
-	err = newStrictDecoder(data).Decode(&dst.String)
+	err = json.Unmarshal(data, &dst.String)
 	if err == nil {
 		jsonString, _ := json.Marshal(dst.String)
 		if string(jsonString) == "{}" { // empty struct
 			dst.String = nil
 		} else {
-			if err = validator.Validate(dst.String); err != nil {
-				dst.String = nil
-			} else {
-				match++
-			}
+			match++
 		}
 	} else {
 		dst.String = nil
@@ -85,14 +76,14 @@ func (dst *ApplicationPortValue) UnmarshalJSON(data []byte) error {
 		return nil // exactly one match
 	} else { // no match
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(ApplicationPortValue): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(ApplicationPortValue): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(ApplicationPortValue)")
+           return fmt.Errorf("data failed to match schemas in oneOf(ApplicationPortValue)")
         }
         if err != nil {
-            return fmt.Errorf("data failed to match schemas in oneOf(ApplicationPortValue): %v", err)
+		   return fmt.Errorf("data failed to match schemas in oneOf(ApplicationPortValue): %v", err)
         } else {
-            return fmt.Errorf("data failed to match schemas in oneOf(ApplicationPortValue)")
+           return fmt.Errorf("data failed to match schemas in oneOf(ApplicationPortValue)")
         }
 	}
 }
