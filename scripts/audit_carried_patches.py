@@ -14,6 +14,23 @@ NetworkTunnelIpsecRedundant unreliable (their required fields are nested
 inside allOf branches / referenced sub-schemas too). declares_property()
 and required_fields() below walk the full composition tree so every
 property/required check in this script is composition-aware.
+
+Fix round 2 (rebuilt from `.swagger-codegen-ignore` and the v2.3 hand-patched
+files themselves, not from LEFTOVERS.md/DEVELOPER-GUIDE.md prose — see
+api/AUDIT-2026-08-10.md): round 1 had two further defects, neither caused by
+the composition blind spot above.
+
+- A7 (object-service protocol anyOf shape, BUG-17) was listed as a
+  carried-forward candidate in the design spec but had **no check at all**
+  in round 1 of this script — not a wrong verdict, an absent one.
+- A9 (ASN/RemoteASN, BUG-24) checked `schema.get("type") != "integer"`, which
+  is a *proxy* for the defect, not the defect itself. v3's ASN/RemoteASN do
+  declare `type: integer` at top level (so the proxy check passed and this
+  script reported ALREADY-FIXED both rounds) but each ALSO carries a sibling
+  `oneOf` of narrower integer ranges that drives openapi-generator 7.24.0 to
+  emit an empty-struct wrapper regardless of the sibling `type: integer` —
+  the exact symptom BUG-24 exists to fix. The check now tests the oneOf
+  sibling directly.
 """
 import pathlib, yaml
 
@@ -90,17 +107,40 @@ for name, field in (("IPSecSharedSettingsCreate", "p81ASN"),
     else:
         record(f"A6:{name}", f"{name} required list", bool(req), f"required={sorted(req)}")
 
+# A7 — object-service protocol shape (anyOf strict-match failure, BUG-17).
+# Fix round 2: this candidate was named in the design spec's carried-forward
+# table but round 1 of this script never checked it at all — there was no
+# A7 record anywhere in the original version of this file. The defect is an
+# anyOf wrapper directly at the schema's own top level (no composition to
+# resolve), so a plain `"anyOf" in s` check is sufficient.
+for name in ("ObjectsServicesProtocolRequestObj", "ObjectsServicesProtocolResponseObj"):
+    s = schemas.get(name, {})
+    has_anyof = "anyOf" in s
+    record(f"A7:{name}", f"{name} anyOf wrapper (BUG-17)", has_anyof,
+           f"anyOf={has_anyof}")
+
 # A8 — peakBandwidth vs peakBandwidthMbps (composition-aware)
 hits = [n for n, s in schemas.items()
         if isinstance(s, dict) and declares_property(s, "peakBandwidth", schemas)]
 record("A8", "peakBandwidth (not ...Mbps) property name", bool(hits), f"schemas={hits}")
 
-# A9 — ASN integer width (top-level type/format; not a composition blind
-# spot — ASN/RemoteASN declare `type` directly, so this check is left as-is)
+# A9 — ASN / RemoteASN empty-struct-via-oneOf (BUG-24). Fix round 2: round 1
+# checked only `schema.get("type") != "integer"` and reported ALREADY-FIXED
+# because v3's ASN/RemoteASN do declare `type: integer` at top level — true,
+# but a proxy for the actual defect. Both schemas ALSO carry a sibling
+# `oneOf` of narrower integer ranges, and openapi-generator 7.24.0's Go
+# codegen follows that oneOf into a wrapper model instead of the sibling
+# `type: integer`, regenerating the exact `type ASN struct {}` empty struct
+# BUG-24 exists to work around (confirmed by generating this SDK from
+# v3.upstream.yaml with no overlay entry: model_asn.go is `type ASN struct
+# {}`). This check tests the oneOf sibling directly instead of using `type`
+# as a stand-in for it.
 for name in ("ASN", "RemoteASN"):
     s = schemas.get(name, {})
-    record(f"A9:{name}", f"{name} type/format", s.get("type") != "integer",
-           f"type={s.get('type')} format={s.get('format')}")
+    has_redundant_oneof = s.get("type") == "integer" and "oneOf" in s
+    record(f"A9:{name}", f"{name} type=integer + redundant oneOf (BUG-24)",
+           has_redundant_oneof,
+           f"type={s.get('type')} oneOf={'oneOf' in s}")
 
 # A10 — EnhancedHealthCheckMeta over-required (composition-aware)
 s = schemas.get("EnhancedHealthCheckMeta", {})

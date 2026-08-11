@@ -305,6 +305,141 @@ entries:
     op: remove
     path: [components, schemas, HarmonySaseRegionsList, items, additionalProperties]
 
+  # --- Fix round 2 (2026-08-11): rebuilt from `.swagger-codegen-ignore` and
+  # the v2.3 hand-patched files themselves (git history on `main`), not from
+  # LEFTOVERS.md/DEVELOPER-GUIDE.md prose. See api/AUDIT-2026-08-10.md's
+  # second section for the full audit and what it corrects in round 1.
+
+  - id: A9-asn-remove-redundant-oneof
+    reason: >
+      v2.3's model_asn.go (BUG-24) records that codegen produced
+      `type ASN struct {}` (empty struct) because the v2.3 swagger schema had
+      no properties at all. Round 1 of this audit checked `schema.get("type")
+      != "integer"` and reported ALREADY-FIXED because v3's ASN schema does
+      declare `type: integer` at its own top level. That check was a proxy,
+      not the defect itself: v3's ASN schema declares `type: integer` *and* a
+      sibling `oneOf` of three non-overlapping integer ranges (public ASN
+      space, private 16-bit, private 32-bit — pure bounds validation).
+      openapi-generator 7.24.0's Go codegen follows the `oneOf` into a
+      wrapper-model shape instead of respecting the sibling `type: integer`,
+      regenerating the exact `type ASN struct {}` empty struct BUG-24 worked
+      around (confirmed: current `model_asn.go` in this SDK, generated from
+      v3.upstream.yaml with no overlay entry, is `type ASN struct {}`). The
+      Terraform provider does `perimeter81Sdk.ASN(int32(...))`, a conversion
+      that cannot compile against a struct type. The oneOf's range bounds are
+      enforced by the server regardless of whether the spec also expresses
+      them client-side, and Go has no type that could express "one of these
+      three disjoint integer ranges" as a distinct type from plain int32
+      anyway, so dropping the oneOf changes no accepted values — only how
+      codegen resolves the Go type.
+    remove_when: >
+      openapi-generator stops materializing a wrapper type for a `type: integer`
+      schema that also carries a `oneOf` of narrower integer ranges, or
+      upstream drops the oneOf itself.
+    op: remove
+    path: [components, schemas, ASN, oneOf]
+
+  - id: A9-remote-asn-remove-redundant-oneof
+    reason: >
+      See A9-asn-remove-redundant-oneof. RemoteASN is BUG-24's twin fix
+      (model_remote_asn.go) and has the identical shape in v3 — `type: integer`
+      plus a sibling `oneOf` of four non-overlapping integer ranges — and the
+      identical empty-struct symptom for the identical reason.
+    remove_when: See A9-asn-remove-redundant-oneof.
+    op: remove
+    path: [components, schemas, RemoteASN, oneOf]
+
+  - id: A7-objects-services-protocol-request-obj-flatten
+    reason: >
+      v2.3's model_objects_services_protocol_request_obj.go (BUG-17,
+      P81-123406) records that the generated
+      `anyOf(ObjectServiceProtocolTCPUDP, ObjectServiceProtocolICMPRequest)`
+      wrapper "could never round-trip the wire payload" because the real
+      public API emits and accepts one flat object per protocol entry:
+      `{protocol, valueType, value}` for tcp/udp, `{protocol, protocolOptions}`
+      for icmp. Round 1 of this audit never checked this candidate at all —
+      it was candidate A7 in the design spec's carried-forward list but the
+      first version of audit_carried_patches.py has no A7 check. v3 still
+      declares the identical two-member anyOf (confirmed in
+      api/v3.upstream.yaml), and openapi-generator 7.24.0 still emits the
+      identical pointer-pair anyOf wrapper with a try-each-and-count-matches
+      UnmarshalJSON (confirmed: current `model_objects_services_protocol_request_obj.go`
+      in this SDK, generated with no overlay entry, is exactly that wrapper),
+      which fails the same way against the flat wire payload. This entry
+      replaces the anyOf with a single flat object schema — the union of
+      protocol/valueType/value (tcp/udp) and protocol/protocolOptions (icmp)
+      — matching the flat Go struct the v2.3 file was hand-rewritten to.
+      Only `protocol` is genuinely present on every entry, so it alone is
+      required. `protocolOptions` keeps a $ref to
+      ObjectServiceProtocolOptionsICMPrequest (v3's named int32 enum of that
+      name) instead of falling back to a bare int32, so the generated field
+      keeps real enum validation.
+    remove_when: upstream flattens ObjectsServicesProtocolRequestObj itself, dropping the anyOf.
+    op: set
+    path: [components, schemas, ObjectsServicesProtocolRequestObj]
+    value:
+      type: object
+      description: >
+        One protocol entry in the request body for POST/PUT /v3/objects/services.
+        tcp/udp entries carry valueType + value; icmp entries carry
+        protocolOptions instead.
+      required: [protocol]
+      properties:
+        protocol:
+          type: string
+          description: Protocol name — tcp, udp, or icmp.
+        valueType:
+          type: string
+          description: >
+            Port-value shape for tcp/udp entries (single, range, or list).
+            Absent for icmp.
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortNumber'
+          description: Port number(s) for tcp/udp entries. Absent for icmp.
+        protocolOptions:
+          $ref: '#/components/schemas/ObjectServiceProtocolOptionsICMPrequest'
+      additionalProperties: true
+
+  - id: A7-objects-services-protocol-response-obj-flatten
+    reason: >
+      See A7-objects-services-protocol-request-obj-flatten.
+      ObjectsServicesProtocolResponseObj is the response-side twin —
+      identical `anyOf(ObjectServiceProtocolTCPUDP, ObjectServiceProtocolICMPResponse)`
+      shape, identical BUG-17 rationale
+      (model_objects_services_protocol_response_obj.go) — differing only in
+      protocolOptions' referenced type: ObjectServiceProtocolOptionsICMPresponse
+      (an object with code/description) instead of the request side's plain
+      int32 enum.
+    remove_when: See A7-objects-services-protocol-request-obj-flatten.
+    op: set
+    path: [components, schemas, ObjectsServicesProtocolResponseObj]
+    value:
+      type: object
+      description: >
+        One protocol entry in the response returned by GET /v3/objects/services.
+        tcp/udp entries carry valueType + value; icmp entries carry
+        protocolOptions instead.
+      required: [protocol]
+      properties:
+        protocol:
+          type: string
+          description: Protocol name — tcp, udp, or icmp.
+        valueType:
+          type: string
+          description: >
+            Port-value shape for tcp/udp entries (single, range, or list).
+            Absent for icmp.
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortNumber'
+          description: Port number(s) for tcp/udp entries. Absent for icmp.
+        protocolOptions:
+          $ref: '#/components/schemas/ObjectServiceProtocolOptionsICMPresponse'
+      additionalProperties: true
+
   # A13/A14 (deleted): originally used x-enum-varnames to break the
   # RoutingType/RoutingTypeUpdate ('route'/'policy') and
   # StandardHealthCheckType/EnhancedHealthCheckType ('tunnel') constant-name

@@ -3393,16 +3393,6 @@ components:
     ASN:
       type: integer
       description: Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set.
-      oneOf:
-      - minimum: 1
-        maximum: 64496
-        description: Public ASN range
-      - minimum: 64512
-        maximum: 65535
-        description: Private ASN range (16-bit)
-      - minimum: 131072
-        maximum: 4294967295
-        description: Private ASN range (32-bit)
     AccessPolicyDestination:
       type: object
       description: Destination for access policy rules
@@ -6623,13 +6613,53 @@ components:
       - itemsTotal
       additionalProperties: true
     ObjectsServicesProtocolRequestObj:
-      anyOf:
-      - $ref: '#/components/schemas/ObjectServiceProtocolTCPUDP'
-      - $ref: '#/components/schemas/ObjectServiceProtocolICMPRequest'
+      type: object
+      description: 'One protocol entry in the request body for POST/PUT /v3/objects/services. tcp/udp entries carry valueType + value; icmp entries carry protocolOptions instead.
+
+        '
+      required:
+      - protocol
+      properties:
+        protocol:
+          type: string
+          description: Protocol name — tcp, udp, or icmp.
+        valueType:
+          type: string
+          description: 'Port-value shape for tcp/udp entries (single, range, or list). Absent for icmp.
+
+            '
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortNumber'
+          description: Port number(s) for tcp/udp entries. Absent for icmp.
+        protocolOptions:
+          $ref: '#/components/schemas/ObjectServiceProtocolOptionsICMPrequest'
+      additionalProperties: true
     ObjectsServicesProtocolResponseObj:
-      anyOf:
-      - $ref: '#/components/schemas/ObjectServiceProtocolTCPUDP'
-      - $ref: '#/components/schemas/ObjectServiceProtocolICMPResponse'
+      type: object
+      description: 'One protocol entry in the response returned by GET /v3/objects/services. tcp/udp entries carry valueType + value; icmp entries carry protocolOptions instead.
+
+        '
+      required:
+      - protocol
+      properties:
+        protocol:
+          type: string
+          description: Protocol name — tcp, udp, or icmp.
+        valueType:
+          type: string
+          description: 'Port-value shape for tcp/udp entries (single, range, or list). Absent for icmp.
+
+            '
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortNumber'
+          description: Port number(s) for tcp/udp entries. Absent for icmp.
+        protocolOptions:
+          $ref: '#/components/schemas/ObjectServiceProtocolOptionsICMPresponse'
+      additionalProperties: true
     ObjectsServicesRequestObj:
       type: object
       properties:
@@ -6859,19 +6889,6 @@ components:
       description: description of regions dto object.
     RemoteASN:
       type: integer
-      oneOf:
-      - type: integer
-        minimum: 1
-        maximum: 23455
-      - type: integer
-        minimum: 23457
-        maximum: 64495
-      - type: integer
-        minimum: 64512
-        maximum: 65534
-      - type: integer
-        minimum: 131072
-        maximum: 4294967294
     RemoveInstancePayload:
       properties:
         id:

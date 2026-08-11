@@ -140,6 +140,72 @@ def test_carried_forward_patches_are_applied():
     # A11
     assert "id" in s["ObjectsServicesResponseObj"]["properties"]
 
+def test_a9_asn_and_remote_asn_have_no_redundant_oneof():
+    """Fix round 2 (2026-08-11): A9 was mis-checked in both prior audit passes
+    as "ASN/RemoteASN type/format" and reported ALREADY-FIXED because v3's
+    ASN/RemoteASN declare `type: integer` at top level — true, but a proxy
+    for the actual defect. Each schema ALSO carries a sibling `oneOf` of
+    narrower integer ranges, and openapi-generator 7.24.0's Go codegen
+    follows that oneOf into an empty-struct wrapper (`type ASN struct {}`)
+    regardless of the sibling `type: integer` — confirmed by generating this
+    SDK from api/v3.upstream.yaml with no A9 overlay entry. This asserts the
+    real derived postcondition (type integer stands alone, oneOf gone), not
+    merely that the entry exists in the overlay file.
+
+    Note what this test does NOT cover: `go build`/`go vet` in
+    scripts/generate.sh do not fail either way here — both the old
+    `struct{}` and the fixed shape compile fine standalone, since nothing in
+    this SDK module itself converts a bare int to ASN/RemoteASN. The actual
+    Go-level effect (confirmed manually, see api/AUDIT-2026-08-10.md) is
+    that openapi-generator 7.24.0 has no mechanism to alias a bare scalar
+    schema to a named Go type — with the oneOf gone, ASN/RemoteASN generate
+    no model file at all, and every field that used to reference them
+    (DynamicTunnelDetails.RemoteASN, EnhancedIPSecSharedSettingsCreate.LeftASN,
+    IPSecRedundantTunnel.RemoteASN, etc.) becomes a plain int32/*int32 field
+    that correctly carries real values end-to-end — a strict improvement
+    over the unusable empty struct, but not a distinct `ASN`/`RemoteASN` Go
+    type. `ASN(int32(x))`-style conversions do not compile against this
+    result; they fail with "undefined: ASN", not a struct-conversion error.
+    """
+    d = build()
+    s = d["components"]["schemas"]
+    for name in ("ASN", "RemoteASN"):
+        schema = s[name]
+        assert schema.get("type") == "integer", (name, schema)
+        assert "oneOf" not in schema, (name, schema)
+
+
+def test_a7_objects_services_protocol_objects_are_flat():
+    """A7 (BUG-17) had no check at all in either prior audit pass — absent,
+    not wrong. v3 still declares
+    ObjectsServicesProtocolRequestObj/ResponseObj as a two-member anyOf
+    (ObjectServiceProtocolTCPUDP, ObjectServiceProtocolICMPRequest/Response),
+    which openapi-generator 7.24.0 still turns into a pointer-pair wrapper
+    with a try-each UnmarshalJSON that cannot round-trip the real flat wire
+    payload (`{protocol, valueType, value}` for tcp/udp,
+    `{protocol, protocolOptions}` for icmp) — the same failure the v2.3
+    hand-patch (model_objects_services_protocol_request_obj.go /
+    model_objects_services_protocol_response_obj.go) worked around. This
+    asserts the flattened postcondition directly: no anyOf, protocol alone
+    required, and the request/response variants keep their own distinct
+    protocolOptions $ref (ICMPrequest vs ICMPresponse) rather than
+    collapsing to one shared type."""
+    d = build()
+    s = d["components"]["schemas"]
+    for name, options_ref in (
+        ("ObjectsServicesProtocolRequestObj", "ObjectServiceProtocolOptionsICMPrequest"),
+        ("ObjectsServicesProtocolResponseObj", "ObjectServiceProtocolOptionsICMPresponse"),
+    ):
+        schema = s[name]
+        assert "anyOf" not in schema, (name, schema)
+        assert schema.get("type") == "object", (name, schema)
+        assert schema.get("required") == ["protocol"], (name, schema)
+        props = schema["properties"]
+        assert set(props) == {"protocol", "valueType", "value", "protocolOptions"}, (name, props)
+        assert props["value"]["items"]["$ref"] == "#/components/schemas/PortNumber"
+        assert props["protocolOptions"]["$ref"] == f"#/components/schemas/{options_ref}"
+
+
 def test_a12_harmony_sase_regions_list_items_have_no_sibling_additional_properties():
     """A12 removes a redundant `additionalProperties: true` sibling from
     HarmonySaseRegionsList.items that openapi-generator 7.24.0's Go codegen
