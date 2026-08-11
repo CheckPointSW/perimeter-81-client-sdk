@@ -266,3 +266,69 @@ entries:
       id:
         type: string
         description: Unique identifier of the service object.
+
+  - id: A12-harmony-sase-regions-list-drop-redundant-additional-properties
+    reason: >
+      HarmonySaseRegionsList.items is `allOf: [$ref HarmonySaseRegion,
+      {description}]` with a sibling `additionalProperties: true` set
+      directly on the items schema itself. That sibling key is semantically
+      redundant — HarmonySaseRegion already sets `additionalProperties: true`,
+      which the allOf composition already inherits — but openapi-generator
+      7.24.0's Go codegen mis-resolves the combination of a $ref-bearing allOf
+      plus a sibling additionalProperties into an invalid array element type,
+      emitting `[]HarmonySaseRegion[string]interface{}` (a Go syntax error;
+      confirmed via go build). Generator 7.21.0 (the SDK's previous pin)
+      rendered the identical upstream schema correctly as `[]HarmonySaseRegion`,
+      so this is a generator regression, not a spec defect being changed here;
+      removing the redundant key produces byte-identical semantics and
+      restores the pre-existing, already-shipped `[]HarmonySaseRegion` shape.
+      Confirmed by grep across all schemas that this items:allOf + sibling
+      additionalProperties shape occurs exactly once in the spec.
+    remove_when: >
+      openapi-generator fixes Go array-item-type resolution for allOf items
+      with a sibling additionalProperties, or upstream drops the redundant key
+      itself.
+    op: remove
+    path: [components, schemas, HarmonySaseRegionsList, items, additionalProperties]
+
+  - id: A13-routing-type-update-enum-varnames
+    reason: >
+      RoutingType and RoutingTypeUpdate are two separate named schemas with
+      the identical enum ['route', 'policy']. openapi-generator's Go enum
+      template names each constant purely from the enum value text (e.g.
+      `ROUTE`, `POLICY`), with no per-schema scoping, so both schemas emit
+      top-level `const ROUTE ... = "route"` / `const POLICY ... = "policy"`
+      declarations that collide at package scope: `go build` fails with
+      "ROUTE redeclared in this block" / "POLICY redeclared in this block".
+      x-enum-varnames lets one of the two schemas pick distinct Go
+      identifiers without touching the wire values ("route"/"policy" are
+      unchanged) or restructuring the schemas. RoutingTypeUpdate is the
+      lower-reference-count schema (referenced once vs. RoutingType's five),
+      so it is the one renamed here to minimize the blast radius.
+    remove_when: >
+      upstream merges RoutingType and RoutingTypeUpdate into one schema, or
+      openapi-generator scopes Go enum constant names per-schema by default.
+    op: set
+    path: [components, schemas, RoutingTypeUpdate, x-enum-varnames]
+    value: [ROUTE_UPDATE, POLICY_UPDATE]
+
+  - id: A14-enhanced-health-check-type-enum-varnames
+    reason: >
+      StandardHealthCheckType (['gateway', 'tunnel']) and
+      EnhancedHealthCheckType (['tunnel']) both contain the value 'tunnel'.
+      openapi-generator's Go enum template names constants purely from the
+      enum value text with no per-schema scoping, so both schemas emit a
+      top-level `const TUNNEL ... = "tunnel"` declaration that collides at
+      package scope: `go build` fails with "TUNNEL redeclared in this
+      block". x-enum-varnames lets one of the two schemas pick a distinct Go
+      identifier without touching the wire value ("tunnel" is unchanged) or
+      restructuring the schemas. EnhancedHealthCheckType is the
+      single-value, narrower schema, so it is the one renamed here; the
+      broader StandardHealthCheckType keeps the default GATEWAY/TUNNEL
+      names.
+    remove_when: >
+      upstream merges the two health-check-type schemas, or openapi-generator
+      scopes Go enum constant names per-schema by default.
+    op: set
+    path: [components, schemas, EnhancedHealthCheckType, x-enum-varnames]
+    value: [ENHANCED_TUNNEL]

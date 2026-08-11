@@ -48,9 +48,15 @@ type APIClient struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// API Services
-	ApplicationAPI *ApplicationAPIService
+	ApplicationsAPI *ApplicationsAPIService
+
+	AuthenticationAPI *AuthenticationAPIService
+
+	CustomRolesAPI *CustomRolesAPIService
 
 	EnhancedNetworksAPI *EnhancedNetworksAPIService
+
+	EnhancedPrivateDNSAPI *EnhancedPrivateDNSAPIService
 
 	EnhancedRegionsAPI *EnhancedRegionsAPIService
 
@@ -60,27 +66,25 @@ type APIClient struct {
 
 	FirewallPolicyAPI *FirewallPolicyAPIService
 
-	GatewaysAPI *GatewaysAPIService
-
-	IPSecRedundantAPI *IPSecRedundantAPIService
-
-	IPSecSingleAPI *IPSecSingleAPIService
+	InternetAccessPoliciesAPI *InternetAccessPoliciesAPIService
 
 	NetworksAPI *NetworksAPIService
 
-	ObjectsAddressesAPI *ObjectsAddressesAPIService
+	ObjectsAPI *ObjectsAPIService
 
-	ObjectsServicesAPI *ObjectsServicesAPIService
-
-	OpenVPNAPI *OpenVPNAPIService
-
-	RegionsAPI *RegionsAPIService
-
-	RouteTableAPI *RouteTableAPIService
+	SettingsAPI *SettingsAPIService
 
 	StandardNetworksAPI *StandardNetworksAPIService
 
-	WireguardAPI *WireguardAPIService
+	StandardPrivateDNSAPI *StandardPrivateDNSAPIService
+
+	StandardRegionsAPI *StandardRegionsAPIService
+
+	StandardRouteTablesAPI *StandardRouteTablesAPIService
+
+	StandardTunnelsAPI *StandardTunnelsAPIService
+
+	TeamAPI *TeamAPIService
 }
 
 type service struct {
@@ -99,23 +103,25 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.ApplicationAPI = (*ApplicationAPIService)(&c.common)
+	c.ApplicationsAPI = (*ApplicationsAPIService)(&c.common)
+	c.AuthenticationAPI = (*AuthenticationAPIService)(&c.common)
+	c.CustomRolesAPI = (*CustomRolesAPIService)(&c.common)
 	c.EnhancedNetworksAPI = (*EnhancedNetworksAPIService)(&c.common)
+	c.EnhancedPrivateDNSAPI = (*EnhancedPrivateDNSAPIService)(&c.common)
 	c.EnhancedRegionsAPI = (*EnhancedRegionsAPIService)(&c.common)
 	c.EnhancedRouteTablesAPI = (*EnhancedRouteTablesAPIService)(&c.common)
 	c.EnhancedTunnelsAPI = (*EnhancedTunnelsAPIService)(&c.common)
 	c.FirewallPolicyAPI = (*FirewallPolicyAPIService)(&c.common)
-	c.GatewaysAPI = (*GatewaysAPIService)(&c.common)
-	c.IPSecRedundantAPI = (*IPSecRedundantAPIService)(&c.common)
-	c.IPSecSingleAPI = (*IPSecSingleAPIService)(&c.common)
+	c.InternetAccessPoliciesAPI = (*InternetAccessPoliciesAPIService)(&c.common)
 	c.NetworksAPI = (*NetworksAPIService)(&c.common)
-	c.ObjectsAddressesAPI = (*ObjectsAddressesAPIService)(&c.common)
-	c.ObjectsServicesAPI = (*ObjectsServicesAPIService)(&c.common)
-	c.OpenVPNAPI = (*OpenVPNAPIService)(&c.common)
-	c.RegionsAPI = (*RegionsAPIService)(&c.common)
-	c.RouteTableAPI = (*RouteTableAPIService)(&c.common)
+	c.ObjectsAPI = (*ObjectsAPIService)(&c.common)
+	c.SettingsAPI = (*SettingsAPIService)(&c.common)
 	c.StandardNetworksAPI = (*StandardNetworksAPIService)(&c.common)
-	c.WireguardAPI = (*WireguardAPIService)(&c.common)
+	c.StandardPrivateDNSAPI = (*StandardPrivateDNSAPIService)(&c.common)
+	c.StandardRegionsAPI = (*StandardRegionsAPIService)(&c.common)
+	c.StandardRouteTablesAPI = (*StandardRouteTablesAPIService)(&c.common)
+	c.StandardTunnelsAPI = (*StandardTunnelsAPIService)(&c.common)
+	c.TeamAPI = (*TeamAPIService)(&c.common)
 
 	return c
 }

@@ -12,8 +12,8 @@ Name | Type | Description | Notes
 **CreatedAt** | Pointer to **string** | Application create date | [optional] 
 **Network** | [**BasicApplicationAllOfNetwork**](BasicApplicationAllOfNetwork.md) |  | 
 **Icon** | Pointer to [**BasicApplicationAllOfIcon**](BasicApplicationAllOfIcon.md) |  | [optional] 
-**Users** | Pointer to [**[]BasicApplicationAllOfUsers**](BasicApplicationAllOfUsers.md) | List of IDs of assigned users | [optional] 
-**Groups** | Pointer to [**[]BasicApplicationAllOfGroups**](BasicApplicationAllOfGroups.md) | List of IDs of assigned groups | [optional] 
+**Users** | Pointer to [**[]BasicApplicationAllOfUsersInner**](BasicApplicationAllOfUsersInner.md) | List of IDs of assigned users | [optional] 
+**Groups** | Pointer to [**[]BasicApplicationAllOfGroupsInner**](BasicApplicationAllOfGroupsInner.md) | List of IDs of assigned groups | [optional] 
 **Auth** | [**ApplicationAuth**](ApplicationAuth.md) |  | 
 **Alias** | [**ApplicationAlias**](ApplicationAlias.md) |  | 
 **DisplayIconAtLogin** | **bool** | Determines if the application icon is displayed during user login | 
@@ -225,20 +225,20 @@ HasIcon returns a boolean if a field has been set.
 
 ### GetUsers
 
-`func (o *HttpsApplication) GetUsers() []BasicApplicationAllOfUsers`
+`func (o *HttpsApplication) GetUsers() []BasicApplicationAllOfUsersInner`
 
 GetUsers returns the Users field if non-nil, zero value otherwise.
 
 ### GetUsersOk
 
-`func (o *HttpsApplication) GetUsersOk() (*[]BasicApplicationAllOfUsers, bool)`
+`func (o *HttpsApplication) GetUsersOk() (*[]BasicApplicationAllOfUsersInner, bool)`
 
 GetUsersOk returns a tuple with the Users field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUsers
 
-`func (o *HttpsApplication) SetUsers(v []BasicApplicationAllOfUsers)`
+`func (o *HttpsApplication) SetUsers(v []BasicApplicationAllOfUsersInner)`
 
 SetUsers sets Users field to given value.
 
@@ -250,20 +250,20 @@ HasUsers returns a boolean if a field has been set.
 
 ### GetGroups
 
-`func (o *HttpsApplication) GetGroups() []BasicApplicationAllOfGroups`
+`func (o *HttpsApplication) GetGroups() []BasicApplicationAllOfGroupsInner`
 
 GetGroups returns the Groups field if non-nil, zero value otherwise.
 
 ### GetGroupsOk
 
-`func (o *HttpsApplication) GetGroupsOk() (*[]BasicApplicationAllOfGroups, bool)`
+`func (o *HttpsApplication) GetGroupsOk() (*[]BasicApplicationAllOfGroupsInner, bool)`
 
 GetGroupsOk returns a tuple with the Groups field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetGroups
 
-`func (o *HttpsApplication) SetGroups(v []BasicApplicationAllOfGroups)`
+`func (o *HttpsApplication) SetGroups(v []BasicApplicationAllOfGroupsInner)`
 
 SetGroups sets Groups field to given value.
 

@@ -4,21 +4,24 @@ All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-a
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**StandardGetNetworks**](StandardNetworksAPI.md#StandardGetNetworks) | **Get** /v2.3/networks/standard | Get all Networks
-[**StandardNetworksControllerV2GetNetworkHealth**](StandardNetworksAPI.md#StandardNetworksControllerV2GetNetworkHealth) | **Get** /v2.3/networks/standard/{networkId}/health | Get network health status
-[**StandardNetworksControllerV2NetworkCreate**](StandardNetworksAPI.md#StandardNetworksControllerV2NetworkCreate) | **Post** /v2.3/networks/standard | Create network
-[**StandardNetworksControllerV2NetworkDelete**](StandardNetworksAPI.md#StandardNetworksControllerV2NetworkDelete) | **Delete** /v2.3/networks/standard/{networkId} | Delete network
-[**StandardNetworksControllerV2NetworkFind**](StandardNetworksAPI.md#StandardNetworksControllerV2NetworkFind) | **Get** /v2.3/networks/standard/{networkId} | Get network by Id
-[**StandardNetworksControllerV2NetworkUpdate**](StandardNetworksAPI.md#StandardNetworksControllerV2NetworkUpdate) | **Put** /v2.3/networks/standard/{networkId} | Update network
-[**StandardNetworksControllerV2Status**](StandardNetworksAPI.md#StandardNetworksControllerV2Status) | **Get** /v2.3/networks/standard/status/{statusId} | Get status of asynchronous operations.
+[**StandardGetInstance**](StandardNetworksAPI.md#StandardGetInstance) | **Get** /v3/networks/standard/{networkId}/instances/{gatewayId} | Get instance of a gateway by ID
+[**StandardGetNetworks**](StandardNetworksAPI.md#StandardGetNetworks) | **Get** /v3/networks/standard | Get all networks
+[**StandardNetworksControllerV2AddNetworkInstance**](StandardNetworksAPI.md#StandardNetworksControllerV2AddNetworkInstance) | **Post** /v3/networks/standard/{networkId}/instances | Add gateway
+[**StandardNetworksControllerV2DeleteNetworkInstance**](StandardNetworksAPI.md#StandardNetworksControllerV2DeleteNetworkInstance) | **Delete** /v3/networks/standard/{networkId}/instances | Remove gateways from network
+[**StandardNetworksControllerV2GetNetworkHealth**](StandardNetworksAPI.md#StandardNetworksControllerV2GetNetworkHealth) | **Get** /v3/networks/standard/{networkId}/health | Get network health status
+[**StandardNetworksControllerV2NetworkCreate**](StandardNetworksAPI.md#StandardNetworksControllerV2NetworkCreate) | **Post** /v3/networks/standard | Create network
+[**StandardNetworksControllerV2NetworkDelete**](StandardNetworksAPI.md#StandardNetworksControllerV2NetworkDelete) | **Delete** /v3/networks/standard/{networkId} | Delete network
+[**StandardNetworksControllerV2NetworkFind**](StandardNetworksAPI.md#StandardNetworksControllerV2NetworkFind) | **Get** /v3/networks/standard/{networkId} | Get network by ID
+[**StandardNetworksControllerV2NetworkUpdate**](StandardNetworksAPI.md#StandardNetworksControllerV2NetworkUpdate) | **Put** /v3/networks/standard/{networkId} | Update network
+[**StandardNetworksControllerV2Status**](StandardNetworksAPI.md#StandardNetworksControllerV2Status) | **Get** /v3/networks/standard/status/{statusId} | Get status of asynchronous operations.
 
 
 
-## StandardGetNetworks
+## StandardGetInstance
 
-> []Network StandardGetNetworks(ctx).Execute()
+> NetworkInstance StandardGetInstance(ctx, networkId, gatewayId).Execute()
 
-Get all Networks
+Get instance of a gateway by ID
 
 
 
@@ -31,7 +34,80 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
+)
+
+func main() {
+	networkId := "networkId_example" // string | 
+	gatewayId := "gatewayId_example" // string | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.StandardNetworksAPI.StandardGetInstance(context.Background(), networkId, gatewayId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `StandardNetworksAPI.StandardGetInstance``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `StandardGetInstance`: NetworkInstance
+	fmt.Fprintf(os.Stdout, "Response from `StandardNetworksAPI.StandardGetInstance`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**networkId** | **string** |  | 
+**gatewayId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiStandardGetInstanceRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+
+### Return type
+
+[**NetworkInstance**](NetworkInstance.md)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## StandardGetNetworks
+
+> []Network StandardGetNetworks(ctx).Execute()
+
+Get all networks
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -75,6 +151,150 @@ Other parameters are passed through a pointer to a apiStandardGetNetworksRequest
 [[Back to README]](../README.md)
 
 
+## StandardNetworksControllerV2AddNetworkInstance
+
+> AsyncOperationResponse StandardNetworksControllerV2AddNetworkInstance(ctx, networkId).CreateInstancesInNetworkPayload(createInstancesInNetworkPayload).Execute()
+
+Add gateway
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
+)
+
+func main() {
+	networkId := "networkId_example" // string | 
+	createInstancesInNetworkPayload := *openapiclient.NewCreateInstancesInNetworkPayload("RegionId_example", false) // CreateInstancesInNetworkPayload | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.StandardNetworksAPI.StandardNetworksControllerV2AddNetworkInstance(context.Background(), networkId).CreateInstancesInNetworkPayload(createInstancesInNetworkPayload).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `StandardNetworksAPI.StandardNetworksControllerV2AddNetworkInstance``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `StandardNetworksControllerV2AddNetworkInstance`: AsyncOperationResponse
+	fmt.Fprintf(os.Stdout, "Response from `StandardNetworksAPI.StandardNetworksControllerV2AddNetworkInstance`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**networkId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiStandardNetworksControllerV2AddNetworkInstanceRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **createInstancesInNetworkPayload** | [**CreateInstancesInNetworkPayload**](CreateInstancesInNetworkPayload.md) |  | 
+
+### Return type
+
+[**AsyncOperationResponse**](AsyncOperationResponse.md)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## StandardNetworksControllerV2DeleteNetworkInstance
+
+> AsyncOperationResult StandardNetworksControllerV2DeleteNetworkInstance(ctx, networkId).RemoveRegionInstance(removeRegionInstance).Execute()
+
+Remove gateways from network
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
+)
+
+func main() {
+	networkId := "networkId_example" // string | 
+	removeRegionInstance := *openapiclient.NewRemoveRegionInstance([]openapiclient.RemoveRegionPayload{*openapiclient.NewRemoveRegionPayload()}) // RemoveRegionInstance | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.StandardNetworksAPI.StandardNetworksControllerV2DeleteNetworkInstance(context.Background(), networkId).RemoveRegionInstance(removeRegionInstance).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `StandardNetworksAPI.StandardNetworksControllerV2DeleteNetworkInstance``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `StandardNetworksControllerV2DeleteNetworkInstance`: AsyncOperationResult
+	fmt.Fprintf(os.Stdout, "Response from `StandardNetworksAPI.StandardNetworksControllerV2DeleteNetworkInstance`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**networkId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiStandardNetworksControllerV2DeleteNetworkInstanceRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **removeRegionInstance** | [**RemoveRegionInstance**](RemoveRegionInstance.md) |  | 
+
+### Return type
+
+[**AsyncOperationResult**](AsyncOperationResult.md)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## StandardNetworksControllerV2GetNetworkHealth
 
 > StandardHealthResponse StandardNetworksControllerV2GetNetworkHealth(ctx, networkId).Execute()
@@ -92,11 +312,11 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
-	networkId := "networkId_example" // string | 
+	networkId := "networkId_example" // string | ID of the standard network
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -116,7 +336,7 @@ func main() {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**networkId** | **string** |  | 
+**networkId** | **string** | ID of the standard network | 
 
 ### Other Parameters
 
@@ -162,7 +382,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -228,7 +448,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -285,7 +505,7 @@ Name | Type | Description  | Notes
 
 > Network StandardNetworksControllerV2NetworkFind(ctx, networkId).Execute()
 
-Get network by Id
+Get network by ID
 
 
 
@@ -298,7 +518,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -368,7 +588,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -440,7 +660,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {

@@ -6,7 +6,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **HarmonySaseRegionId** | **string** | Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions). | 
 **Idle** | **bool** | Create the gateway as disabled if true. | [default to true]
-**ScaleUnits** | Pointer to **int32** | Number of scale units for the region. Scale units determine the capacity and performance level of the enhanced region. Higher values provide greater throughput and connection capacity.  | [optional] [default to 1]
 
 ## Methods
 
@@ -66,31 +65,6 @@ and a boolean to check if the value has been set.
 
 SetIdle sets Idle field to given value.
 
-
-### GetScaleUnits
-
-`func (o *CreateRegionInNetworkPayload) GetScaleUnits() int32`
-
-GetScaleUnits returns the ScaleUnits field if non-nil, zero value otherwise.
-
-### GetScaleUnitsOk
-
-`func (o *CreateRegionInNetworkPayload) GetScaleUnitsOk() (*int32, bool)`
-
-GetScaleUnitsOk returns a tuple with the ScaleUnits field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetScaleUnits
-
-`func (o *CreateRegionInNetworkPayload) SetScaleUnits(v int32)`
-
-SetScaleUnits sets ScaleUnits field to given value.
-
-### HasScaleUnits
-
-`func (o *CreateRegionInNetworkPayload) HasScaleUnits() bool`
-
-HasScaleUnits returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

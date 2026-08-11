@@ -6,7 +6,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **P81GatewaySubnets** | **[]string** |  | 
 **RemoteGatewaySubnets** | **[]string** |  | 
-**PeakBandwidth** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
 **P81ASN** | Pointer to [**RemoteASN**](RemoteASN.md) |  | [optional] 
 **Features** | Pointer to [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | [optional] 
 
@@ -68,31 +67,6 @@ and a boolean to check if the value has been set.
 
 SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
-
-### GetPeakBandwidth
-
-`func (o *EnhancedIPSecSharedSettingsUpdate) GetPeakBandwidth() int32`
-
-GetPeakBandwidth returns the PeakBandwidth field if non-nil, zero value otherwise.
-
-### GetPeakBandwidthOk
-
-`func (o *EnhancedIPSecSharedSettingsUpdate) GetPeakBandwidthOk() (*int32, bool)`
-
-GetPeakBandwidthOk returns a tuple with the PeakBandwidth field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPeakBandwidth
-
-`func (o *EnhancedIPSecSharedSettingsUpdate) SetPeakBandwidth(v int32)`
-
-SetPeakBandwidth sets PeakBandwidth field to given value.
-
-### HasPeakBandwidth
-
-`func (o *EnhancedIPSecSharedSettingsUpdate) HasPeakBandwidth() bool`
-
-HasPeakBandwidth returns a boolean if a field has been set.
 
 ### GetP81ASN
 

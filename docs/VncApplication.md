@@ -12,8 +12,8 @@ Name | Type | Description | Notes
 **CreatedAt** | Pointer to **string** | Application create date | [optional] 
 **Network** | [**BasicApplicationAllOfNetwork**](BasicApplicationAllOfNetwork.md) |  | 
 **Icon** | Pointer to [**BasicApplicationAllOfIcon**](BasicApplicationAllOfIcon.md) |  | [optional] 
-**Users** | Pointer to [**[]BasicApplicationAllOfUsers**](BasicApplicationAllOfUsers.md) | List of IDs of assigned users | [optional] 
-**Groups** | Pointer to [**[]BasicApplicationAllOfGroups**](BasicApplicationAllOfGroups.md) | List of IDs of assigned groups | [optional] 
+**Users** | Pointer to [**[]BasicApplicationAllOfUsersInner**](BasicApplicationAllOfUsersInner.md) | List of IDs of assigned users | [optional] 
+**Groups** | Pointer to [**[]BasicApplicationAllOfGroupsInner**](BasicApplicationAllOfGroupsInner.md) | List of IDs of assigned groups | [optional] 
 **Auth** | [**ApplicationAuth**](ApplicationAuth.md) |  | 
 **Alias** | [**ApplicationAlias**](ApplicationAlias.md) |  | 
 **DisplayIconAtLogin** | **bool** | Determines if the application icon is displayed during user login | 
@@ -224,20 +224,20 @@ HasIcon returns a boolean if a field has been set.
 
 ### GetUsers
 
-`func (o *VncApplication) GetUsers() []BasicApplicationAllOfUsers`
+`func (o *VncApplication) GetUsers() []BasicApplicationAllOfUsersInner`
 
 GetUsers returns the Users field if non-nil, zero value otherwise.
 
 ### GetUsersOk
 
-`func (o *VncApplication) GetUsersOk() (*[]BasicApplicationAllOfUsers, bool)`
+`func (o *VncApplication) GetUsersOk() (*[]BasicApplicationAllOfUsersInner, bool)`
 
 GetUsersOk returns a tuple with the Users field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUsers
 
-`func (o *VncApplication) SetUsers(v []BasicApplicationAllOfUsers)`
+`func (o *VncApplication) SetUsers(v []BasicApplicationAllOfUsersInner)`
 
 SetUsers sets Users field to given value.
 
@@ -249,20 +249,20 @@ HasUsers returns a boolean if a field has been set.
 
 ### GetGroups
 
-`func (o *VncApplication) GetGroups() []BasicApplicationAllOfGroups`
+`func (o *VncApplication) GetGroups() []BasicApplicationAllOfGroupsInner`
 
 GetGroups returns the Groups field if non-nil, zero value otherwise.
 
 ### GetGroupsOk
 
-`func (o *VncApplication) GetGroupsOk() (*[]BasicApplicationAllOfGroups, bool)`
+`func (o *VncApplication) GetGroupsOk() (*[]BasicApplicationAllOfGroupsInner, bool)`
 
 GetGroupsOk returns a tuple with the Groups field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetGroups
 
-`func (o *VncApplication) SetGroups(v []BasicApplicationAllOfGroups)`
+`func (o *VncApplication) SetGroups(v []BasicApplicationAllOfGroupsInner)`
 
 SetGroups sets Groups field to given value.
 

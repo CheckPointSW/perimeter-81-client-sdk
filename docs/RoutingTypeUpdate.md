@@ -3,9 +3,9 @@
 ## Enum
 
 
-* `ROUTE` (value: `"route"`)
+* `ROUTE_UPDATE` (value: `"route"`)
 
-* `POLICY` (value: `"policy"`)
+* `POLICY_UPDATE` (value: `"policy"`)
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Passphrase** | **string** |  | 
+**Passphrase** | Pointer to **string** |  | [optional] 
 **P81GWInternalIP** | **string** |  | 
 **RemoteGWInternalIP** | **string** |  | 
 **RemotePublicIP** | **string** |  | 
 **RemoteASN** | [**RemoteASN**](RemoteASN.md) |  | 
-**RemoteID** | [**RemoteID**](RemoteID.md) |  | 
+**RemoteID** | Pointer to [**RemoteID**](RemoteID.md) |  | [optional] 
 **GatewayID** | **string** |  | 
 **TunnelID** | Pointer to **string** |  | [optional] 
 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewIPSecRedundantTunnel
 
-`func NewIPSecRedundantTunnel(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN RemoteASN, remoteID RemoteID, gatewayID string, ) *IPSecRedundantTunnel`
+`func NewIPSecRedundantTunnel(p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN RemoteASN, gatewayID string, ) *IPSecRedundantTunnel`
 
 NewIPSecRedundantTunnel instantiates a new IPSecRedundantTunnel object
 This constructor will assign default values to properties that have it defined,
@@ -51,6 +51,11 @@ and a boolean to check if the value has been set.
 
 SetPassphrase sets Passphrase field to given value.
 
+### HasPassphrase
+
+`func (o *IPSecRedundantTunnel) HasPassphrase() bool`
+
+HasPassphrase returns a boolean if a field has been set.
 
 ### GetP81GWInternalIP
 
@@ -151,6 +156,11 @@ and a boolean to check if the value has been set.
 
 SetRemoteID sets RemoteID field to given value.
 
+### HasRemoteID
+
+`func (o *IPSecRedundantTunnel) HasRemoteID() bool`
+
+HasRemoteID returns a boolean if a field has been set.
 
 ### GetGatewayID
 

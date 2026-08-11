@@ -7,12 +7,6 @@ Name | Type | Description | Notes
 **AuthType** | Pointer to **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | [optional] 
 **Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk. | [optional] 
 **CustomerRootCA** | Pointer to **string** | Customer root certificate authority. Required when authType is cert. | [optional] 
-**RemotePublicIP** | Pointer to **string** | Remote gateway public IP address | [optional] 
-**RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
-**Description** | Pointer to **string** | Optional tunnel description | [optional] 
-**Features** | Pointer to [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | [optional] 
-**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTE]
-**PeakBandwidth** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
 **TunnelName** | Pointer to **string** | Name of the static tunnel | [optional] 
 **P81GatewaySubnets** | Pointer to **[]string** | Harmony Sase gateway subnets | [optional] 
 **RemoteGatewaySubnets** | Pointer to **[]string** | Remote gateway subnets | [optional] 
@@ -23,6 +17,11 @@ Name | Type | Description | Notes
 **DpdTimeout** | Pointer to **string** |  | [optional] 
 **Phase1** | Pointer to [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | [optional] 
 **Phase2** | Pointer to [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | [optional] 
+**RemotePublicIP** | Pointer to **string** | Remote gateway public IP address | [optional] 
+**RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
+**Description** | Pointer to **string** | Optional tunnel description | [optional] 
+**Features** | Pointer to [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | [optional] 
+**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTE]
 
 ## Methods
 
@@ -117,156 +116,6 @@ SetCustomerRootCA sets CustomerRootCA field to given value.
 `func (o *StaticTunnelUpdate) HasCustomerRootCA() bool`
 
 HasCustomerRootCA returns a boolean if a field has been set.
-
-### GetRemotePublicIP
-
-`func (o *StaticTunnelUpdate) GetRemotePublicIP() string`
-
-GetRemotePublicIP returns the RemotePublicIP field if non-nil, zero value otherwise.
-
-### GetRemotePublicIPOk
-
-`func (o *StaticTunnelUpdate) GetRemotePublicIPOk() (*string, bool)`
-
-GetRemotePublicIPOk returns a tuple with the RemotePublicIP field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRemotePublicIP
-
-`func (o *StaticTunnelUpdate) SetRemotePublicIP(v string)`
-
-SetRemotePublicIP sets RemotePublicIP field to given value.
-
-### HasRemotePublicIP
-
-`func (o *StaticTunnelUpdate) HasRemotePublicIP() bool`
-
-HasRemotePublicIP returns a boolean if a field has been set.
-
-### GetRemoteID
-
-`func (o *StaticTunnelUpdate) GetRemoteID() string`
-
-GetRemoteID returns the RemoteID field if non-nil, zero value otherwise.
-
-### GetRemoteIDOk
-
-`func (o *StaticTunnelUpdate) GetRemoteIDOk() (*string, bool)`
-
-GetRemoteIDOk returns a tuple with the RemoteID field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRemoteID
-
-`func (o *StaticTunnelUpdate) SetRemoteID(v string)`
-
-SetRemoteID sets RemoteID field to given value.
-
-### HasRemoteID
-
-`func (o *StaticTunnelUpdate) HasRemoteID() bool`
-
-HasRemoteID returns a boolean if a field has been set.
-
-### GetDescription
-
-`func (o *StaticTunnelUpdate) GetDescription() string`
-
-GetDescription returns the Description field if non-nil, zero value otherwise.
-
-### GetDescriptionOk
-
-`func (o *StaticTunnelUpdate) GetDescriptionOk() (*string, bool)`
-
-GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDescription
-
-`func (o *StaticTunnelUpdate) SetDescription(v string)`
-
-SetDescription sets Description field to given value.
-
-### HasDescription
-
-`func (o *StaticTunnelUpdate) HasDescription() bool`
-
-HasDescription returns a boolean if a field has been set.
-
-### GetFeatures
-
-`func (o *StaticTunnelUpdate) GetFeatures() NetworkFeaturesCreate`
-
-GetFeatures returns the Features field if non-nil, zero value otherwise.
-
-### GetFeaturesOk
-
-`func (o *StaticTunnelUpdate) GetFeaturesOk() (*NetworkFeaturesCreate, bool)`
-
-GetFeaturesOk returns a tuple with the Features field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetFeatures
-
-`func (o *StaticTunnelUpdate) SetFeatures(v NetworkFeaturesCreate)`
-
-SetFeatures sets Features field to given value.
-
-### HasFeatures
-
-`func (o *StaticTunnelUpdate) HasFeatures() bool`
-
-HasFeatures returns a boolean if a field has been set.
-
-### GetRoutingType
-
-`func (o *StaticTunnelUpdate) GetRoutingType() RoutingType`
-
-GetRoutingType returns the RoutingType field if non-nil, zero value otherwise.
-
-### GetRoutingTypeOk
-
-`func (o *StaticTunnelUpdate) GetRoutingTypeOk() (*RoutingType, bool)`
-
-GetRoutingTypeOk returns a tuple with the RoutingType field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRoutingType
-
-`func (o *StaticTunnelUpdate) SetRoutingType(v RoutingType)`
-
-SetRoutingType sets RoutingType field to given value.
-
-### HasRoutingType
-
-`func (o *StaticTunnelUpdate) HasRoutingType() bool`
-
-HasRoutingType returns a boolean if a field has been set.
-
-### GetPeakBandwidth
-
-`func (o *StaticTunnelUpdate) GetPeakBandwidth() int32`
-
-GetPeakBandwidth returns the PeakBandwidth field if non-nil, zero value otherwise.
-
-### GetPeakBandwidthOk
-
-`func (o *StaticTunnelUpdate) GetPeakBandwidthOk() (*int32, bool)`
-
-GetPeakBandwidthOk returns a tuple with the PeakBandwidth field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPeakBandwidth
-
-`func (o *StaticTunnelUpdate) SetPeakBandwidth(v int32)`
-
-SetPeakBandwidth sets PeakBandwidth field to given value.
-
-### HasPeakBandwidth
-
-`func (o *StaticTunnelUpdate) HasPeakBandwidth() bool`
-
-HasPeakBandwidth returns a boolean if a field has been set.
 
 ### GetTunnelName
 
@@ -517,6 +366,131 @@ SetPhase2 sets Phase2 field to given value.
 `func (o *StaticTunnelUpdate) HasPhase2() bool`
 
 HasPhase2 returns a boolean if a field has been set.
+
+### GetRemotePublicIP
+
+`func (o *StaticTunnelUpdate) GetRemotePublicIP() string`
+
+GetRemotePublicIP returns the RemotePublicIP field if non-nil, zero value otherwise.
+
+### GetRemotePublicIPOk
+
+`func (o *StaticTunnelUpdate) GetRemotePublicIPOk() (*string, bool)`
+
+GetRemotePublicIPOk returns a tuple with the RemotePublicIP field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRemotePublicIP
+
+`func (o *StaticTunnelUpdate) SetRemotePublicIP(v string)`
+
+SetRemotePublicIP sets RemotePublicIP field to given value.
+
+### HasRemotePublicIP
+
+`func (o *StaticTunnelUpdate) HasRemotePublicIP() bool`
+
+HasRemotePublicIP returns a boolean if a field has been set.
+
+### GetRemoteID
+
+`func (o *StaticTunnelUpdate) GetRemoteID() string`
+
+GetRemoteID returns the RemoteID field if non-nil, zero value otherwise.
+
+### GetRemoteIDOk
+
+`func (o *StaticTunnelUpdate) GetRemoteIDOk() (*string, bool)`
+
+GetRemoteIDOk returns a tuple with the RemoteID field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRemoteID
+
+`func (o *StaticTunnelUpdate) SetRemoteID(v string)`
+
+SetRemoteID sets RemoteID field to given value.
+
+### HasRemoteID
+
+`func (o *StaticTunnelUpdate) HasRemoteID() bool`
+
+HasRemoteID returns a boolean if a field has been set.
+
+### GetDescription
+
+`func (o *StaticTunnelUpdate) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *StaticTunnelUpdate) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *StaticTunnelUpdate) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
+
+### HasDescription
+
+`func (o *StaticTunnelUpdate) HasDescription() bool`
+
+HasDescription returns a boolean if a field has been set.
+
+### GetFeatures
+
+`func (o *StaticTunnelUpdate) GetFeatures() NetworkFeaturesCreate`
+
+GetFeatures returns the Features field if non-nil, zero value otherwise.
+
+### GetFeaturesOk
+
+`func (o *StaticTunnelUpdate) GetFeaturesOk() (*NetworkFeaturesCreate, bool)`
+
+GetFeaturesOk returns a tuple with the Features field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFeatures
+
+`func (o *StaticTunnelUpdate) SetFeatures(v NetworkFeaturesCreate)`
+
+SetFeatures sets Features field to given value.
+
+### HasFeatures
+
+`func (o *StaticTunnelUpdate) HasFeatures() bool`
+
+HasFeatures returns a boolean if a field has been set.
+
+### GetRoutingType
+
+`func (o *StaticTunnelUpdate) GetRoutingType() RoutingType`
+
+GetRoutingType returns the RoutingType field if non-nil, zero value otherwise.
+
+### GetRoutingTypeOk
+
+`func (o *StaticTunnelUpdate) GetRoutingTypeOk() (*RoutingType, bool)`
+
+GetRoutingTypeOk returns a tuple with the RoutingType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRoutingType
+
+`func (o *StaticTunnelUpdate) SetRoutingType(v RoutingType)`
+
+SetRoutingType sets RoutingType field to given value.
+
+### HasRoutingType
+
+`func (o *StaticTunnelUpdate) HasRoutingType() bool`
+
+HasRoutingType returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

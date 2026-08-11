@@ -1,5 +1,5 @@
 /*
-Harmony SASE Public API
+Check Point - SASE Public API
 
 Testing NetworksAPIService
 
@@ -14,224 +14,28 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v2"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func Test_perimeter81sdk_NetworksAPIService(t *testing.T) {
 
-	configuration := openapiclient.NewConfiguration()
+	// NewConfiguration here takes (apiKey, basePath): this SDK's hand-written
+	// configuration.go (protected by .openapi-generator-ignore) replaced the
+	// stock zero-arg NewConfiguration() with a two-arg constructor. The stock
+	// api_test.mustache calls NewConfiguration() with no arguments, which no
+	// longer compiles. Every test below is unconditionally t.Skip'd (it is
+	// generated documentation, not an exercised regression test), so these
+	// are placeholder values, never used against a real server.
+	configuration := openapiclient.NewConfiguration("API_KEY", "BASE_PATH")
 	apiClient := openapiclient.NewAPIClient(configuration)
 
-	t.Run("Test NetworksAPIService CreateIPSecRedundantTunnel", func(t *testing.T) {
+	t.Run("Test NetworksAPIService GetSplitTunnelingConfiguration", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
 		var networkId string
 
-		resp, httpRes, err := apiClient.NetworksAPI.CreateIPSecRedundantTunnel(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService CreateIPSecSingleTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.CreateIPSecSingleTunnel(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService CreateOpenVPNTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.CreateOpenVPNTunnel(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService CreateWireguardTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.CreateWireguardTunnel(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService DeleteIPSecRedundantTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var haTunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.DeleteIPSecRedundantTunnel(context.Background(), networkId, haTunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService DeleteIPSecSingleTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.DeleteIPSecSingleTunnel(context.Background(), networkId, tunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService DeleteOpenVPNTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.DeleteOpenVPNTunnel(context.Background(), networkId, tunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService DeleteWireguardTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.DeleteWireguardTunnel(context.Background(), networkId, tunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService GetIPSecRedundantTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var haTunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.GetIPSecRedundantTunnel(context.Background(), networkId, haTunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService GetIPSecSingleTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.GetIPSecSingleTunnel(context.Background(), networkId, tunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService GetInstance", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var gatewayId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.GetInstance(context.Background(), networkId, gatewayId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService GetNetworks", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.NetworksAPI.GetNetworks(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService GetOpenVPNTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.GetOpenVPNTunnel(context.Background(), networkId, tunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService GetRegion", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var regionId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.GetRegion(context.Background(), networkId, regionId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService GetRouteTable", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.GetRouteTable(context.Background(), networkId).Execute()
+		resp, httpRes, err := apiClient.NetworksAPI.GetSplitTunnelingConfiguration(context.Background(), networkId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -244,157 +48,6 @@ func Test_perimeter81sdk_NetworksAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.NetworksAPI.GetStatus(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService GetWireguardTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.GetWireguardTunnel(context.Background(), networkId, tunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2AddNetworkInstance", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2AddNetworkInstance(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2AddNetworkRegion", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2AddNetworkRegion(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2DeleteNetworkInstance", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2DeleteNetworkInstance(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2DeleteNetworkRegion", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2DeleteNetworkRegion(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2GetNetworkHealth", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2GetNetworkHealth(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2GetRegions", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2GetRegions(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2NetworkCreate", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2NetworkCreate(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2NetworkDelete", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2NetworkDelete(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2NetworkFind", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2NetworkFind(context.Background(), networkId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService NetworksControllerV2NetworkUpdate", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.NetworksControllerV2NetworkUpdate(context.Background(), networkId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -416,59 +69,13 @@ func Test_perimeter81sdk_NetworksAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test NetworksAPIService UpdateIPSecRedundantTunnel", func(t *testing.T) {
+	t.Run("Test NetworksAPIService UpdateSplitTunnelingConfigurationAsync", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
 		var networkId string
-		var haTunnelId string
 
-		resp, httpRes, err := apiClient.NetworksAPI.UpdateIPSecRedundantTunnel(context.Background(), networkId, haTunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService UpdateIPSecSingleTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.UpdateIPSecSingleTunnel(context.Background(), networkId, tunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService UpdateOpenVPNTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.UpdateOpenVPNTunnel(context.Background(), networkId, tunnelId).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test NetworksAPIService UpdateWireguardTunnel", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var networkId string
-		var tunnelId string
-
-		resp, httpRes, err := apiClient.NetworksAPI.UpdateWireguardTunnel(context.Background(), networkId, tunnelId).Execute()
+		resp, httpRes, err := apiClient.NetworksAPI.UpdateSplitTunnelingConfigurationAsync(context.Background(), networkId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

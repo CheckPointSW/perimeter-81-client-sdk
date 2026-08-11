@@ -1,5 +1,5 @@
 /*
-Harmony SASE Public API
+Check Point - SASE Public API
 
 Testing EnhancedTunnelsAPIService
 
@@ -14,12 +14,19 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v2"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func Test_perimeter81sdk_EnhancedTunnelsAPIService(t *testing.T) {
 
-	configuration := openapiclient.NewConfiguration()
+	// NewConfiguration here takes (apiKey, basePath): this SDK's hand-written
+	// configuration.go (protected by .openapi-generator-ignore) replaced the
+	// stock zero-arg NewConfiguration() with a two-arg constructor. The stock
+	// api_test.mustache calls NewConfiguration() with no arguments, which no
+	// longer compiles. Every test below is unconditionally t.Skip'd (it is
+	// generated documentation, not an exercised regression test), so these
+	// are placeholder values, never used against a real server.
+	configuration := openapiclient.NewConfiguration("API_KEY", "BASE_PATH")
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	t.Run("Test EnhancedTunnelsAPIService CreateDynamicTunnel", func(t *testing.T) {

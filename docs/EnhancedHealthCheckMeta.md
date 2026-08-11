@@ -4,16 +4,16 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**NetworkId** | **string** | ID of the network | 
-**TunnelName** | **string** | Name of the tunnel | 
-**TunnelId** | **string** | ID of the tunnel | 
-**RegionId** | **string** | ID of the region where the tunnel is deployed | 
+**NetworkId** | Pointer to **string** | ID of the network | [optional] 
+**TunnelName** | Pointer to **string** | Name of the tunnel | [optional] 
+**TunnelId** | Pointer to **string** | ID of the tunnel | [optional] 
+**RegionId** | Pointer to **string** | ID of the region where the tunnel is deployed | [optional] 
 
 ## Methods
 
 ### NewEnhancedHealthCheckMeta
 
-`func NewEnhancedHealthCheckMeta(networkId string, tunnelName string, tunnelId string, regionId string, ) *EnhancedHealthCheckMeta`
+`func NewEnhancedHealthCheckMeta() *EnhancedHealthCheckMeta`
 
 NewEnhancedHealthCheckMeta instantiates a new EnhancedHealthCheckMeta object
 This constructor will assign default values to properties that have it defined,
@@ -47,6 +47,11 @@ and a boolean to check if the value has been set.
 
 SetNetworkId sets NetworkId field to given value.
 
+### HasNetworkId
+
+`func (o *EnhancedHealthCheckMeta) HasNetworkId() bool`
+
+HasNetworkId returns a boolean if a field has been set.
 
 ### GetTunnelName
 
@@ -67,6 +72,11 @@ and a boolean to check if the value has been set.
 
 SetTunnelName sets TunnelName field to given value.
 
+### HasTunnelName
+
+`func (o *EnhancedHealthCheckMeta) HasTunnelName() bool`
+
+HasTunnelName returns a boolean if a field has been set.
 
 ### GetTunnelId
 
@@ -87,6 +97,11 @@ and a boolean to check if the value has been set.
 
 SetTunnelId sets TunnelId field to given value.
 
+### HasTunnelId
+
+`func (o *EnhancedHealthCheckMeta) HasTunnelId() bool`
+
+HasTunnelId returns a boolean if a field has been set.
 
 ### GetRegionId
 
@@ -107,6 +122,11 @@ and a boolean to check if the value has been set.
 
 SetRegionId sets RegionId field to given value.
 
+### HasRegionId
+
+`func (o *EnhancedHealthCheckMeta) HasRegionId() bool`
+
+HasRegionId returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

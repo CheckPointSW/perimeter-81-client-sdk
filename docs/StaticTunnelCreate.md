@@ -4,19 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AuthType** | Pointer to **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | [optional] 
+**AuthType** | **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | 
 **Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk. | [optional] 
 **CustomerRootCA** | Pointer to **string** | Customer root certificate authority. Required when authType is cert. | [optional] 
-**RemotePublicIP** | Pointer to **string** | Remote gateway public IP address | [optional] 
-**RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
-**Description** | Pointer to **string** | Optional tunnel description | [optional] 
-**Features** | Pointer to [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | [optional] 
-**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTE]
 **RegionID** | **string** | Target region ID | 
 **TunnelName** | **string** | Name of the static tunnel | 
 **P81GatewaySubnets** | **[]string** | Harmony Sase gateway subnets | 
 **RemoteGatewaySubnets** | **[]string** | Remote gateway subnets | 
-**PeakBandwidth** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
 **KeyExchange** | **string** | IKE version for key exchange | [default to "ikev2"]
 **IkeLifeTime** | **string** |  | 
 **Lifetime** | **string** |  | 
@@ -24,12 +18,18 @@ Name | Type | Description | Notes
 **DpdTimeout** | **string** |  | 
 **Phase1** | [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | 
 **Phase2** | [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | 
+**RemotePublicIP** | **string** | Remote gateway public IP address | 
+**RemoteID** | **string** | Remote gateway ID | 
+**Description** | Pointer to **string** | Optional tunnel description | [optional] 
+**Features** | [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | 
+**RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTE]
+**PeakBandwidthMbps** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
 
 ## Methods
 
 ### NewStaticTunnelCreate
 
-`func NewStaticTunnelCreate(regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, ) *StaticTunnelCreate`
+`func NewStaticTunnelCreate(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, remotePublicIP string, remoteID string, features NetworkFeaturesCreate, routingType RoutingType, ) *StaticTunnelCreate`
 
 NewStaticTunnelCreate instantiates a new StaticTunnelCreate object
 This constructor will assign default values to properties that have it defined,
@@ -63,11 +63,6 @@ and a boolean to check if the value has been set.
 
 SetAuthType sets AuthType field to given value.
 
-### HasAuthType
-
-`func (o *StaticTunnelCreate) HasAuthType() bool`
-
-HasAuthType returns a boolean if a field has been set.
 
 ### GetPassphrase
 
@@ -118,131 +113,6 @@ SetCustomerRootCA sets CustomerRootCA field to given value.
 `func (o *StaticTunnelCreate) HasCustomerRootCA() bool`
 
 HasCustomerRootCA returns a boolean if a field has been set.
-
-### GetRemotePublicIP
-
-`func (o *StaticTunnelCreate) GetRemotePublicIP() string`
-
-GetRemotePublicIP returns the RemotePublicIP field if non-nil, zero value otherwise.
-
-### GetRemotePublicIPOk
-
-`func (o *StaticTunnelCreate) GetRemotePublicIPOk() (*string, bool)`
-
-GetRemotePublicIPOk returns a tuple with the RemotePublicIP field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRemotePublicIP
-
-`func (o *StaticTunnelCreate) SetRemotePublicIP(v string)`
-
-SetRemotePublicIP sets RemotePublicIP field to given value.
-
-### HasRemotePublicIP
-
-`func (o *StaticTunnelCreate) HasRemotePublicIP() bool`
-
-HasRemotePublicIP returns a boolean if a field has been set.
-
-### GetRemoteID
-
-`func (o *StaticTunnelCreate) GetRemoteID() string`
-
-GetRemoteID returns the RemoteID field if non-nil, zero value otherwise.
-
-### GetRemoteIDOk
-
-`func (o *StaticTunnelCreate) GetRemoteIDOk() (*string, bool)`
-
-GetRemoteIDOk returns a tuple with the RemoteID field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRemoteID
-
-`func (o *StaticTunnelCreate) SetRemoteID(v string)`
-
-SetRemoteID sets RemoteID field to given value.
-
-### HasRemoteID
-
-`func (o *StaticTunnelCreate) HasRemoteID() bool`
-
-HasRemoteID returns a boolean if a field has been set.
-
-### GetDescription
-
-`func (o *StaticTunnelCreate) GetDescription() string`
-
-GetDescription returns the Description field if non-nil, zero value otherwise.
-
-### GetDescriptionOk
-
-`func (o *StaticTunnelCreate) GetDescriptionOk() (*string, bool)`
-
-GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDescription
-
-`func (o *StaticTunnelCreate) SetDescription(v string)`
-
-SetDescription sets Description field to given value.
-
-### HasDescription
-
-`func (o *StaticTunnelCreate) HasDescription() bool`
-
-HasDescription returns a boolean if a field has been set.
-
-### GetFeatures
-
-`func (o *StaticTunnelCreate) GetFeatures() NetworkFeaturesCreate`
-
-GetFeatures returns the Features field if non-nil, zero value otherwise.
-
-### GetFeaturesOk
-
-`func (o *StaticTunnelCreate) GetFeaturesOk() (*NetworkFeaturesCreate, bool)`
-
-GetFeaturesOk returns a tuple with the Features field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetFeatures
-
-`func (o *StaticTunnelCreate) SetFeatures(v NetworkFeaturesCreate)`
-
-SetFeatures sets Features field to given value.
-
-### HasFeatures
-
-`func (o *StaticTunnelCreate) HasFeatures() bool`
-
-HasFeatures returns a boolean if a field has been set.
-
-### GetRoutingType
-
-`func (o *StaticTunnelCreate) GetRoutingType() RoutingType`
-
-GetRoutingType returns the RoutingType field if non-nil, zero value otherwise.
-
-### GetRoutingTypeOk
-
-`func (o *StaticTunnelCreate) GetRoutingTypeOk() (*RoutingType, bool)`
-
-GetRoutingTypeOk returns a tuple with the RoutingType field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRoutingType
-
-`func (o *StaticTunnelCreate) SetRoutingType(v RoutingType)`
-
-SetRoutingType sets RoutingType field to given value.
-
-### HasRoutingType
-
-`func (o *StaticTunnelCreate) HasRoutingType() bool`
-
-HasRoutingType returns a boolean if a field has been set.
 
 ### GetRegionID
 
@@ -323,31 +193,6 @@ and a boolean to check if the value has been set.
 
 SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
-
-### GetPeakBandwidth
-
-`func (o *StaticTunnelCreate) GetPeakBandwidth() int32`
-
-GetPeakBandwidth returns the PeakBandwidth field if non-nil, zero value otherwise.
-
-### GetPeakBandwidthOk
-
-`func (o *StaticTunnelCreate) GetPeakBandwidthOk() (*int32, bool)`
-
-GetPeakBandwidthOk returns a tuple with the PeakBandwidth field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPeakBandwidth
-
-`func (o *StaticTunnelCreate) SetPeakBandwidth(v int32)`
-
-SetPeakBandwidth sets PeakBandwidth field to given value.
-
-### HasPeakBandwidth
-
-`func (o *StaticTunnelCreate) HasPeakBandwidth() bool`
-
-HasPeakBandwidth returns a boolean if a field has been set.
 
 ### GetKeyExchange
 
@@ -488,6 +333,136 @@ and a boolean to check if the value has been set.
 
 SetPhase2 sets Phase2 field to given value.
 
+
+### GetRemotePublicIP
+
+`func (o *StaticTunnelCreate) GetRemotePublicIP() string`
+
+GetRemotePublicIP returns the RemotePublicIP field if non-nil, zero value otherwise.
+
+### GetRemotePublicIPOk
+
+`func (o *StaticTunnelCreate) GetRemotePublicIPOk() (*string, bool)`
+
+GetRemotePublicIPOk returns a tuple with the RemotePublicIP field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRemotePublicIP
+
+`func (o *StaticTunnelCreate) SetRemotePublicIP(v string)`
+
+SetRemotePublicIP sets RemotePublicIP field to given value.
+
+
+### GetRemoteID
+
+`func (o *StaticTunnelCreate) GetRemoteID() string`
+
+GetRemoteID returns the RemoteID field if non-nil, zero value otherwise.
+
+### GetRemoteIDOk
+
+`func (o *StaticTunnelCreate) GetRemoteIDOk() (*string, bool)`
+
+GetRemoteIDOk returns a tuple with the RemoteID field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRemoteID
+
+`func (o *StaticTunnelCreate) SetRemoteID(v string)`
+
+SetRemoteID sets RemoteID field to given value.
+
+
+### GetDescription
+
+`func (o *StaticTunnelCreate) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *StaticTunnelCreate) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *StaticTunnelCreate) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
+
+### HasDescription
+
+`func (o *StaticTunnelCreate) HasDescription() bool`
+
+HasDescription returns a boolean if a field has been set.
+
+### GetFeatures
+
+`func (o *StaticTunnelCreate) GetFeatures() NetworkFeaturesCreate`
+
+GetFeatures returns the Features field if non-nil, zero value otherwise.
+
+### GetFeaturesOk
+
+`func (o *StaticTunnelCreate) GetFeaturesOk() (*NetworkFeaturesCreate, bool)`
+
+GetFeaturesOk returns a tuple with the Features field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFeatures
+
+`func (o *StaticTunnelCreate) SetFeatures(v NetworkFeaturesCreate)`
+
+SetFeatures sets Features field to given value.
+
+
+### GetRoutingType
+
+`func (o *StaticTunnelCreate) GetRoutingType() RoutingType`
+
+GetRoutingType returns the RoutingType field if non-nil, zero value otherwise.
+
+### GetRoutingTypeOk
+
+`func (o *StaticTunnelCreate) GetRoutingTypeOk() (*RoutingType, bool)`
+
+GetRoutingTypeOk returns a tuple with the RoutingType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRoutingType
+
+`func (o *StaticTunnelCreate) SetRoutingType(v RoutingType)`
+
+SetRoutingType sets RoutingType field to given value.
+
+
+### GetPeakBandwidthMbps
+
+`func (o *StaticTunnelCreate) GetPeakBandwidthMbps() int32`
+
+GetPeakBandwidthMbps returns the PeakBandwidthMbps field if non-nil, zero value otherwise.
+
+### GetPeakBandwidthMbpsOk
+
+`func (o *StaticTunnelCreate) GetPeakBandwidthMbpsOk() (*int32, bool)`
+
+GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPeakBandwidthMbps
+
+`func (o *StaticTunnelCreate) SetPeakBandwidthMbps(v int32)`
+
+SetPeakBandwidthMbps sets PeakBandwidthMbps field to given value.
+
+### HasPeakBandwidthMbps
+
+`func (o *StaticTunnelCreate) HasPeakBandwidthMbps() bool`
+
+HasPeakBandwidthMbps returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

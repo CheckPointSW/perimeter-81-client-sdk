@@ -4,13 +4,13 @@ All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-a
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateEnhancedNetwork**](EnhancedNetworksAPI.md#CreateEnhancedNetwork) | **Post** /v2.3/networks/enhanced | Create enhanced network
-[**DeleteEnhancedNetwork**](EnhancedNetworksAPI.md#DeleteEnhancedNetwork) | **Delete** /v2.3/networks/enhanced/{networkId} | Delete enhanced network
-[**EnhancedNetworksControllerV23GetNetworkCustomerCertificate**](EnhancedNetworksAPI.md#EnhancedNetworksControllerV23GetNetworkCustomerCertificate) | **Get** /v2.3/networks/enhanced/network-customer-certificate | Get network customer certificate
-[**GetEnhancedNetwork**](EnhancedNetworksAPI.md#GetEnhancedNetwork) | **Get** /v2.3/networks/enhanced/{networkId} | Get enhanced network by ID
-[**GetEnhancedNetworkHealth**](EnhancedNetworksAPI.md#GetEnhancedNetworkHealth) | **Get** /v2.3/networks/enhanced/{networkId}/health | Get enhanced network health status
-[**GetEnhancedNetworks**](EnhancedNetworksAPI.md#GetEnhancedNetworks) | **Get** /v2.3/networks/enhanced | Get all enhanced networks
-[**UpdateEnhancedNetwork**](EnhancedNetworksAPI.md#UpdateEnhancedNetwork) | **Put** /v2.3/networks/enhanced/{networkId} | Update enhanced network
+[**CreateEnhancedNetwork**](EnhancedNetworksAPI.md#CreateEnhancedNetwork) | **Post** /v3/networks/enhanced | Create enhanced network
+[**DeleteEnhancedNetwork**](EnhancedNetworksAPI.md#DeleteEnhancedNetwork) | **Delete** /v3/networks/enhanced/{networkId} | Delete enhanced network
+[**EnhancedNetworksControllerV23GetNetworkCustomerCertificate**](EnhancedNetworksAPI.md#EnhancedNetworksControllerV23GetNetworkCustomerCertificate) | **Get** /v3/networks/enhanced/network-customer-certificate | Get network customer certificate
+[**GetEnhancedNetwork**](EnhancedNetworksAPI.md#GetEnhancedNetwork) | **Get** /v3/networks/enhanced/{networkId} | Get enhanced network by ID
+[**GetEnhancedNetworkHealth**](EnhancedNetworksAPI.md#GetEnhancedNetworkHealth) | **Get** /v3/networks/enhanced/{networkId}/health | Get enhanced network health status
+[**GetEnhancedNetworks**](EnhancedNetworksAPI.md#GetEnhancedNetworks) | **Get** /v3/networks/enhanced | Get all enhanced networks
+[**UpdateEnhancedNetwork**](EnhancedNetworksAPI.md#UpdateEnhancedNetwork) | **Put** /v3/networks/enhanced/{networkId} | Update enhanced network
 
 
 
@@ -31,7 +31,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -97,7 +97,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -167,7 +167,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -228,7 +228,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -298,7 +298,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -368,7 +368,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -429,7 +429,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {

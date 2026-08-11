@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 **Name** | **string** | Application name | 
 **Type** | **string** | Application type | 
 **Network** | **string** | Application network ID. To get the ID use endpoint &#39;/networks&#39; with [network:read] permission. | 
-**Host** | [**NullableOneOfFixedHostIdpHost**](oneOf&lt;FixedHost,IdpHost&gt;.md) |  | 
-**Port** | [**NullableOneOfFixedPortIdpPort**](oneOf&lt;FixedPort,IdpPort&gt;.md) |  | 
+**Host** | [**CommonCreateApplicationHost**](CommonCreateApplicationHost.md) |  | 
+**Port** | [**CommonCreateApplicationPort**](CommonCreateApplicationPort.md) |  | 
 **Users** | **[]string** |  | 
 **Groups** | **[]string** |  | 
 **Headers** | **map[string]interface{}** | Application specific headers. Keys must not contain . and $ | 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewWebCreateApplication
 
-`func NewWebCreateApplication(name string, type_ string, network string, host NullableOneOfFixedHostIdpHost, port NullableOneOfFixedPortIdpPort, users []string, groups []string, headers map[string]interface{}, ) *WebCreateApplication`
+`func NewWebCreateApplication(name string, type_ string, network string, host CommonCreateApplicationHost, port CommonCreateApplicationPort, users []string, groups []string, headers map[string]interface{}, ) *WebCreateApplication`
 
 NewWebCreateApplication instantiates a new WebCreateApplication object
 This constructor will assign default values to properties that have it defined,
@@ -94,64 +94,44 @@ SetNetwork sets Network field to given value.
 
 ### GetHost
 
-`func (o *WebCreateApplication) GetHost() OneOfFixedHostIdpHost`
+`func (o *WebCreateApplication) GetHost() CommonCreateApplicationHost`
 
 GetHost returns the Host field if non-nil, zero value otherwise.
 
 ### GetHostOk
 
-`func (o *WebCreateApplication) GetHostOk() (*OneOfFixedHostIdpHost, bool)`
+`func (o *WebCreateApplication) GetHostOk() (*CommonCreateApplicationHost, bool)`
 
 GetHostOk returns a tuple with the Host field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetHost
 
-`func (o *WebCreateApplication) SetHost(v OneOfFixedHostIdpHost)`
+`func (o *WebCreateApplication) SetHost(v CommonCreateApplicationHost)`
 
 SetHost sets Host field to given value.
 
 
-### SetHostNil
-
-`func (o *WebCreateApplication) SetHostNil(b bool)`
-
- SetHostNil sets the value for Host to be an explicit nil
-
-### UnsetHost
-`func (o *WebCreateApplication) UnsetHost()`
-
-UnsetHost ensures that no value is present for Host, not even an explicit nil
 ### GetPort
 
-`func (o *WebCreateApplication) GetPort() OneOfFixedPortIdpPort`
+`func (o *WebCreateApplication) GetPort() CommonCreateApplicationPort`
 
 GetPort returns the Port field if non-nil, zero value otherwise.
 
 ### GetPortOk
 
-`func (o *WebCreateApplication) GetPortOk() (*OneOfFixedPortIdpPort, bool)`
+`func (o *WebCreateApplication) GetPortOk() (*CommonCreateApplicationPort, bool)`
 
 GetPortOk returns a tuple with the Port field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPort
 
-`func (o *WebCreateApplication) SetPort(v OneOfFixedPortIdpPort)`
+`func (o *WebCreateApplication) SetPort(v CommonCreateApplicationPort)`
 
 SetPort sets Port field to given value.
 
 
-### SetPortNil
-
-`func (o *WebCreateApplication) SetPortNil(b bool)`
-
- SetPortNil sets the value for Port to be an explicit nil
-
-### UnsetPort
-`func (o *WebCreateApplication) UnsetPort()`
-
-UnsetPort ensures that no value is present for Port, not even an explicit nil
 ### GetUsers
 
 `func (o *WebCreateApplication) GetUsers() []string`

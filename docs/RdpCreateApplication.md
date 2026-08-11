@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 **Name** | **string** | Application name | 
 **Type** | **string** | Application type | 
 **Network** | **string** | Application network ID. To get the ID use endpoint &#39;/networks&#39; with [network:read] permission. | 
-**Host** | [**NullableOneOfFixedHostIdpHost**](oneOf&lt;FixedHost,IdpHost&gt;.md) |  | 
-**Port** | [**NullableOneOfFixedPortIdpPort**](oneOf&lt;FixedPort,IdpPort&gt;.md) |  | 
+**Host** | [**CommonCreateApplicationHost**](CommonCreateApplicationHost.md) |  | 
+**Port** | [**CommonCreateApplicationPort**](CommonCreateApplicationPort.md) |  | 
 **Users** | **[]string** |  | 
 **Groups** | **[]string** |  | 
 **Attributes** | [**RdpAttributes**](RdpAttributes.md) |  | 
@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 
 ### NewRdpCreateApplication
 
-`func NewRdpCreateApplication(name string, type_ string, network string, host NullableOneOfFixedHostIdpHost, port NullableOneOfFixedPortIdpPort, users []string, groups []string, attributes RdpAttributes, auth ApplicationAuth, ) *RdpCreateApplication`
+`func NewRdpCreateApplication(name string, type_ string, network string, host CommonCreateApplicationHost, port CommonCreateApplicationPort, users []string, groups []string, attributes RdpAttributes, auth ApplicationAuth, ) *RdpCreateApplication`
 
 NewRdpCreateApplication instantiates a new RdpCreateApplication object
 This constructor will assign default values to properties that have it defined,
@@ -95,64 +95,44 @@ SetNetwork sets Network field to given value.
 
 ### GetHost
 
-`func (o *RdpCreateApplication) GetHost() OneOfFixedHostIdpHost`
+`func (o *RdpCreateApplication) GetHost() CommonCreateApplicationHost`
 
 GetHost returns the Host field if non-nil, zero value otherwise.
 
 ### GetHostOk
 
-`func (o *RdpCreateApplication) GetHostOk() (*OneOfFixedHostIdpHost, bool)`
+`func (o *RdpCreateApplication) GetHostOk() (*CommonCreateApplicationHost, bool)`
 
 GetHostOk returns a tuple with the Host field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetHost
 
-`func (o *RdpCreateApplication) SetHost(v OneOfFixedHostIdpHost)`
+`func (o *RdpCreateApplication) SetHost(v CommonCreateApplicationHost)`
 
 SetHost sets Host field to given value.
 
 
-### SetHostNil
-
-`func (o *RdpCreateApplication) SetHostNil(b bool)`
-
- SetHostNil sets the value for Host to be an explicit nil
-
-### UnsetHost
-`func (o *RdpCreateApplication) UnsetHost()`
-
-UnsetHost ensures that no value is present for Host, not even an explicit nil
 ### GetPort
 
-`func (o *RdpCreateApplication) GetPort() OneOfFixedPortIdpPort`
+`func (o *RdpCreateApplication) GetPort() CommonCreateApplicationPort`
 
 GetPort returns the Port field if non-nil, zero value otherwise.
 
 ### GetPortOk
 
-`func (o *RdpCreateApplication) GetPortOk() (*OneOfFixedPortIdpPort, bool)`
+`func (o *RdpCreateApplication) GetPortOk() (*CommonCreateApplicationPort, bool)`
 
 GetPortOk returns a tuple with the Port field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPort
 
-`func (o *RdpCreateApplication) SetPort(v OneOfFixedPortIdpPort)`
+`func (o *RdpCreateApplication) SetPort(v CommonCreateApplicationPort)`
 
 SetPort sets Port field to given value.
 
 
-### SetPortNil
-
-`func (o *RdpCreateApplication) SetPortNil(b bool)`
-
- SetPortNil sets the value for Port to be an explicit nil
-
-### UnsetPort
-`func (o *RdpCreateApplication) UnsetPort()`
-
-UnsetPort ensures that no value is present for Port, not even an explicit nil
 ### GetUsers
 
 `func (o *RdpCreateApplication) GetUsers() []string`

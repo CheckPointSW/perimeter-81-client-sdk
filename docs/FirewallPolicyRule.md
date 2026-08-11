@@ -4,13 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | Pointer to **string** | Policy rule ID. | [optional] 
-**Name** | **string** | Policy rule ID. | 
-**Enabled** | **bool** | wether the rule is enabled. | 
-**Allowed** | **bool** | wether the rule is enabled. | 
+**Id** | Pointer to **string** | Unique policy rule ID. | [optional] 
+**Name** | **string** | Name of the policy rule. | 
+**Enabled** | **bool** | Enables or disables the rule on the firewall. When set to true, the rule is active; when false, the rule is inactive. | 
+**Allowed** | **bool** | Determines the rule action. When set to true, traffic is allowed; when false, traffic is blocked. | 
 **Sources** | [**SourcesAndDestinations**](SourcesAndDestinations.md) |  | 
 **Destinations** | [**SourcesAndDestinations**](SourcesAndDestinations.md) |  | 
-**Services** | Pointer to **[]string** | List of services objects IDs. | [optional] 
+**Services** | Pointer to **[]string** | List of service object IDs. | [optional] 
 
 ## Methods
 

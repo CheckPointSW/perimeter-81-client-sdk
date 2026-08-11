@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **UpdateTunnels** | Pointer to [**[]DynamicTunnelUpdateUpdateTunnelsInner**](DynamicTunnelUpdateUpdateTunnelsInner.md) |  | [optional] 
 **RemoveTunnels** | Pointer to [**[]DynamicTunnelUpdateRemoveTunnelsInner**](DynamicTunnelUpdateRemoveTunnelsInner.md) |  | [optional] 
 **SharedSettings** | Pointer to [**EnhancedIPSecSharedSettingsUpdate**](EnhancedIPSecSharedSettingsUpdate.md) |  | [optional] 
-**AdvancedSettings** | Pointer to [**IPSecAdvancedSettingsUpdateV23**](IPSecAdvancedSettingsUpdateV23.md) |  | [optional] 
+**AdvancedSettings** | Pointer to [**IPSecAdvancedSettingsV23**](IPSecAdvancedSettingsV23.md) |  | [optional] 
 **RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTE]
 
 ## Methods
@@ -179,20 +179,20 @@ HasSharedSettings returns a boolean if a field has been set.
 
 ### GetAdvancedSettings
 
-`func (o *DynamicTunnelUpdate) GetAdvancedSettings() IPSecAdvancedSettingsUpdateV23`
+`func (o *DynamicTunnelUpdate) GetAdvancedSettings() IPSecAdvancedSettingsV23`
 
 GetAdvancedSettings returns the AdvancedSettings field if non-nil, zero value otherwise.
 
 ### GetAdvancedSettingsOk
 
-`func (o *DynamicTunnelUpdate) GetAdvancedSettingsOk() (*IPSecAdvancedSettingsUpdateV23, bool)`
+`func (o *DynamicTunnelUpdate) GetAdvancedSettingsOk() (*IPSecAdvancedSettingsV23, bool)`
 
 GetAdvancedSettingsOk returns a tuple with the AdvancedSettings field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetAdvancedSettings
 
-`func (o *DynamicTunnelUpdate) SetAdvancedSettings(v IPSecAdvancedSettingsUpdateV23)`
+`func (o *DynamicTunnelUpdate) SetAdvancedSettings(v IPSecAdvancedSettingsV23)`
 
 SetAdvancedSettings sets AdvancedSettings field to given value.
 

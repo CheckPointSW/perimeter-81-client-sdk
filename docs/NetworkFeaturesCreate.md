@@ -4,15 +4,15 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**CloudSecurity** | Pointer to [**NetworkFeaturesCloudSecurity**](NetworkFeaturesCloudSecurity.md) |  | [optional] 
-**SymmetricInnerMesh** | Pointer to [**NetworkFeaturesCloudSecurity**](NetworkFeaturesCloudSecurity.md) |  | [optional] 
-**DNSServices** | Pointer to [**NetworkFeaturesDNSServices**](NetworkFeaturesDNSServices.md) |  | [optional] 
+**CloudSecurity** | [**NetworkFeaturesCloudSecurity**](NetworkFeaturesCloudSecurity.md) |  | 
+**SymmetricInnerMesh** | [**NetworkFeaturesCloudSecurity**](NetworkFeaturesCloudSecurity.md) |  | 
+**DNSServices** | [**NetworkFeaturesDNSServices**](NetworkFeaturesDNSServices.md) |  | 
 
 ## Methods
 
 ### NewNetworkFeaturesCreate
 
-`func NewNetworkFeaturesCreate() *NetworkFeaturesCreate`
+`func NewNetworkFeaturesCreate(cloudSecurity NetworkFeaturesCloudSecurity, symmetricInnerMesh NetworkFeaturesCloudSecurity, dNSServices NetworkFeaturesDNSServices, ) *NetworkFeaturesCreate`
 
 NewNetworkFeaturesCreate instantiates a new NetworkFeaturesCreate object
 This constructor will assign default values to properties that have it defined,
@@ -46,11 +46,6 @@ and a boolean to check if the value has been set.
 
 SetCloudSecurity sets CloudSecurity field to given value.
 
-### HasCloudSecurity
-
-`func (o *NetworkFeaturesCreate) HasCloudSecurity() bool`
-
-HasCloudSecurity returns a boolean if a field has been set.
 
 ### GetSymmetricInnerMesh
 
@@ -71,11 +66,6 @@ and a boolean to check if the value has been set.
 
 SetSymmetricInnerMesh sets SymmetricInnerMesh field to given value.
 
-### HasSymmetricInnerMesh
-
-`func (o *NetworkFeaturesCreate) HasSymmetricInnerMesh() bool`
-
-HasSymmetricInnerMesh returns a boolean if a field has been set.
 
 ### GetDNSServices
 
@@ -96,11 +86,6 @@ and a boolean to check if the value has been set.
 
 SetDNSServices sets DNSServices field to given value.
 
-### HasDNSServices
-
-`func (o *NetworkFeaturesCreate) HasDNSServices() bool`
-
-HasDNSServices returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

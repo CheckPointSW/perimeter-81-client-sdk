@@ -1,5 +1,5 @@
 /*
-Harmony SASE Public API
+Check Point - SASE Public API
 
 Testing StandardNetworksAPIService
 
@@ -14,19 +14,69 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v2"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func Test_perimeter81sdk_StandardNetworksAPIService(t *testing.T) {
 
-	configuration := openapiclient.NewConfiguration()
+	// NewConfiguration here takes (apiKey, basePath): this SDK's hand-written
+	// configuration.go (protected by .openapi-generator-ignore) replaced the
+	// stock zero-arg NewConfiguration() with a two-arg constructor. The stock
+	// api_test.mustache calls NewConfiguration() with no arguments, which no
+	// longer compiles. Every test below is unconditionally t.Skip'd (it is
+	// generated documentation, not an exercised regression test), so these
+	// are placeholder values, never used against a real server.
+	configuration := openapiclient.NewConfiguration("API_KEY", "BASE_PATH")
 	apiClient := openapiclient.NewAPIClient(configuration)
+
+	t.Run("Test StandardNetworksAPIService StandardGetInstance", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var networkId string
+		var gatewayId string
+
+		resp, httpRes, err := apiClient.StandardNetworksAPI.StandardGetInstance(context.Background(), networkId, gatewayId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
 
 	t.Run("Test StandardNetworksAPIService StandardGetNetworks", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.StandardNetworksAPI.StandardGetNetworks(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test StandardNetworksAPIService StandardNetworksControllerV2AddNetworkInstance", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var networkId string
+
+		resp, httpRes, err := apiClient.StandardNetworksAPI.StandardNetworksControllerV2AddNetworkInstance(context.Background(), networkId).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test StandardNetworksAPIService StandardNetworksControllerV2DeleteNetworkInstance", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		var networkId string
+
+		resp, httpRes, err := apiClient.StandardNetworksAPI.StandardNetworksControllerV2DeleteNetworkInstance(context.Background(), networkId).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

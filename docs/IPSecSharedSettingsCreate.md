@@ -6,15 +6,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **P81GatewaySubnets** | **[]string** |  | 
 **RemoteGatewaySubnets** | **[]string** |  | 
-**PeakBandwidth** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
-**P81ASN** | [**RemoteASN**](RemoteASN.md) |  | 
+**P81ASN** | Pointer to [**RemoteASN**](RemoteASN.md) |  | [optional] 
 **Features** | Pointer to [**IPSecSharedSettingsFeatures**](IPSecSharedSettingsFeatures.md) |  | [optional] 
 
 ## Methods
 
 ### NewIPSecSharedSettingsCreate
 
-`func NewIPSecSharedSettingsCreate(p81GatewaySubnets []string, remoteGatewaySubnets []string, p81ASN RemoteASN, ) *IPSecSharedSettingsCreate`
+`func NewIPSecSharedSettingsCreate(p81GatewaySubnets []string, remoteGatewaySubnets []string, ) *IPSecSharedSettingsCreate`
 
 NewIPSecSharedSettingsCreate instantiates a new IPSecSharedSettingsCreate object
 This constructor will assign default values to properties that have it defined,
@@ -69,31 +68,6 @@ and a boolean to check if the value has been set.
 SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
 
-### GetPeakBandwidth
-
-`func (o *IPSecSharedSettingsCreate) GetPeakBandwidth() int32`
-
-GetPeakBandwidth returns the PeakBandwidth field if non-nil, zero value otherwise.
-
-### GetPeakBandwidthOk
-
-`func (o *IPSecSharedSettingsCreate) GetPeakBandwidthOk() (*int32, bool)`
-
-GetPeakBandwidthOk returns a tuple with the PeakBandwidth field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPeakBandwidth
-
-`func (o *IPSecSharedSettingsCreate) SetPeakBandwidth(v int32)`
-
-SetPeakBandwidth sets PeakBandwidth field to given value.
-
-### HasPeakBandwidth
-
-`func (o *IPSecSharedSettingsCreate) HasPeakBandwidth() bool`
-
-HasPeakBandwidth returns a boolean if a field has been set.
-
 ### GetP81ASN
 
 `func (o *IPSecSharedSettingsCreate) GetP81ASN() RemoteASN`
@@ -113,6 +87,11 @@ and a boolean to check if the value has been set.
 
 SetP81ASN sets P81ASN field to given value.
 
+### HasP81ASN
+
+`func (o *IPSecSharedSettingsCreate) HasP81ASN() bool`
+
+HasP81ASN returns a boolean if a field has been set.
 
 ### GetFeatures
 

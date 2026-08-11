@@ -4,16 +4,16 @@ All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-a
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateDynamicTunnel**](EnhancedTunnelsAPI.md#CreateDynamicTunnel) | **Post** /v2.3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic | Create dynamic IPSec tunnel
-[**CreateStaticTunnel**](EnhancedTunnelsAPI.md#CreateStaticTunnel) | **Post** /v2.3/networks/enhanced/{networkId}/tunnels/ipsec/static | Create static IPSec tunnel
-[**DeleteDynamicTunnel**](EnhancedTunnelsAPI.md#DeleteDynamicTunnel) | **Delete** /v2.3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Delete dynamic IPSec tunnel
-[**DeleteStaticTunnel**](EnhancedTunnelsAPI.md#DeleteStaticTunnel) | **Delete** /v2.3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Delete static IPSec tunnel
-[**GetDynamicTunnel**](EnhancedTunnelsAPI.md#GetDynamicTunnel) | **Get** /v2.3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Get dynamic IPSec tunnel
-[**GetEnhancedRegionTunnelsPerNetwork**](EnhancedTunnelsAPI.md#GetEnhancedRegionTunnelsPerNetwork) | **Get** /v2.3/networks/enhanced/{networkId}/tunnels | Get tunnels for a network
-[**GetEnhancedRegionTunnelsPerRegion**](EnhancedTunnelsAPI.md#GetEnhancedRegionTunnelsPerRegion) | **Get** /v2.3/networks/enhanced/{networkId}/regions/{regionId}/tunnels | Get tunnels for a region
-[**GetStaticTunnel**](EnhancedTunnelsAPI.md#GetStaticTunnel) | **Get** /v2.3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Get static IPSec tunnel
-[**UpdateDynamicTunnel**](EnhancedTunnelsAPI.md#UpdateDynamicTunnel) | **Put** /v2.3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Update dynamic IPSec tunnel
-[**UpdateStaticTunnel**](EnhancedTunnelsAPI.md#UpdateStaticTunnel) | **Put** /v2.3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Update static IPSec tunnel
+[**CreateDynamicTunnel**](EnhancedTunnelsAPI.md#CreateDynamicTunnel) | **Post** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic | Create dynamic IPSec tunnel
+[**CreateStaticTunnel**](EnhancedTunnelsAPI.md#CreateStaticTunnel) | **Post** /v3/networks/enhanced/{networkId}/tunnels/ipsec/static | Create static IPSec tunnel
+[**DeleteDynamicTunnel**](EnhancedTunnelsAPI.md#DeleteDynamicTunnel) | **Delete** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Delete dynamic IPSec tunnel
+[**DeleteStaticTunnel**](EnhancedTunnelsAPI.md#DeleteStaticTunnel) | **Delete** /v3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Delete static IPSec tunnel
+[**GetDynamicTunnel**](EnhancedTunnelsAPI.md#GetDynamicTunnel) | **Get** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Get dynamic IPSec tunnel
+[**GetEnhancedRegionTunnelsPerNetwork**](EnhancedTunnelsAPI.md#GetEnhancedRegionTunnelsPerNetwork) | **Get** /v3/networks/enhanced/{networkId}/tunnels | Get tunnels for a network
+[**GetEnhancedRegionTunnelsPerRegion**](EnhancedTunnelsAPI.md#GetEnhancedRegionTunnelsPerRegion) | **Get** /v3/networks/enhanced/{networkId}/regions/{regionId}/tunnels | Get tunnels for a region
+[**GetStaticTunnel**](EnhancedTunnelsAPI.md#GetStaticTunnel) | **Get** /v3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Get static IPSec tunnel
+[**UpdateDynamicTunnel**](EnhancedTunnelsAPI.md#UpdateDynamicTunnel) | **Put** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Update dynamic IPSec tunnel
+[**UpdateStaticTunnel**](EnhancedTunnelsAPI.md#UpdateStaticTunnel) | **Put** /v3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Update static IPSec tunnel
 
 
 
@@ -34,12 +34,12 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
 	networkId := "networkId_example" // string | 
-	dynamicTunnelCreate := *openapiclient.NewDynamicTunnelCreate("TunnelName_example", []openapiclient.DynamicTunnelDetails{*openapiclient.NewDynamicTunnelDetails("RegionID_example")}, *openapiclient.NewEnhancedIPSecSharedSettingsCreate([]string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}, *openapiclient.NewNetworkFeaturesCreate(), *openapiclient.NewRemoteASN()), *openapiclient.NewIPSecAdvancedSettingsV23("KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}))) // DynamicTunnelCreate | 
+	dynamicTunnelCreate := *openapiclient.NewDynamicTunnelCreate("TunnelName_example", []openapiclient.DynamicTunnelDetails{*openapiclient.NewDynamicTunnelDetails("AuthType_example", "RegionID_example", "P81GWInternalIP_example", "RemoteGWInternalIP_example", "RemotePublicIP_example", *openapiclient.NewASN(), "RemoteID_example", openapiclient.RoutingType("route"))}, *openapiclient.NewEnhancedIPSecSharedSettingsCreate([]string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}, *openapiclient.NewNetworkFeaturesCreate(*openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesDNSServices(*openapiclient.NewNetworkFeaturesDNSServicesRedirectToResolver(false))), *openapiclient.NewRemoteASN()), *openapiclient.NewIPSecAdvancedSettingsV23("KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}))) // DynamicTunnelCreate | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -106,12 +106,12 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
 	networkId := "networkId_example" // string | 
-	staticTunnelCreate := *openapiclient.NewStaticTunnelCreate("RegionID_example", "TunnelName_example", []string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}, "KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"})) // StaticTunnelCreate | 
+	staticTunnelCreate := *openapiclient.NewStaticTunnelCreate("AuthType_example", "RegionID_example", "TunnelName_example", []string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}, "KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), "RemotePublicIP_example", "RemoteID_example", *openapiclient.NewNetworkFeaturesCreate(*openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesDNSServices(*openapiclient.NewNetworkFeaturesDNSServicesRedirectToResolver(false))), openapiclient.RoutingType("route")) // StaticTunnelCreate | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -178,7 +178,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -251,7 +251,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -324,7 +324,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -397,7 +397,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -471,7 +471,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -548,7 +548,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -621,7 +621,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -696,7 +696,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {

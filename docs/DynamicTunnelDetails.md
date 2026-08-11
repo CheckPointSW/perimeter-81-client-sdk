@@ -4,22 +4,22 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AuthType** | Pointer to **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | [optional] 
+**AuthType** | **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | 
 **Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk. | [optional] 
 **CustomerRootCA** | Pointer to **string** | Customer root certificate authority. Required when authType is cert. | [optional] 
-**P81GWInternalIP** | Pointer to **string** | Harmony Sase gateway internal IP address | [optional] 
-**RemoteGWInternalIP** | Pointer to **string** | Remote gateway internal IP address | [optional] 
-**RemotePublicIP** | Pointer to **string** | Remote gateway public IP address | [optional] 
-**RemoteASN** | Pointer to [**ASN**](ASN.md) |  | [optional] 
-**RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
-**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTE]
 **RegionID** | **string** | Dynamic tunnel enhanced region ID | 
+**P81GWInternalIP** | **string** | Harmony Sase gateway internal IP address | 
+**RemoteGWInternalIP** | **string** | Remote gateway internal IP address | 
+**RemotePublicIP** | **string** | Remote gateway public IP address | 
+**RemoteASN** | [**ASN**](ASN.md) |  | 
+**RemoteID** | **string** | Remote gateway ID | 
+**RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTE]
 
 ## Methods
 
 ### NewDynamicTunnelDetails
 
-`func NewDynamicTunnelDetails(regionID string, ) *DynamicTunnelDetails`
+`func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN ASN, remoteID string, routingType RoutingType, ) *DynamicTunnelDetails`
 
 NewDynamicTunnelDetails instantiates a new DynamicTunnelDetails object
 This constructor will assign default values to properties that have it defined,
@@ -53,11 +53,6 @@ and a boolean to check if the value has been set.
 
 SetAuthType sets AuthType field to given value.
 
-### HasAuthType
-
-`func (o *DynamicTunnelDetails) HasAuthType() bool`
-
-HasAuthType returns a boolean if a field has been set.
 
 ### GetPassphrase
 
@@ -109,6 +104,26 @@ SetCustomerRootCA sets CustomerRootCA field to given value.
 
 HasCustomerRootCA returns a boolean if a field has been set.
 
+### GetRegionID
+
+`func (o *DynamicTunnelDetails) GetRegionID() string`
+
+GetRegionID returns the RegionID field if non-nil, zero value otherwise.
+
+### GetRegionIDOk
+
+`func (o *DynamicTunnelDetails) GetRegionIDOk() (*string, bool)`
+
+GetRegionIDOk returns a tuple with the RegionID field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRegionID
+
+`func (o *DynamicTunnelDetails) SetRegionID(v string)`
+
+SetRegionID sets RegionID field to given value.
+
+
 ### GetP81GWInternalIP
 
 `func (o *DynamicTunnelDetails) GetP81GWInternalIP() string`
@@ -128,11 +143,6 @@ and a boolean to check if the value has been set.
 
 SetP81GWInternalIP sets P81GWInternalIP field to given value.
 
-### HasP81GWInternalIP
-
-`func (o *DynamicTunnelDetails) HasP81GWInternalIP() bool`
-
-HasP81GWInternalIP returns a boolean if a field has been set.
 
 ### GetRemoteGWInternalIP
 
@@ -153,11 +163,6 @@ and a boolean to check if the value has been set.
 
 SetRemoteGWInternalIP sets RemoteGWInternalIP field to given value.
 
-### HasRemoteGWInternalIP
-
-`func (o *DynamicTunnelDetails) HasRemoteGWInternalIP() bool`
-
-HasRemoteGWInternalIP returns a boolean if a field has been set.
 
 ### GetRemotePublicIP
 
@@ -178,11 +183,6 @@ and a boolean to check if the value has been set.
 
 SetRemotePublicIP sets RemotePublicIP field to given value.
 
-### HasRemotePublicIP
-
-`func (o *DynamicTunnelDetails) HasRemotePublicIP() bool`
-
-HasRemotePublicIP returns a boolean if a field has been set.
 
 ### GetRemoteASN
 
@@ -203,11 +203,6 @@ and a boolean to check if the value has been set.
 
 SetRemoteASN sets RemoteASN field to given value.
 
-### HasRemoteASN
-
-`func (o *DynamicTunnelDetails) HasRemoteASN() bool`
-
-HasRemoteASN returns a boolean if a field has been set.
 
 ### GetRemoteID
 
@@ -228,11 +223,6 @@ and a boolean to check if the value has been set.
 
 SetRemoteID sets RemoteID field to given value.
 
-### HasRemoteID
-
-`func (o *DynamicTunnelDetails) HasRemoteID() bool`
-
-HasRemoteID returns a boolean if a field has been set.
 
 ### GetRoutingType
 
@@ -252,31 +242,6 @@ and a boolean to check if the value has been set.
 `func (o *DynamicTunnelDetails) SetRoutingType(v RoutingType)`
 
 SetRoutingType sets RoutingType field to given value.
-
-### HasRoutingType
-
-`func (o *DynamicTunnelDetails) HasRoutingType() bool`
-
-HasRoutingType returns a boolean if a field has been set.
-
-### GetRegionID
-
-`func (o *DynamicTunnelDetails) GetRegionID() string`
-
-GetRegionID returns the RegionID field if non-nil, zero value otherwise.
-
-### GetRegionIDOk
-
-`func (o *DynamicTunnelDetails) GetRegionIDOk() (*string, bool)`
-
-GetRegionIDOk returns a tuple with the RegionID field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRegionID
-
-`func (o *DynamicTunnelDetails) SetRegionID(v string)`
-
-SetRegionID sets RegionID field to given value.
 
 
 
