@@ -503,3 +503,162 @@ entries:
       - $ref: '#/components/schemas/NetworkTunnelIpsecSingle'
       - $ref: '#/components/schemas/NetworkTunnelIpsecRedundant'
       - $ref: '#/components/schemas/NetworkTunnelBase'
+
+  # --- Fix round 1 of 5 (2026-08-11): A15 added NetworkTunnelBase as a
+  # fallback anyOf member, but composition-resolved it still requires 9
+  # fields (its own 8-field inline branch plus createdAt via allOf ->
+  # BaseDates), so it rejected the realistic connector payload (createdAt
+  # absent) it was meant to catch — confirmed by
+  # TestNetworkTunnel_UnrecognizedTypeWithoutCreatedAt_StillErrors. A16-A17d
+  # fix that without loosening BaseDates (shared by other schemas) or
+  # silently loosening the four concrete tunnel variants that also compose
+  # NetworkTunnelBase (NetworkTunnelOpenvpn, NetworkTunnelWireguard,
+  # NetworkTunnelIpsecSingle, NetworkTunnelIpsecRedundant) — see
+  # api/AUDIT-2026-08-10.md for none of these (this family postdates that
+  # audit); the reasoning parallels A6-ipsec-redundant-tunnel-not-required's
+  # shared-ancestor hazard instead.
+
+  - id: A16-network-tunnel-base-trim-required-to-id
+    reason: >
+      NetworkTunnelBase plays two roles: (1) the allOf ancestor every
+      concrete tunnel variant composes, where all 9 of its fields (id,
+      network, region, instance, interfaceName, type, isHA, tenantId,
+      createdAt) are genuinely always present; and (2), since A15, the
+      literal fifth anyOf member NetworkTunnel falls back to for tunnel
+      types the spec doesn't enumerate. Those two roles need different
+      required-ness. Composition-resolved, NetworkTunnelBase currently
+      requires all 9 fields (8 from its own inline allOf branch, plus
+      createdAt inherited via its other allOf branch, $ref BaseDates, whose
+      own required is [createdAt] — confirmed via
+      model_network_tunnel_base.go's generated requiredProperties list,
+      which lists all 9). A fallback that requires 9 fields can never do its
+      job for the case that actually needs it: the live API's undocumented
+      tunnel types (e.g. `connector`) are observed to omit createdAt on the
+      wire — the same realistic shape the v2.3 hand-patch's guard was
+      written against, `if err = json.Unmarshal(data, &raw); err == nil &&
+      raw.Id != ""` — non-empty id and nothing else. This flattens
+      NetworkTunnelBase's own allOf composition into a standalone object
+      with required trimmed to [id] alone, reproducing that exact v2.3
+      guard declaratively: permissive enough to catch any unrecognised
+      tunnel type, strict enough that an empty or garbage payload still
+      fails to match. BaseDates itself is deliberately left untouched here —
+      it is shared by schemas beyond NetworkTunnelBase, and trimming its
+      required there would silently relax validation for all of them, not
+      just this one (the same shared-ancestor hazard
+      A6-ipsec-redundant-tunnel-not-required already hit and solved by
+      flattening the specific downstream schema instead of the shared
+      ancestor). NetworkTunnelBase is itself a shared ancestor for four
+      other schemas (see A17a-A17d), which is why those four entries exist:
+      openapi-generator unions required fields across all of a schema's
+      allOf branches at generation time, so trimming NetworkTunnelBase's own
+      required here would otherwise silently cascade into
+      NetworkTunnelOpenvpn/Wireguard/IpsecSingle/IpsecRedundant's composed
+      required sets too, even though none of those four needed loosening.
+    remove_when: >
+      upstream's NetworkTunnelBase schema itself declares only `id` as
+      required, or upstream provides a distinct, purpose-built schema for
+      anyOf(NetworkTunnel)'s "unrecognised tunnel type" fallback role so
+      this schema no longer needs to serve both roles at once.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelBase
+      required: [id]
+
+  - id: A17a-network-tunnel-openvpn-restore-required
+    reason: >
+      See A16. NetworkTunnelOpenvpn's allOf composes NetworkTunnelBase (for
+      the 9 shared tunnel fields) plus its own inline branch (requiring only
+      passphrase and username) — before A16, its composition-resolved
+      required set was [id, network, region, instance, interfaceName, type,
+      isHA, tenantId, createdAt, passphrase, username] (confirmed from
+      model_network_tunnel_openvpn.go's generated requiredProperties prior
+      to this fix round). A16 trims NetworkTunnelBase's own required to
+      [id], which would silently drop network/region/instance/
+      interfaceName/type/isHA/tenantId/createdAt from this list too, since
+      openapi-generator unions required fields across allOf branches — this
+      flattens NetworkTunnelOpenvpn into a standalone object with that exact
+      pre-A16 required list restored explicitly, decoupling it from
+      NetworkTunnelBase's required propagation entirely so A16 cannot affect
+      it.
+    remove_when: See A16.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelOpenvpn
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, passphrase, username]
+
+  - id: A17b-network-tunnel-wireguard-restore-required
+    reason: >
+      See A16 and A17a — same mechanism, applied to NetworkTunnelWireguard.
+      Its pre-A16 composition-resolved required set was [id, network,
+      region, instance, interfaceName, type, isHA, tenantId, createdAt,
+      leftAllowedIP, leftEndpoint, vault, requestConfigToken] (confirmed
+      from model_network_tunnel_wireguard.go's generated requiredProperties
+      prior to this fix round). This is also the schema whose regression
+      this fix round is most protective of:
+      TestNetworkTunnel_ConcreteVariantDoesNotFallBackToBase decodes a
+      wireguard payload and asserts it lands in NetworkTunnelWireguard, not
+      NetworkTunnelBase — a guarantee that matters even more now that
+      NetworkTunnelBase (post-A16) accepts almost any payload with a
+      non-empty id.
+    remove_when: See A16.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelWireguard
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, leftAllowedIP, leftEndpoint, vault, requestConfigToken]
+
+  - id: A17c-network-tunnel-ipsec-single-restore-required
+    reason: >
+      See A16 and A17a — same mechanism, applied to NetworkTunnelIpsecSingle.
+      Its pre-A16 composition-resolved required set was [id, network,
+      region, instance, interfaceName, type, isHA, tenantId, createdAt,
+      keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1,
+      phase2, right, rightID, passphrase, dpdAction, leftSubnets,
+      rightSubnets] (confirmed from
+      model_network_tunnel_ipsec_single.go's generated requiredProperties
+      prior to this fix round). NetworkTunnelIpsecSingle's allOf also
+      composes NetworkIpsecBase alongside NetworkTunnelBase; flattening
+      pulls that schema's properties in too (via the same _flatten_schema
+      helper A6-ipsec-redundant-tunnel-not-required already uses), so no
+      properties are lost — only the required list is replaced, explicitly,
+      with the value it already had.
+    remove_when: See A16.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelIpsecSingle
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction, leftSubnets, rightSubnets]
+
+  - id: A17d-network-tunnel-ipsec-redundant-restore-required
+    reason: >
+      See A16 and A17a — same mechanism, applied to
+      NetworkTunnelIpsecRedundant. Its pre-A16 composition-resolved required
+      set was [id, network, region, instance, interfaceName, type, isHA,
+      tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay,
+      dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction,
+      leftSubnets, rightSubnets, haTunnelID] (confirmed from
+      model_network_tunnel_ipsec_redundant.go's generated requiredProperties
+      prior to this fix round — this already reflects
+      A6-network-tunnel-ipsec-redundant-not-required's earlier trim of
+      rightASN/rightPrivateIP/leftPrivateIP from this schema's own inline
+      branch, which ran before this entry and is preserved by using this
+      exact, already-trimmed list rather than the wider pre-A6 set).
+      NetworkTunnelIpsecRedundant's allOf composes NetworkTunnelBase and
+      NetworkIpsecBase plus its own inline branch (haTunnelID, post-A6); this
+      flattening supersedes A6's in-place trim of that inline branch with an
+      equivalent, fully-flattened result — A6's transform still runs first
+      (entries apply in file order) but becomes a harmless no-op against an
+      already-empty allOf once this entry has run for a later regeneration,
+      since flattening replaces the allOf list entirely. Both entries are
+      kept: A6's reasoning about rightASN/rightPrivateIP/leftPrivateIP is
+      independently true and worth keeping documented even though this
+      entry's explicit required list is what actually takes effect on the
+      built spec.
+    remove_when: See A16.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelIpsecRedundant
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction, leftSubnets, rightSubnets, haTunnelID]

@@ -1,3 +1,46 @@
+{{!
+  Local override of openapi-generator 7.24.0's stock go/model_anyof.mustache.
+
+  WHY THIS FILE EXISTS: openapi-generator's CodegenModel.anyOf (and .oneOf)
+  is declared as `java.util.Set<String> anyOf = new TreeSet<>()` — confirmed
+  via `javap -p -c org.openapitools.codegen.CodegenModel` against
+  openapi-generator-cli-7.24.0.jar. A TreeSet iterates in natural (ASCII/
+  Unicode) String order, alphabetically by Go type name, unconditionally —
+  there is no additional-property or CLI flag that changes this. That means
+  the ORDER an anyOf's members are listed in the spec YAML does not control
+  the order the stock template tries them in; the try-order is always
+  alphabetical, full stop.
+
+  This SDK relies on api/overlay.yaml entry A15 to add NetworkTunnelBase as
+  a fifth, deliberately-last "unrecognised tunnel type" fallback member of
+  NetworkTunnel's anyOf (see that entry, and A16-A17d, for the full story of
+  why a fallback member is needed and how its required-field-ness was
+  reconciled with being shared by four other schemas). A fallback member
+  MUST be tried after every concrete variant: its fields are a subset of
+  every concrete variant's, so if tried first it would silently swallow
+  payloads that belong to a concrete variant, before that variant's own
+  decoder ever got a chance to run — this was empirically confirmed to
+  happen (a genuine wireguard payload decoded into the fallback instead of
+  NetworkTunnelWireguard) before this override existed.
+
+  "NetworkTunnelBase" happens to sort alphabetically first among
+  NetworkTunnel's five anyOf members ('B' precedes 'I', 'O', 'W'), so this
+  template's two-pass split — try every non-alphabetically-first member in
+  the loop's natural order first, then try the alphabetically-first member
+  last, using the "-first" section marker the stock template already uses
+  elsewhere (the discriminator lookup) — is what makes NetworkTunnelBase the
+  last candidate tried, without hand-editing generated output.
+
+  NetworkTunnel is, as of this writing, the ONLY anyOf-composed schema in
+  this spec (verify: `grep -c '^\s*anyOf:' api/swagger.yaml` should print 1),
+  so this override's blast radius is exactly one model today. This split is
+  deliberately narrow, not a general ordering mechanism: it assumes whoever
+  sorts alphabetically first is the one meant to be tried last, which is
+  true for NetworkTunnel's fallback today but is not a general property of
+  anyOf. If a second anyOf schema is ever added to this spec with different
+  ordering needs (or no fallback-last semantics at all), this template must
+  be revisited — do not assume this split generalizes to it.
+}}
 {{#discriminator}}
 // checks if the {{classname}} type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &{{classname}}{}

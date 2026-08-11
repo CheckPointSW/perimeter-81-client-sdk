@@ -123,11 +123,22 @@ def test_carried_forward_patches_are_applied():
         "the shared create-path ancestor must still require passphrase"
     )
     # A6:NetworkTunnelIpsecRedundant — rightASN/rightPrivateIP/leftPrivateIP
-    # no longer required, haTunnelID still is, inline branch otherwise intact.
-    branches = [b for b in s["NetworkTunnelIpsecRedundant"]["allOf"] if "$ref" not in b]
-    assert len(branches) == 1
-    assert branches[0]["required"] == ["haTunnelID"]
-    assert "rightASN" in branches[0]["properties"]
+    # no longer required, haTunnelID still is, rightASN still present as an
+    # optional property. NetworkTunnelIpsecRedundant no longer has an allOf
+    # of its own to inspect a branch of: A17d (fix round 1 of 5, 2026-08-11)
+    # fully flattened it into a standalone flat object (decoupling it from
+    # NetworkTunnelBase's required-ness so A16's trim of NetworkTunnelBase
+    # doesn't cascade into it) — see that entry for why. A6's own
+    # required-trim still runs first and still matters: it's what makes
+    # haTunnelID (not rightASN/rightPrivateIP/leftPrivateIP) the one
+    # NetworkTunnelIpsecRedundant-specific field baked into A17d's explicit
+    # required list below.
+    assert "allOf" not in s["NetworkTunnelIpsecRedundant"]
+    assert "haTunnelID" in s["NetworkTunnelIpsecRedundant"]["required"]
+    assert "rightASN" not in s["NetworkTunnelIpsecRedundant"]["required"]
+    assert "rightPrivateIP" not in s["NetworkTunnelIpsecRedundant"]["required"]
+    assert "leftPrivateIP" not in s["NetworkTunnelIpsecRedundant"]["required"]
+    assert "rightASN" in s["NetworkTunnelIpsecRedundant"]["properties"]
     # A8 — composition-aware: no schema declares peakBandwidth at any depth,
     # and the two schemas that used to (EnhancedTunnelBase, StaticTunnelCreate)
     # now declare peakBandwidthMbps instead.
@@ -285,3 +296,72 @@ def test_a15_network_tunnel_anyof_has_base_fallback_last():
         "#/components/schemas/NetworkTunnelIpsecSingle",
         "#/components/schemas/NetworkTunnelIpsecRedundant",
     ], refs
+
+
+def test_a16_network_tunnel_base_required_is_id_only():
+    """A16 (fix round 1 of 5, 2026-08-11): NetworkTunnelBase's
+    composition-resolved required set was 9 fields (its own 8-field inline
+    branch, plus createdAt inherited via allOf -> BaseDates) — too strict
+    for its post-A15 role as NetworkTunnel's anyOf fallback member, since the
+    live API's undocumented tunnel types are observed to omit createdAt on
+    the wire (see api/overlay.yaml's A16 entry). This asserts the
+    flattened postcondition: no allOf left, required trimmed to exactly
+    [id], and every field BaseDates/its own inline branch used to require
+    (network, region, instance, interfaceName, type, isHA, tenantId,
+    createdAt, updatedAt) is still present as an (now-optional) property —
+    nothing was dropped, only required-ness."""
+    d = build()
+    base = d["components"]["schemas"]["NetworkTunnelBase"]
+    assert "allOf" not in base, base
+    assert base["required"] == ["id"], base["required"]
+    for prop in (
+        "id", "network", "region", "instance", "interfaceName", "type",
+        "isHA", "tenantId", "createdAt", "updatedAt",
+    ):
+        assert prop in base["properties"], prop
+
+
+def test_a17_concrete_tunnel_variants_required_sets_are_unchanged():
+    """A17a-A17d (fix round 1 of 5, 2026-08-11): A16 trims NetworkTunnelBase's
+    own required list to [id]. Because openapi-generator unions required
+    fields across all of a schema's allOf branches at generation time, and
+    NetworkTunnelOpenvpn/Wireguard/IpsecSingle/IpsecRedundant each compose
+    NetworkTunnelBase via allOf, A16 would otherwise silently cascade into
+    all four of their composed required sets too — the exact "no other
+    schema's required set changed" hazard flagged when this fix round was
+    reviewed. A17a-A17d flatten each of the four into a standalone object
+    with their exact pre-A16 composed required set restored explicitly,
+    decoupling them from NetworkTunnelBase's required-ness entirely. This
+    asserts each schema's flattened required set still matches ground truth
+    captured from the generated Go files before A16/A17a-A17d existed."""
+    d = build()
+    s = d["components"]["schemas"]
+    expected = {
+        "NetworkTunnelOpenvpn": {
+            "id", "network", "region", "instance", "interfaceName", "type",
+            "isHA", "tenantId", "createdAt", "passphrase", "username",
+        },
+        "NetworkTunnelWireguard": {
+            "id", "network", "region", "instance", "interfaceName", "type",
+            "isHA", "tenantId", "createdAt", "leftAllowedIP", "leftEndpoint",
+            "vault", "requestConfigToken",
+        },
+        "NetworkTunnelIpsecSingle": {
+            "id", "network", "region", "instance", "interfaceName", "type",
+            "isHA", "tenantId", "createdAt", "keyExchange", "ikeLifeTime",
+            "lifetime", "dpdDelay", "dpdTimeout", "phase1", "phase2",
+            "right", "rightID", "passphrase", "dpdAction", "leftSubnets",
+            "rightSubnets",
+        },
+        "NetworkTunnelIpsecRedundant": {
+            "id", "network", "region", "instance", "interfaceName", "type",
+            "isHA", "tenantId", "createdAt", "keyExchange", "ikeLifeTime",
+            "lifetime", "dpdDelay", "dpdTimeout", "phase1", "phase2",
+            "right", "rightID", "passphrase", "dpdAction", "leftSubnets",
+            "rightSubnets", "haTunnelID",
+        },
+    }
+    for name, want in expected.items():
+        schema = s[name]
+        assert "allOf" not in schema, (name, schema)
+        assert set(schema["required"]) == want, (name, set(schema["required"]) ^ want)

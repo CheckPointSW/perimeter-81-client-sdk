@@ -9542,7 +9542,7 @@ components:
               tenantId: tenantId
               createdAt: 2000-01-23T04:56:07.000+00:00
               updatedAt: 2000-01-23T04:56:07.000+00:00
-              passphrase: null
+              passphrase: passphrase
               username: username
             - id: id
               network: network
@@ -9554,7 +9554,7 @@ components:
               tenantId: tenantId
               createdAt: 2000-01-23T04:56:07.000+00:00
               updatedAt: 2000-01-23T04:56:07.000+00:00
-              passphrase: null
+              passphrase: passphrase
               username: username
             id: id
             tenantId: tenantId
@@ -9578,7 +9578,7 @@ components:
               tenantId: tenantId
               createdAt: 2000-01-23T04:56:07.000+00:00
               updatedAt: 2000-01-23T04:56:07.000+00:00
-              passphrase: null
+              passphrase: passphrase
               username: username
             - id: id
               network: network
@@ -9590,7 +9590,7 @@ components:
               tenantId: tenantId
               createdAt: 2000-01-23T04:56:07.000+00:00
               updatedAt: 2000-01-23T04:56:07.000+00:00
-              passphrase: null
+              passphrase: passphrase
               username: username
             id: id
             tenantId: tenantId
@@ -9622,7 +9622,7 @@ components:
               tenantId: tenantId
               createdAt: 2000-01-23T04:56:07.000+00:00
               updatedAt: 2000-01-23T04:56:07.000+00:00
-              passphrase: null
+              passphrase: passphrase
               username: username
             - id: id
               network: network
@@ -9634,7 +9634,7 @@ components:
               tenantId: tenantId
               createdAt: 2000-01-23T04:56:07.000+00:00
               updatedAt: 2000-01-23T04:56:07.000+00:00
-              passphrase: null
+              passphrase: passphrase
               username: username
             id: id
             tenantId: tenantId
@@ -9658,7 +9658,7 @@ components:
               tenantId: tenantId
               createdAt: 2000-01-23T04:56:07.000+00:00
               updatedAt: 2000-01-23T04:56:07.000+00:00
-              passphrase: null
+              passphrase: passphrase
               username: username
             - id: id
               network: network
@@ -9670,7 +9670,7 @@ components:
               tenantId: tenantId
               createdAt: 2000-01-23T04:56:07.000+00:00
               updatedAt: 2000-01-23T04:56:07.000+00:00
-              passphrase: null
+              passphrase: passphrase
               username: username
             id: id
             tenantId: tenantId
@@ -9803,7 +9803,7 @@ components:
           tenantId: tenantId
           createdAt: 2000-01-23T04:56:07.000+00:00
           updatedAt: 2000-01-23T04:56:07.000+00:00
-          passphrase: null
+          passphrase: passphrase
           username: username
         - id: id
           network: network
@@ -9815,7 +9815,7 @@ components:
           tenantId: tenantId
           createdAt: 2000-01-23T04:56:07.000+00:00
           updatedAt: 2000-01-23T04:56:07.000+00:00
-          passphrase: null
+          passphrase: passphrase
           username: username
         id: id
         tenantId: tenantId
@@ -9918,7 +9918,7 @@ components:
             tenantId: tenantId
             createdAt: 2000-01-23T04:56:07.000+00:00
             updatedAt: 2000-01-23T04:56:07.000+00:00
-            passphrase: null
+            passphrase: passphrase
             username: username
           - id: id
             network: network
@@ -9930,7 +9930,7 @@ components:
             tenantId: tenantId
             createdAt: 2000-01-23T04:56:07.000+00:00
             updatedAt: 2000-01-23T04:56:07.000+00:00
-            passphrase: null
+            passphrase: passphrase
             username: username
           id: id
           tenantId: tenantId
@@ -9954,7 +9954,7 @@ components:
             tenantId: tenantId
             createdAt: 2000-01-23T04:56:07.000+00:00
             updatedAt: 2000-01-23T04:56:07.000+00:00
-            passphrase: null
+            passphrase: passphrase
             username: username
           - id: id
             network: network
@@ -9966,7 +9966,7 @@ components:
             tenantId: tenantId
             createdAt: 2000-01-23T04:56:07.000+00:00
             updatedAt: 2000-01-23T04:56:07.000+00:00
-            passphrase: null
+            passphrase: passphrase
             username: username
           id: id
           tenantId: tenantId
@@ -9981,84 +9981,274 @@ components:
       - $ref: "#/components/schemas/NetworkTunnelBase"
     NetworkTunnelBase:
       additionalProperties: true
-      allOf:
-      - additionalProperties: true
-        properties:
-          id:
-            description: Unique ID.
-            type: string
-          network:
-            description: ID of the network.
-            type: string
-          region:
-            description: ID of the network region.
-            type: string
-          instance:
-            description: ID of the network instance.
-            type: string
-          interfaceName:
-            type: string
-          type:
-            enum:
-            - connector
-            - ipsec
-            - openvpn
-            type: string
-          isHA:
-            description: Indicates if it's a redundant tunnel.
-            type: boolean
-          tenantId:
-            description: ID of the tenant.
-            type: string
-        required:
-        - id
-        - instance
-        - interfaceName
-        - isHA
-        - network
-        - region
-        - tenantId
-        - type
-        type: object
-      - $ref: "#/components/schemas/BaseDates"
+      properties:
+        id:
+          description: Unique ID.
+          type: string
+        network:
+          description: ID of the network.
+          type: string
+        region:
+          description: ID of the network region.
+          type: string
+        instance:
+          description: ID of the network instance.
+          type: string
+        interfaceName:
+          type: string
+        type:
+          enum:
+          - connector
+          - ipsec
+          - openvpn
+          type: string
+        isHA:
+          description: Indicates if it's a redundant tunnel.
+          type: boolean
+        tenantId:
+          description: ID of the tenant.
+          type: string
+        createdAt:
+          description: The date when this record was created.
+          format: date-time
+          type: string
+        updatedAt:
+          description: The date of last update of the record.
+          format: date-time
+          type: string
+      required:
+      - id
+      type: object
     NetworkTunnelIpsecRedundant:
       additionalProperties: true
-      allOf:
-      - $ref: "#/components/schemas/NetworkTunnelBase"
-      - $ref: "#/components/schemas/NetworkIpsecBase"
-      - additionalProperties: true
-        properties:
-          haTunnelID:
-            $ref: "#/components/schemas/NetworkHaTunnelID"
-          rightASN:
-            $ref: "#/components/schemas/ASN"
-          rightPrivateIP:
-            $ref: "#/components/schemas/IP"
-          leftPrivateIP:
-            $ref: "#/components/schemas/IP"
-        required:
-        - haTunnelID
-        type: object
+      properties:
+        id:
+          description: Unique ID.
+          type: string
+        network:
+          description: ID of the network.
+          type: string
+        region:
+          description: ID of the network region.
+          type: string
+        instance:
+          description: ID of the network instance.
+          type: string
+        interfaceName:
+          type: string
+        type:
+          enum:
+          - connector
+          - ipsec
+          - openvpn
+          type: string
+        isHA:
+          description: Indicates if it's a redundant tunnel.
+          type: boolean
+        tenantId:
+          description: ID of the tenant.
+          type: string
+        createdAt:
+          description: The date when this record was created.
+          format: date-time
+          type: string
+        updatedAt:
+          description: The date of last update of the record.
+          format: date-time
+          type: string
+        keyExchange:
+          enum:
+          - ikev1
+          - ikev2
+          type: string
+        ikeLifeTime:
+          pattern: "^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"
+          type: string
+        lifetime:
+          pattern: "^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"
+          type: string
+        dpdDelay:
+          pattern: "^([5-9]|[1-5][0-9]|60)s$"
+          type: string
+        dpdTimeout:
+          pattern: "^([5-9]|[1-5][0-9]|60)s$"
+          type: string
+        phase1:
+          $ref: "#/components/schemas/IPSecPhaseConfig"
+        phase2:
+          $ref: "#/components/schemas/IPSecPhaseConfig"
+        right:
+          format: ipv4
+          type: string
+        rightID:
+          $ref: "#/components/schemas/NetworkIpsecBase_allOf_rightID"
+        passphrase:
+          additionalProperties: true
+          allOf:
+          - $ref: "#/components/schemas/Passphrase"
+          deprecated: true
+        dpdAction:
+          description: dpdAction.
+          type: string
+        leftSubnets:
+          items:
+            type: string
+          minLength: 1
+          type: array
+          uniqueItems: true
+        rightSubnets:
+          items:
+            type: string
+          minLength: 1
+          type: array
+          uniqueItems: true
+        haTunnelID:
+          $ref: "#/components/schemas/NetworkHaTunnelID"
+        rightASN:
+          description: Autonomous System Number (ASN) for BGP routing. It will be
+            automatically assigned an ASN once creating the first dynamic tunnel in
+            this network. The network ASN can never be changed once it is set.
+          type: integer
+        rightPrivateIP:
+          format: ipv4
+          type: string
+        leftPrivateIP:
+          format: ipv4
+          type: string
+      required:
+      - createdAt
+      - dpdAction
+      - dpdDelay
+      - dpdTimeout
+      - haTunnelID
+      - id
+      - ikeLifeTime
+      - instance
+      - interfaceName
+      - isHA
+      - keyExchange
+      - leftSubnets
+      - lifetime
+      - network
+      - passphrase
+      - phase1
+      - phase2
+      - region
+      - right
+      - rightID
+      - rightSubnets
+      - tenantId
+      - type
+      type: object
     NetworkTunnelIpsecSingle:
       additionalProperties: true
-      allOf:
-      - $ref: "#/components/schemas/NetworkTunnelBase"
-      - $ref: "#/components/schemas/NetworkIpsecBase"
+      properties:
+        id:
+          description: Unique ID.
+          type: string
+        network:
+          description: ID of the network.
+          type: string
+        region:
+          description: ID of the network region.
+          type: string
+        instance:
+          description: ID of the network instance.
+          type: string
+        interfaceName:
+          type: string
+        type:
+          enum:
+          - connector
+          - ipsec
+          - openvpn
+          type: string
+        isHA:
+          description: Indicates if it's a redundant tunnel.
+          type: boolean
+        tenantId:
+          description: ID of the tenant.
+          type: string
+        createdAt:
+          description: The date when this record was created.
+          format: date-time
+          type: string
+        updatedAt:
+          description: The date of last update of the record.
+          format: date-time
+          type: string
+        keyExchange:
+          enum:
+          - ikev1
+          - ikev2
+          type: string
+        ikeLifeTime:
+          pattern: "^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"
+          type: string
+        lifetime:
+          pattern: "^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"
+          type: string
+        dpdDelay:
+          pattern: "^([5-9]|[1-5][0-9]|60)s$"
+          type: string
+        dpdTimeout:
+          pattern: "^([5-9]|[1-5][0-9]|60)s$"
+          type: string
+        phase1:
+          $ref: "#/components/schemas/IPSecPhaseConfig"
+        phase2:
+          $ref: "#/components/schemas/IPSecPhaseConfig"
+        right:
+          format: ipv4
+          type: string
+        rightID:
+          $ref: "#/components/schemas/NetworkIpsecBase_allOf_rightID"
+        passphrase:
+          additionalProperties: true
+          allOf:
+          - $ref: "#/components/schemas/Passphrase"
+          deprecated: true
+        dpdAction:
+          description: dpdAction.
+          type: string
+        leftSubnets:
+          items:
+            type: string
+          minLength: 1
+          type: array
+          uniqueItems: true
+        rightSubnets:
+          items:
+            type: string
+          minLength: 1
+          type: array
+          uniqueItems: true
+      required:
+      - createdAt
+      - dpdAction
+      - dpdDelay
+      - dpdTimeout
+      - id
+      - ikeLifeTime
+      - instance
+      - interfaceName
+      - isHA
+      - keyExchange
+      - leftSubnets
+      - lifetime
+      - network
+      - passphrase
+      - phase1
+      - phase2
+      - region
+      - right
+      - rightID
+      - rightSubnets
+      - tenantId
+      - type
+      type: object
     NetworkTunnelOpenvpn:
       additionalProperties: true
-      allOf:
-      - $ref: "#/components/schemas/NetworkTunnelBase"
-      - additionalProperties: true
-        properties:
-          passphrase:
-            $ref: "#/components/schemas/Passphrase"
-          username:
-            description: Openvpn username.
-            type: string
-        required:
-        - passphrase
-        - username
-        type: object
       example:
         id: id
         network: network
@@ -10070,34 +10260,129 @@ components:
         tenantId: tenantId
         createdAt: 2000-01-23T04:56:07.000+00:00
         updatedAt: 2000-01-23T04:56:07.000+00:00
-        passphrase: null
+        passphrase: passphrase
         username: username
+      properties:
+        id:
+          description: Unique ID.
+          type: string
+        network:
+          description: ID of the network.
+          type: string
+        region:
+          description: ID of the network region.
+          type: string
+        instance:
+          description: ID of the network instance.
+          type: string
+        interfaceName:
+          type: string
+        type:
+          enum:
+          - connector
+          - ipsec
+          - openvpn
+          type: string
+        isHA:
+          description: Indicates if it's a redundant tunnel.
+          type: boolean
+        tenantId:
+          description: ID of the tenant.
+          type: string
+        createdAt:
+          description: The date when this record was created.
+          format: date-time
+          type: string
+        updatedAt:
+          description: The date of last update of the record.
+          format: date-time
+          type: string
+        passphrase:
+          pattern: "^[$a-zA-Z1-9_\\/\\.][$a-zA-Z0-9_\\/\\.]{7,101}$"
+          type: string
+        username:
+          description: Openvpn username.
+          type: string
+      required:
+      - createdAt
+      - id
+      - instance
+      - interfaceName
+      - isHA
+      - network
+      - passphrase
+      - region
+      - tenantId
+      - type
+      - username
+      type: object
     NetworkTunnelWireguard:
       additionalProperties: true
-      allOf:
-      - $ref: "#/components/schemas/NetworkTunnelBase"
-      - additionalProperties: true
-        properties:
-          leftAllowedIP:
-            items:
-              type: string
-            minLength: 1
-            type: array
-            uniqueItems: true
-          leftEndpoint:
-            $ref: "#/components/schemas/IP"
-          vault:
-            description: vault.
+      properties:
+        id:
+          description: Unique ID.
+          type: string
+        network:
+          description: ID of the network.
+          type: string
+        region:
+          description: ID of the network region.
+          type: string
+        instance:
+          description: ID of the network instance.
+          type: string
+        interfaceName:
+          type: string
+        type:
+          enum:
+          - connector
+          - ipsec
+          - openvpn
+          type: string
+        isHA:
+          description: Indicates if it's a redundant tunnel.
+          type: boolean
+        tenantId:
+          description: ID of the tenant.
+          type: string
+        createdAt:
+          description: The date when this record was created.
+          format: date-time
+          type: string
+        updatedAt:
+          description: The date of last update of the record.
+          format: date-time
+          type: string
+        leftAllowedIP:
+          items:
             type: string
-          requestConfigToken:
-            description: requestConfigToken.
-            type: string
-        required:
-        - leftAllowedIP
-        - leftEndpoint
-        - requestConfigToken
-        - vault
-        type: object
+          minLength: 1
+          type: array
+          uniqueItems: true
+        leftEndpoint:
+          format: ipv4
+          type: string
+        vault:
+          description: vault.
+          type: string
+        requestConfigToken:
+          description: requestConfigToken.
+          type: string
+      required:
+      - createdAt
+      - id
+      - instance
+      - interfaceName
+      - isHA
+      - leftAllowedIP
+      - leftEndpoint
+      - network
+      - region
+      - requestConfigToken
+      - tenantId
+      - type
+      - vault
+      type: object
     NumberPositive500:
       maximum: 500
       minimum: 0

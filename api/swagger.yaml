@@ -3854,11 +3854,11 @@ components:
     BaseDates:
       type: object
       properties:
-        createdAt:
+        createdAt: &id008
           format: date-time
           type: string
           description: The date when this record was created.
-        updatedAt:
+        updatedAt: &id009
           format: date-time
           type: string
           description: The date of last update of the record.
@@ -5695,22 +5695,22 @@ components:
     IPSecAdvancedSettings:
       type: object
       properties:
-        keyExchange:
+        keyExchange: &id018
           type: string
           enum:
           - ikev1
           - ikev2
-        ikeLifeTime:
+        ikeLifeTime: &id019
           $ref: '#/components/schemas/Lifetime'
-        lifetime:
+        lifetime: &id020
           $ref: '#/components/schemas/Lifetime'
-        dpdDelay:
+        dpdDelay: &id021
           $ref: '#/components/schemas/DPDTime'
-        dpdTimeout:
+        dpdTimeout: &id022
           $ref: '#/components/schemas/DPDTime'
-        phase1:
+        phase1: &id023
           $ref: '#/components/schemas/IPSecPhaseConfig'
-        phase2:
+        phase2: &id024
           $ref: '#/components/schemas/IPSecPhaseConfig'
       required:
       - keyExchange
@@ -6259,28 +6259,28 @@ components:
       - $ref: '#/components/schemas/IPSecAdvancedSettings'
       - type: object
         properties:
-          right:
+          right: &id025
             $ref: '#/components/schemas/IP'
-          rightID:
+          rightID: &id026
             oneOf:
             - $ref: '#/components/schemas/IP'
             - type: string
               pattern: ^[a-zA-Z0-9]{3,25}$
-          passphrase:
+          passphrase: &id027
             deprecated: true
             allOf:
             - $ref: '#/components/schemas/Passphrase'
             additionalProperties: true
-          dpdAction:
+          dpdAction: &id028
             type: string
             description: dpdAction.
-          leftSubnets:
+          leftSubnets: &id029
             minLength: 1
             uniqueItems: true
             type: array
             items:
               type: string
-          rightSubnets:
+          rightSubnets: &id030
             minLength: 1
             uniqueItems: true
             type: array
@@ -6337,110 +6337,220 @@ components:
       - $ref: '#/components/schemas/NetworkTunnelIpsecRedundant'
       - $ref: '#/components/schemas/NetworkTunnelBase'
     NetworkTunnelBase:
-      allOf:
-      - type: object
-        properties:
-          id:
-            type: string
-            description: Unique ID.
-          network:
-            type: string
-            description: ID of the network.
-          region:
-            type: string
-            description: ID of the network region.
-          instance:
-            type: string
-            description: ID of the network instance.
-          interfaceName:
-            type: string
-          type:
-            enum:
-            - connector
-            - ipsec
-            - openvpn
-            type: string
-          isHA:
-            type: boolean
-            description: Indicates if it's a redundant tunnel.
-          tenantId:
-            type: string
-            description: ID of the tenant.
-        required:
-        - id
-        - network
-        - region
-        - instance
-        - interfaceName
-        - type
-        - isHA
-        - tenantId
-        additionalProperties: true
-      - $ref: '#/components/schemas/BaseDates'
+      type: object
+      properties:
+        id: &id010
+          type: string
+          description: Unique ID.
+        network: &id011
+          type: string
+          description: ID of the network.
+        region: &id012
+          type: string
+          description: ID of the network region.
+        instance: &id013
+          type: string
+          description: ID of the network instance.
+        interfaceName: &id014
+          type: string
+        type: &id015
+          enum:
+          - connector
+          - ipsec
+          - openvpn
+          type: string
+        isHA: &id016
+          type: boolean
+          description: Indicates if it's a redundant tunnel.
+        tenantId: &id017
+          type: string
+          description: ID of the tenant.
+        createdAt: *id008
+        updatedAt: *id009
+      required:
+      - id
       additionalProperties: true
     NetworkTunnelIpsecRedundant:
-      allOf:
-      - $ref: '#/components/schemas/NetworkTunnelBase'
-      - $ref: '#/components/schemas/NetworkIpsecBase'
-      - type: object
-        properties:
-          haTunnelID:
-            $ref: '#/components/schemas/NetworkHaTunnelID'
-          rightASN:
-            $ref: '#/components/schemas/ASN'
-          rightPrivateIP:
-            $ref: '#/components/schemas/IP'
-          leftPrivateIP:
-            $ref: '#/components/schemas/IP'
-        required:
-        - haTunnelID
-        additionalProperties: true
+      type: object
+      properties:
+        id: *id010
+        network: *id011
+        region: *id012
+        instance: *id013
+        interfaceName: *id014
+        type: *id015
+        isHA: *id016
+        tenantId: *id017
+        createdAt: *id008
+        updatedAt: *id009
+        keyExchange: *id018
+        ikeLifeTime: *id019
+        lifetime: *id020
+        dpdDelay: *id021
+        dpdTimeout: *id022
+        phase1: *id023
+        phase2: *id024
+        right: *id025
+        rightID: *id026
+        passphrase: *id027
+        dpdAction: *id028
+        leftSubnets: *id029
+        rightSubnets: *id030
+        haTunnelID:
+          $ref: '#/components/schemas/NetworkHaTunnelID'
+        rightASN:
+          $ref: '#/components/schemas/ASN'
+        rightPrivateIP:
+          $ref: '#/components/schemas/IP'
+        leftPrivateIP:
+          $ref: '#/components/schemas/IP'
+      required:
+      - id
+      - network
+      - region
+      - instance
+      - interfaceName
+      - type
+      - isHA
+      - tenantId
+      - createdAt
+      - keyExchange
+      - ikeLifeTime
+      - lifetime
+      - dpdDelay
+      - dpdTimeout
+      - phase1
+      - phase2
+      - right
+      - rightID
+      - passphrase
+      - dpdAction
+      - leftSubnets
+      - rightSubnets
+      - haTunnelID
       additionalProperties: true
     NetworkTunnelIpsecSingle:
-      allOf:
-      - $ref: '#/components/schemas/NetworkTunnelBase'
-      - $ref: '#/components/schemas/NetworkIpsecBase'
+      type: object
+      properties:
+        id: *id010
+        network: *id011
+        region: *id012
+        instance: *id013
+        interfaceName: *id014
+        type: *id015
+        isHA: *id016
+        tenantId: *id017
+        createdAt: *id008
+        updatedAt: *id009
+        keyExchange: *id018
+        ikeLifeTime: *id019
+        lifetime: *id020
+        dpdDelay: *id021
+        dpdTimeout: *id022
+        phase1: *id023
+        phase2: *id024
+        right: *id025
+        rightID: *id026
+        passphrase: *id027
+        dpdAction: *id028
+        leftSubnets: *id029
+        rightSubnets: *id030
+      required:
+      - id
+      - network
+      - region
+      - instance
+      - interfaceName
+      - type
+      - isHA
+      - tenantId
+      - createdAt
+      - keyExchange
+      - ikeLifeTime
+      - lifetime
+      - dpdDelay
+      - dpdTimeout
+      - phase1
+      - phase2
+      - right
+      - rightID
+      - passphrase
+      - dpdAction
+      - leftSubnets
+      - rightSubnets
       additionalProperties: true
     NetworkTunnelOpenvpn:
-      allOf:
-      - $ref: '#/components/schemas/NetworkTunnelBase'
-      - type: object
-        properties:
-          passphrase:
-            $ref: '#/components/schemas/Passphrase'
-          username:
-            type: string
-            description: Openvpn username.
-        required:
-        - passphrase
-        - username
-        additionalProperties: true
+      type: object
+      properties:
+        id: *id010
+        network: *id011
+        region: *id012
+        instance: *id013
+        interfaceName: *id014
+        type: *id015
+        isHA: *id016
+        tenantId: *id017
+        createdAt: *id008
+        updatedAt: *id009
+        passphrase:
+          $ref: '#/components/schemas/Passphrase'
+        username:
+          type: string
+          description: Openvpn username.
+      required:
+      - id
+      - network
+      - region
+      - instance
+      - interfaceName
+      - type
+      - isHA
+      - tenantId
+      - createdAt
+      - passphrase
+      - username
       additionalProperties: true
     NetworkTunnelWireguard:
-      allOf:
-      - $ref: '#/components/schemas/NetworkTunnelBase'
-      - type: object
-        properties:
-          leftAllowedIP:
-            minLength: 1
-            uniqueItems: true
-            type: array
-            items:
-              type: string
-          leftEndpoint:
-            $ref: '#/components/schemas/IP'
-          vault:
+      type: object
+      properties:
+        id: *id010
+        network: *id011
+        region: *id012
+        instance: *id013
+        interfaceName: *id014
+        type: *id015
+        isHA: *id016
+        tenantId: *id017
+        createdAt: *id008
+        updatedAt: *id009
+        leftAllowedIP:
+          minLength: 1
+          uniqueItems: true
+          type: array
+          items:
             type: string
-            description: vault.
-          requestConfigToken:
-            type: string
-            description: requestConfigToken.
-        required:
-        - leftAllowedIP
-        - leftEndpoint
-        - vault
-        - requestConfigToken
-        additionalProperties: true
+        leftEndpoint:
+          $ref: '#/components/schemas/IP'
+        vault:
+          type: string
+          description: vault.
+        requestConfigToken:
+          type: string
+          description: requestConfigToken.
+      required:
+      - id
+      - network
+      - region
+      - instance
+      - interfaceName
+      - type
+      - isHA
+      - tenantId
+      - createdAt
+      - leftAllowedIP
+      - leftEndpoint
+      - vault
+      - requestConfigToken
       additionalProperties: true
     NumberPositive500:
       type: number
