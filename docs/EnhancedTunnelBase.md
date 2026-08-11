@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **RemoteGatewaySubnets** | **[]string** | Remote gateway subnets | 
 **KeyExchange** | **string** | IKE version for key exchange | [default to "ikev2"]
 **AdvancedSettings** | Pointer to [**IPSecAdvancedSettingsV23**](IPSecAdvancedSettingsV23.md) |  | [optional] 
-**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTE]
+**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
 **PeakBandwidthMbps** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
 
 ## Methods

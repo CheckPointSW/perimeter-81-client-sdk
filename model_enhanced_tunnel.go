@@ -63,7 +63,7 @@ func NewEnhancedTunnel(authType string, regionID string, tunnelName string, p81G
 	this.P81GatewaySubnets = p81GatewaySubnets
 	this.RemoteGatewaySubnets = remoteGatewaySubnets
 	this.KeyExchange = keyExchange
-	var routingType RoutingType = ROUTE
+	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = &routingType
 	var peakBandwidthMbps int32 = 1000
 	this.PeakBandwidthMbps = &peakBandwidthMbps
@@ -80,7 +80,7 @@ func NewEnhancedTunnelWithDefaults() *EnhancedTunnel {
 	this := EnhancedTunnel{}
 	var keyExchange string = "ikev2"
 	this.KeyExchange = keyExchange
-	var routingType RoutingType = ROUTE
+	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = &routingType
 	var peakBandwidthMbps int32 = 1000
 	this.PeakBandwidthMbps = &peakBandwidthMbps

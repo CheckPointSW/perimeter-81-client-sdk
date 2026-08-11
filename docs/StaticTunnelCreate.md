@@ -22,7 +22,7 @@ Name | Type | Description | Notes
 **RemoteID** | **string** | Remote gateway ID | 
 **Description** | Pointer to **string** | Optional tunnel description | [optional] 
 **Features** | [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | 
-**RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTE]
+**RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTINGTYPE_ROUTE]
 **PeakBandwidthMbps** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
 
 ## Methods

@@ -20,9 +20,9 @@ type HealthStatus string
 
 // List of HealthStatus
 const (
-	PASSING HealthStatus = "passing"
-	CRITICAL HealthStatus = "critical"
-	UNKNOWN HealthStatus = "unknown"
+	HEALTHSTATUS_PASSING HealthStatus = "passing"
+	HEALTHSTATUS_CRITICAL HealthStatus = "critical"
+	HEALTHSTATUS_UNKNOWN HealthStatus = "unknown"
 )
 
 // All allowed values of HealthStatus enum

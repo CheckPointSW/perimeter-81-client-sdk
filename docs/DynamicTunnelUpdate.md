@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **RemoveTunnels** | Pointer to [**[]DynamicTunnelUpdateRemoveTunnelsInner**](DynamicTunnelUpdateRemoveTunnelsInner.md) |  | [optional] 
 **SharedSettings** | Pointer to [**EnhancedIPSecSharedSettingsUpdate**](EnhancedIPSecSharedSettingsUpdate.md) |  | [optional] 
 **AdvancedSettings** | Pointer to [**IPSecAdvancedSettingsV23**](IPSecAdvancedSettingsV23.md) |  | [optional] 
-**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTE]
+**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
 
 ## Methods
 

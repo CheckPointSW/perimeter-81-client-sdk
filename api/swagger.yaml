@@ -4823,8 +4823,6 @@ components:
       enum:
       - tunnel
       description: Type of health check component for enhanced networks (tunnel only)
-      x-enum-varnames:
-      - ENHANCED_TUNNEL
     EnhancedHealthResponse:
       type: object
       properties:
@@ -6934,9 +6932,6 @@ components:
       enum:
       - route
       - policy
-      x-enum-varnames:
-      - ROUTE_UPDATE
-      - POLICY_UPDATE
     ScaleUnitsCount:
       type: integer
       description: 'Number of scale units for the region. Scale units determine the capacity and performance level of the enhanced region.

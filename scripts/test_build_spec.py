@@ -139,3 +139,50 @@ def test_carried_forward_patches_are_applied():
     assert s["EnhancedHealthCheckMeta"].get("required") == []
     # A11
     assert "id" in s["ObjectsServicesResponseObj"]["properties"]
+
+def test_a12_harmony_sase_regions_list_items_have_no_sibling_additional_properties():
+    """A12 removes a redundant `additionalProperties: true` sibling from
+    HarmonySaseRegionsList.items that openapi-generator 7.24.0's Go codegen
+    mis-resolves into invalid Go (`[]HarmonySaseRegion[string]interface{}`,
+    a syntax error — see api/overlay.yaml's A12 entry for the full story).
+
+    This asserts the spec-level precondition, not the generated .go file
+    directly: doing so keeps this test fast (no openapi-generator subprocess)
+    and precisely localizes a regression to the overlay/spec layer. The
+    Go-level guarantee — that this precondition actually produces
+    `[]HarmonySaseRegion` rather than the malformed form — is enforced
+    end-to-end by `go build ./...` in scripts/generate.sh, which fails loudly
+    (a compile error, not a silent behaviour change) if this regresses.
+
+    The precondition proven (empirically, before this entry existed) to
+    yield the correct `[]HarmonySaseRegion` type is: items has no
+    additionalProperties key of its own, and its allOf has exactly one
+    substantive branch — a single $ref — with any other branch being
+    property-less (e.g. just a description)."""
+    d = build()
+    items = d["components"]["schemas"]["HarmonySaseRegionsList"]["items"]
+    assert "additionalProperties" not in items, items
+    refs = [b for b in items["allOf"] if "$ref" in b]
+    non_ref_branches_with_properties = [
+        b for b in items["allOf"] if "$ref" not in b and "properties" in b
+    ]
+    assert len(refs) == 1, items
+    assert refs[0]["$ref"] == "#/components/schemas/HarmonySaseRegion"
+    assert non_ref_branches_with_properties == [], items
+
+    # The upstream shape this entry corrects is not unique to
+    # HarmonySaseRegionsList — DynamicTunnelUpdate.updateTunnels.items has
+    # the same allOf-plus-sibling-additionalProperties shape but is left
+    # alone, because its non-$ref branch is a substantive inline object
+    # (forcing model materialization, which sidesteps the bug). Confirm the
+    # overlay didn't touch it and that it still has real content in that
+    # branch, i.e. this test's "property-less other branch" precondition is
+    # what actually distinguishes the two, not some property of
+    # HarmonySaseRegionsList alone.
+    other_items = d["components"]["schemas"]["DynamicTunnelUpdate"]["properties"][
+        "updateTunnels"]["items"]
+    assert "additionalProperties" in other_items
+    other_non_ref_with_properties = [
+        b for b in other_items["allOf"] if "$ref" not in b and "properties" in b
+    ]
+    assert other_non_ref_with_properties != []

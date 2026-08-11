@@ -42,7 +42,7 @@ type _DynamicTunnelUpdate DynamicTunnelUpdate
 func NewDynamicTunnelUpdate(tunnelName string) *DynamicTunnelUpdate {
 	this := DynamicTunnelUpdate{}
 	this.TunnelName = tunnelName
-	var routingType RoutingType = ROUTE
+	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = &routingType
 	return &this
 }
@@ -52,7 +52,7 @@ func NewDynamicTunnelUpdate(tunnelName string) *DynamicTunnelUpdate {
 // but it doesn't guarantee that properties required by API are set
 func NewDynamicTunnelUpdateWithDefaults() *DynamicTunnelUpdate {
 	this := DynamicTunnelUpdate{}
-	var routingType RoutingType = ROUTE
+	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = &routingType
 	return &this
 }

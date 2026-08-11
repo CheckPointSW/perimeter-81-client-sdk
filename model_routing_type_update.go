@@ -20,8 +20,8 @@ type RoutingTypeUpdate string
 
 // List of RoutingTypeUpdate
 const (
-	ROUTE_UPDATE RoutingTypeUpdate = "route"
-	POLICY_UPDATE RoutingTypeUpdate = "policy"
+	ROUTINGTYPEUPDATE_ROUTE RoutingTypeUpdate = "route"
+	ROUTINGTYPEUPDATE_POLICY RoutingTypeUpdate = "policy"
 )
 
 // All allowed values of RoutingTypeUpdate enum

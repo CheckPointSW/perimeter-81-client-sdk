@@ -21,7 +21,7 @@ Name | Type | Description | Notes
 **RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
 **Description** | Pointer to **string** | Optional tunnel description | [optional] 
 **Features** | Pointer to [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | [optional] 
-**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTE]
+**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
 
 ## Methods
 

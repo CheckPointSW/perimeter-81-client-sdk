@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **RemotePublicIP** | **string** | Remote gateway public IP address | 
 **RemoteASN** | [**ASN**](ASN.md) |  | 
 **RemoteID** | **string** | Remote gateway ID | 
-**RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTE]
+**RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTINGTYPE_ROUTE]
 
 ## Methods
 

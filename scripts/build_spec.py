@@ -33,8 +33,28 @@ def op_set(doc, entry):
 
 
 def op_remove(doc, entry):
+    """Remove `path`'s last key from its parent container.
+
+    Fails closed by default: if the key is already absent, that means the
+    entry's `remove_when` condition has come true (upstream dropped it) or
+    the path was wrong to begin with, and either way the entry is now dead —
+    it should be caught and deleted, not silently do nothing forever. An
+    entry that genuinely needs to tolerate the key already being absent can
+    set `optional: true` to opt back into the old pop(key, None) behaviour;
+    no entry does today.
+    """
     container, key = _walk(doc, entry["path"])
-    container.pop(key, None)
+    if key not in container:
+        if entry.get("optional"):
+            return
+        name = entry.get("id", "<unnamed>")
+        raise KeyError(
+            f"{name}: remove target {'/'.join(map(str, entry['path']))!r} is already "
+            f"absent — its remove_when condition may have come true (or the path is "
+            f"wrong). Delete this entry, fix the path, or set optional: true if it "
+            f"should tolerate absence."
+        )
+    del container[key]
 
 
 def op_merge(doc, entry):

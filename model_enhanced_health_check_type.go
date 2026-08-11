@@ -20,7 +20,7 @@ type EnhancedHealthCheckType string
 
 // List of EnhancedHealthCheckType
 const (
-	ENHANCED_TUNNEL EnhancedHealthCheckType = "tunnel"
+	ENHANCEDHEALTHCHECKTYPE_TUNNEL EnhancedHealthCheckType = "tunnel"
 )
 
 // All allowed values of EnhancedHealthCheckType enum

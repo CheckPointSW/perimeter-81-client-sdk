@@ -65,7 +65,7 @@ func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP s
 // but it doesn't guarantee that properties required by API are set
 func NewDynamicTunnelDetailsWithDefaults() *DynamicTunnelDetails {
 	this := DynamicTunnelDetails{}
-	var routingType RoutingType = ROUTE
+	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = routingType
 	return &this
 }

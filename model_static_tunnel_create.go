@@ -91,7 +91,7 @@ func NewStaticTunnelCreateWithDefaults() *StaticTunnelCreate {
 	this := StaticTunnelCreate{}
 	var keyExchange string = "ikev2"
 	this.KeyExchange = keyExchange
-	var routingType RoutingType = ROUTE
+	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = routingType
 	var peakBandwidthMbps int32 = 1000
 	this.PeakBandwidthMbps = &peakBandwidthMbps

@@ -20,8 +20,8 @@ type RoutingType string
 
 // List of RoutingType
 const (
-	ROUTE RoutingType = "route"
-	POLICY RoutingType = "policy"
+	ROUTINGTYPE_ROUTE RoutingType = "route"
+	ROUTINGTYPE_POLICY RoutingType = "policy"
 )
 
 // All allowed values of RoutingType enum

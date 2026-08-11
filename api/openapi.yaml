@@ -7525,8 +7525,6 @@ components:
       enum:
       - tunnel
       type: string
-      x-enum-varnames:
-      - ENHANCED_TUNNEL
     EnhancedHealthResponse:
       additionalProperties: true
       example:
@@ -10674,9 +10672,6 @@ components:
       - route
       - policy
       type: string
-      x-enum-varnames:
-      - ROUTE_UPDATE
-      - POLICY_UPDATE
     ScaleUnitsCount:
       description: |
         Number of scale units for the region. Scale units determine the capacity and performance level of the enhanced region.

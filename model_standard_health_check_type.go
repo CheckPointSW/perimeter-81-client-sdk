@@ -20,8 +20,8 @@ type StandardHealthCheckType string
 
 // List of StandardHealthCheckType
 const (
-	GATEWAY StandardHealthCheckType = "gateway"
-	TUNNEL StandardHealthCheckType = "tunnel"
+	STANDARDHEALTHCHECKTYPE_GATEWAY StandardHealthCheckType = "gateway"
+	STANDARDHEALTHCHECKTYPE_TUNNEL StandardHealthCheckType = "tunnel"
 )
 
 // All allowed values of StandardHealthCheckType enum
