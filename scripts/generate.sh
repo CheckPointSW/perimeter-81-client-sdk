@@ -4,6 +4,11 @@
 # api/swagger.yaml is itself a build product (scripts/build_spec.py).
 # Local template overrides live in templates/ and take precedence over the
 # generator's embedded templates; anything not overridden falls back to stock.
+# templates/model_anyof.mustache overrides the stock anyOf decoder to try
+# NetworkTunnel's NetworkTunnelBase fallback member (overlay A15) last,
+# working around CodegenModel.anyOf being a hardcoded, unconfigurable
+# java.util.TreeSet<String> (alphabetical by Go type name) — see that
+# template's own header comment for the full mechanism and its limits.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 

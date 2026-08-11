@@ -457,3 +457,49 @@ entries:
   # vs. EnhancedHealthCheckType) as a side effect, and is collision-proof
   # against any future enum value shared across schemas — no new overlay
   # entry needed per collision. See generate.sh for the flag and its comment.
+
+  # --- Amendment (2026-08-11): NetworkTunnel's anyOf is missing a fallback
+  # member for tunnel types the spec does not enumerate.
+
+  - id: A15-network-tunnel-anyof-add-base-fallback
+    reason: >
+      GET /v3/networks/standard/{id} returns tunnel objects, and the live API
+      returns tunnel types this anyOf does not enumerate — `connector` is the
+      documented example. v3 declares only NetworkTunnelOpenvpn,
+      NetworkTunnelWireguard, NetworkTunnelIpsecSingle, and
+      NetworkTunnelIpsecRedundant as NetworkTunnel's anyOf members, so any
+      tunnel of an unlisted type fails every branch of the generated
+      try-each-and-return-first-match decoder with "data failed to match
+      schemas in anyOf(NetworkTunnel)", failing the entire network read. This
+      is confirmed to persist in v3: the project has established that v3
+      contains v2.3 (an endpoint present in both versions is served by the
+      same microservice), so the undocumented extra tunnel types v2.3
+      observed on the wire are still returned by v3 — this is not a spec
+      defect v3 happens to have fixed. v2.3 solved this by hand-editing the
+      generated Go (model_network_tunnel.go) to add a fifth
+      NetworkTunnelBase member plus a hand-written UnmarshalJSON tail that
+      unmarshalled into a local anonymous 8-field struct and populated the
+      base member when `id` was non-empty — one of the 20 hand-patched files
+      this project exists to eliminate. NetworkTunnelBase already exists as
+      a named v3 schema (via allOf) composing all 10 fields shared by every
+      tunnel variant (createdAt, updatedAt, id, network, region, instance,
+      interfaceName, type, isHA, tenantId), so adding it as NetworkTunnel's
+      fifth anyOf member gives unrecognised tunnel types somewhere to land
+      without a hand-edit. This is set via op: set on the whole array
+      (rather than an in-place append) to guarantee ordering, and
+      NetworkTunnelBase must be LAST: the generated anyOf decoder tries
+      members in list order and returns on the first match, and
+      NetworkTunnelBase's fields are a subset of every concrete variant's, so
+      if it came first it would swallow payloads that belong to the four
+      concrete variants before they ever got a chance to match.
+    remove_when: >
+      upstream adds the missing tunnel types (e.g. connector) to
+      NetworkTunnel's anyOf itself, or documents that no such types exist.
+    op: set
+    path: [components, schemas, NetworkTunnel, anyOf]
+    value:
+      - $ref: '#/components/schemas/NetworkTunnelOpenvpn'
+      - $ref: '#/components/schemas/NetworkTunnelWireguard'
+      - $ref: '#/components/schemas/NetworkTunnelIpsecSingle'
+      - $ref: '#/components/schemas/NetworkTunnelIpsecRedundant'
+      - $ref: '#/components/schemas/NetworkTunnelBase'

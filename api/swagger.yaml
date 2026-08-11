@@ -6335,6 +6335,7 @@ components:
       - $ref: '#/components/schemas/NetworkTunnelWireguard'
       - $ref: '#/components/schemas/NetworkTunnelIpsecSingle'
       - $ref: '#/components/schemas/NetworkTunnelIpsecRedundant'
+      - $ref: '#/components/schemas/NetworkTunnelBase'
     NetworkTunnelBase:
       allOf:
       - type: object

@@ -18,6 +18,7 @@ import (
 
 // NetworkTunnel struct for NetworkTunnel
 type NetworkTunnel struct {
+	NetworkTunnelBase *NetworkTunnelBase
 	NetworkTunnelIpsecRedundant *NetworkTunnelIpsecRedundant
 	NetworkTunnelIpsecSingle *NetworkTunnelIpsecSingle
 	NetworkTunnelOpenvpn *NetworkTunnelOpenvpn
@@ -25,6 +26,33 @@ type NetworkTunnel struct {
 }
 
 // Unmarshal JSON data into any of the pointers in the struct
+//
+// LOCAL OVERRIDE — see api/overlay.yaml entry
+// A15-network-tunnel-anyof-add-base-fallback for the full story. Stock
+// openapi-generator (7.24.0) tries anyOf members in the order given by
+// CodegenModel.anyOf, which is a java.util.TreeSet<String> hardcoded in
+// openapi-generator itself (confirmed via javap on CodegenModel.class) —
+// not configurable through any additional-property. That means member try
+// order is ALWAYS alphabetical by Go type name, regardless of the anyOf
+// list's order in api/swagger.yaml. NetworkTunnel is, as of this writing,
+// the only anyOf-composed schema in this spec (verified: `grep anyOf:
+// api/swagger.yaml` matches exactly once), and its fallback member
+// (NetworkTunnelBase, added by A15) must be tried LAST — its required
+// fields are a strict subset of every concrete variant's, so trying it
+// first would silently swallow payloads that belong to a concrete variant
+// before that variant's decoder ever ran.
+// "NetworkTunnelBase" happens to sort alphabetically first among
+// NetworkTunnel's five anyOf members ('B' precedes 'I', 'O', 'W'), so the
+// two-pass split below — try every non-first-sorted member in the loop's
+// natural (alphabetical) order first, then try the first-sorted member
+// last, using this template's "dash-first" section marker to split the
+// anyOf loop into those two passes — is what makes NetworkTunnelBase the
+// last candidate tried, without hand-editing generated output. This is
+// deliberately narrow: it assumes whichever member is alphabetically first
+// is the one meant to be tried last, which is true for NetworkTunnel today
+// but is not a general property of anyOf. If a second anyOf schema is ever
+// added to this spec with different ordering needs, this template must be
+// revisited — do not assume this split generalizes.
 func (dst *NetworkTunnel) UnmarshalJSON(data []byte) error {
 	var err error
 	// try to unmarshal JSON data into NetworkTunnelIpsecRedundant
@@ -79,6 +107,19 @@ func (dst *NetworkTunnel) UnmarshalJSON(data []byte) error {
 		dst.NetworkTunnelWireguard = nil
 	}
 
+	// try to unmarshal JSON data into NetworkTunnelBase (deferred to last — see the LOCAL OVERRIDE comment above)
+	err = json.Unmarshal(data, &dst.NetworkTunnelBase);
+	if err == nil {
+		jsonNetworkTunnelBase, _ := json.Marshal(dst.NetworkTunnelBase)
+		if string(jsonNetworkTunnelBase) == "{}" { // empty struct
+			dst.NetworkTunnelBase = nil
+		} else {
+			return nil // data stored in dst.NetworkTunnelBase, return on the first match
+		}
+	} else {
+		dst.NetworkTunnelBase = nil
+	}
+
 	return fmt.Errorf("data failed to match schemas in anyOf(NetworkTunnel)")
 }
 
@@ -98,6 +139,10 @@ func (src NetworkTunnel) MarshalJSON() ([]byte, error) {
 
 	if src.NetworkTunnelWireguard != nil {
 		return json.Marshal(&src.NetworkTunnelWireguard)
+	}
+
+	if src.NetworkTunnelBase != nil {
+		return json.Marshal(&src.NetworkTunnelBase)
 	}
 
 	return nil, nil // no data in anyOf schemas
@@ -139,5 +184,4 @@ func (v *NullableNetworkTunnel) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
 

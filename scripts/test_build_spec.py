@@ -252,3 +252,36 @@ def test_a12_harmony_sase_regions_list_items_have_no_sibling_additional_properti
         b for b in other_items["allOf"] if "$ref" not in b and "properties" in b
     ]
     assert other_non_ref_with_properties != []
+
+
+def test_a15_network_tunnel_anyof_has_base_fallback_last():
+    """A15 appends NetworkTunnelBase to NetworkTunnel's anyOf so tunnel types
+    the spec doesn't enumerate (e.g. `connector`) have somewhere to land
+    instead of failing every branch of the generated decoder (see
+    api/overlay.yaml's A15 entry for the full story).
+
+    NetworkTunnelBase must be LAST: openapi-generator 7.24.0's Go codegen
+    collapses anyOf into a java.util.TreeSet<String> (alphabetical by Go type
+    name, confirmed via javap on CodegenModel.class), ignoring the order of
+    this list entirely — so this assertion on the spec-level list order does
+    NOT by itself guarantee try-order in the generated decoder. The actual
+    try-order guarantee comes from templates/model_anyof.mustache's
+    dash-first split (documented there), which depends on NetworkTunnelBase
+    sorting alphabetically first among these five names. This test still
+    asserts list order because op: set's whole-array replacement is the
+    overlay-level mechanism the entry uses, and a regression here (wrong
+    order or a missing member) is still worth catching early, even though
+    the Go-level ordering guarantee is enforced separately by
+    model_network_tunnel_base_fallback_test.go's
+    TestNetworkTunnel_ConcreteVariantDoesNotFallBackToBase."""
+    d = build()
+    any_of = d["components"]["schemas"]["NetworkTunnel"]["anyOf"]
+    refs = [b["$ref"] for b in any_of]
+    assert len(refs) == 5, refs
+    assert refs[-1] == "#/components/schemas/NetworkTunnelBase", refs
+    assert refs[:-1] == [
+        "#/components/schemas/NetworkTunnelOpenvpn",
+        "#/components/schemas/NetworkTunnelWireguard",
+        "#/components/schemas/NetworkTunnelIpsecSingle",
+        "#/components/schemas/NetworkTunnelIpsecRedundant",
+    ], refs
