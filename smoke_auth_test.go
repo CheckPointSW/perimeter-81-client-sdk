@@ -48,6 +48,6 @@ func TestSmokeAuthorizeAgainstLiveAPI(t *testing.T) {
 	t.Logf("token exchange OK against %s (token length %d)", authorizeURL(baseURL), len(token.AccessToken))
 
 	if _, _, err := client.NetworksAPI.GetStatus(context.Background()).Execute(); err != nil {
-		t.Fatalf("authenticated GET /v3/status failed, so the token was not accepted: %v", err)
+		t.Fatalf("authenticated GET /v3/status failed (this does not by itself mean the token was rejected; check the error for the actual cause): %v", err)
 	}
 }

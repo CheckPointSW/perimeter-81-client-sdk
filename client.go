@@ -417,6 +417,18 @@ func (c *APIClient) decode(v interface{}, b []byte, contentType string) (err err
 			return err
 		}
 		return nil
+	} else if strings.Contains(contentType, "text/plain") {
+		// The v3 spec legitimately declares text/plain for some responses
+		// (e.g. GET /v3/status returns the bare string "Ok"), and the generator
+		// types those operations as returning a plain string. The stock decode()
+		// only knew json/xml, so every such endpoint failed with
+		// "undefined response type" despite a 200. This file is in
+		// .openapi-generator-ignore, so this branch survives regeneration.
+		if s, ok := v.(*string); ok {
+			*s = string(b)
+			return nil
+		}
+		return fmt.Errorf("text/plain response cannot be decoded into %T", v)
 	}
 	return errors.New("undefined response type")
 }
