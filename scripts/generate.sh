@@ -132,6 +132,24 @@ python3 scripts/build_spec.py
 # docs/ out of sync with the API surface for no idempotency benefit.
 # There is no modelTests flag to set here: the Go generator has no model-test
 # template, so it was already a no-op (no model_*_test.go has ever existed).
+#
+# No --skip-validate-spec: it was carried since this file's inception to
+# suppress five diagnostics — "Undefined array inner type for `null`.
+# Default to String." (x4) and "attribute
+# components.schemas.CommonCreateApplication.items is missing" (x1) — with no
+# record of which schemas they touched (Task 27, api/overlay.yaml's A18
+# entry). All five traced to one place: CommonCreateApplication's own oneOf
+# branches redeclaring properties.users/properties.groups as arrays with no
+# items. A18 gives both branches the same items ref the schema's own
+# top-level users/groups already use, which resolves all five diagnostics —
+# confirmed via `openapi-generator validate -i api/swagger.yaml --recommend`
+# (0 errors, only pre-existing "Unused model"/oneOf-with-properties
+# recommendations, which are advisory and were never part of what this flag
+# suppressed) — and verified to regenerate byte-identical Go output (the fix
+# only touches two dead model files nothing else references). If a future
+# spec change reintroduces a validation error, restore this flag rather than
+# let a broken `generate` block every contributor, but do the same
+# attribution work Task 27 did before doing so.
 openapi-generator generate \
   -i api/swagger.yaml \
   -g go \
@@ -140,8 +158,7 @@ openapi-generator generate \
   --git-user-id=CheckPointSW \
   --git-repo-id=perimeter-81-client-sdk/v3 \
   --global-property=apiTests=false \
-  --additional-properties=packageName=perimeter81sdk,disallowAdditionalPropertiesIfNotPresent=false,useOneOfDiscriminatorLookup=true,enumClassPrefix=true \
-  --skip-validate-spec
+  --additional-properties=packageName=perimeter81sdk,disallowAdditionalPropertiesIfNotPresent=false,useOneOfDiscriminatorLookup=true,enumClassPrefix=true
 
 go mod tidy
 go build ./...

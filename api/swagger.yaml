@@ -4154,12 +4154,16 @@ components:
       - properties:
           users:
             type: array
+            items:
+              $ref: '#/components/schemas/AlphanumericWithSpace'
         required:
         - users
         additionalProperties: true
       - properties:
           groups:
             type: array
+            items:
+              $ref: '#/components/schemas/AlphanumericWithSpace'
         required:
         - groups
         additionalProperties: true

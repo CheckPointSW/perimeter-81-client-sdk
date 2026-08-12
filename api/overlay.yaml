@@ -662,3 +662,81 @@ entries:
     params:
       schema: NetworkTunnelIpsecRedundant
       required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction, leftSubnets, rightSubnets, haTunnelID]
+
+  # --- Task 27 (2026-08-12): validate-spec suppression audit. generate.sh has
+  # run with --skip-validate-spec since inception without a record of what it
+  # suppresses. Reran generation without the flag (and via
+  # `openapi-generator validate -i api/swagger.yaml --recommend`, which prints
+  # the same diagnostics without needing a full generate) to get the verbatim
+  # list: four "Undefined array inner type for `null`. Default to String."
+  # log lines plus one SpecValidationException error, "attribute
+  # components.schemas.CommonCreateApplication.items is missing" — exactly
+  # the five the design brief named, confirmed by re-running validate against
+  # a scratch copy with the fix below applied: all five diagnostics disappear
+  # together, and no others were hiding behind them.
+  #
+  # PROVIDER EXPOSURE: none. Confirmed by grepping both this SDK's *.go and
+  # the provider's checkpointsase/*.go for CommonCreateApplication,
+  # CommonCreateApplicationOneOf, and CommonCreateApplicationOneOf1 (the three
+  # model files openapi-generator materializes for this schema's oneOf): none
+  # of the three is referenced anywhere outside its own defining file — dead
+  # code, generated but unused. The provider (checkpointsase/resource_application.go)
+  # builds WebCreateApplication/HttpCreateApplication/HttpsCreateApplication/
+  # RdpCreateApplication directly; those get their Users/Groups fields from
+  # CommonCreateApplication's own top-level properties.users/properties.groups
+  # via allOf flattening — which already declare
+  # `items: $ref AlphanumericWithSpace` correctly — not from the broken oneOf
+  # branches below, so the live, provider-used types were never affected by
+  # this defect either way. Additionally, even for the dead types, the
+  # generator's "Default to String" fallback happens to produce the exact
+  # same Go type ([]string) a correct items ref would, since
+  # AlphanumericWithSpace is itself a bare string schema — so this defect was
+  # never capable of producing a wrong Go type, live or dead. Fixed anyway
+  # because the fix is free and leaves no suppressed diagnostic undocumented:
+  # regenerating with this entry applied changes only the three dead
+  # model_common_create_application*.go files; model_web_create_application.go,
+  # model_http_create_application.go, model_https_create_application.go, and
+  # model_rdp_create_application.go come out byte-identical.
+
+  - id: A18-common-create-application-oneof-items
+    reason: >
+      CommonCreateApplication's own `oneOf` redeclares
+      properties.users/properties.groups as bare `type: array` with no
+      `items`, unlike this schema's own top-level users/groups (which
+      correctly declare `items: $ref AlphanumericWithSpace`). This is what
+      generate.sh's --skip-validate-spec has been suppressing: each broken
+      property logs 2 of the 4 "Undefined array inner type for `null`.
+      Default to String." lines (confirmed empirically — fixing one branch
+      drops the log count from 4 to 2), and the schema-level, message-
+      deduplicated "attribute components.schemas.CommonCreateApplication.items
+      is missing" validation error fires once as long as either branch is
+      still broken.
+    remove_when: >
+      upstream adds items to both oneOf branches itself, or drops the
+      redundant oneOf outright — CommonCreateApplication already declares
+      users/groups correctly at its own top level, so the oneOf adds nothing
+      that reaches the generated Go models (see the "Schemas defining
+      properties and oneOf are not clearly defined" recommendation from
+      `openapi-generator validate --recommend`, and Task 27's report for the
+      full provider-exposure analysis: this schema's oneOf branches are
+      generated-but-unused dead code, not a path any provider request can
+      reach).
+    op: set
+    path: [components, schemas, CommonCreateApplication, oneOf]
+    value:
+      - properties:
+          users:
+            type: array
+            items:
+              $ref: '#/components/schemas/AlphanumericWithSpace'
+        required:
+          - users
+        additionalProperties: true
+      - properties:
+          groups:
+            type: array
+            items:
+              $ref: '#/components/schemas/AlphanumericWithSpace'
+        required:
+          - groups
+        additionalProperties: true
