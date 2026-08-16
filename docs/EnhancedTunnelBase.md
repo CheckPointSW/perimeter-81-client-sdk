@@ -11,10 +11,19 @@ Name | Type | Description | Notes
 **TunnelName** | **string** | Name of the static tunnel | 
 **P81GatewaySubnets** | **[]string** | Harmony Sase gateway subnets | 
 **RemoteGatewaySubnets** | **[]string** | Remote gateway subnets | 
-**KeyExchange** | **string** | IKE version for key exchange | [default to "ikev2"]
-**AdvancedSettings** | Pointer to [**IPSecAdvancedSettingsV23**](IPSecAdvancedSettingsV23.md) |  | [optional] 
-**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
 **PeakBandwidthMbps** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
+**KeyExchange** | **string** | IKE version for key exchange | [default to "ikev2"]
+**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
+**IkeLifeTime** | Pointer to **string** |  | [optional] 
+**Lifetime** | Pointer to **string** |  | [optional] 
+**DpdDelay** | Pointer to **string** |  | [optional] 
+**DpdTimeout** | Pointer to **string** |  | [optional] 
+**Phase1** | Pointer to [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | [optional] 
+**Phase2** | Pointer to [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | [optional] 
+**RemotePublicIP** | Pointer to **string** | Remote gateway public IP address | [optional] 
+**RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
+**Description** | Pointer to **string** | Optional tunnel description | [optional] 
+**IsHA** | Pointer to **bool** | Whether this tunnel is part of a high-availability pair | [optional] 
 
 ## Methods
 
@@ -185,6 +194,31 @@ and a boolean to check if the value has been set.
 SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
 
+### GetPeakBandwidthMbps
+
+`func (o *EnhancedTunnelBase) GetPeakBandwidthMbps() int32`
+
+GetPeakBandwidthMbps returns the PeakBandwidthMbps field if non-nil, zero value otherwise.
+
+### GetPeakBandwidthMbpsOk
+
+`func (o *EnhancedTunnelBase) GetPeakBandwidthMbpsOk() (*int32, bool)`
+
+GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPeakBandwidthMbps
+
+`func (o *EnhancedTunnelBase) SetPeakBandwidthMbps(v int32)`
+
+SetPeakBandwidthMbps sets PeakBandwidthMbps field to given value.
+
+### HasPeakBandwidthMbps
+
+`func (o *EnhancedTunnelBase) HasPeakBandwidthMbps() bool`
+
+HasPeakBandwidthMbps returns a boolean if a field has been set.
+
 ### GetKeyExchange
 
 `func (o *EnhancedTunnelBase) GetKeyExchange() string`
@@ -204,31 +238,6 @@ and a boolean to check if the value has been set.
 
 SetKeyExchange sets KeyExchange field to given value.
 
-
-### GetAdvancedSettings
-
-`func (o *EnhancedTunnelBase) GetAdvancedSettings() IPSecAdvancedSettingsV23`
-
-GetAdvancedSettings returns the AdvancedSettings field if non-nil, zero value otherwise.
-
-### GetAdvancedSettingsOk
-
-`func (o *EnhancedTunnelBase) GetAdvancedSettingsOk() (*IPSecAdvancedSettingsV23, bool)`
-
-GetAdvancedSettingsOk returns a tuple with the AdvancedSettings field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetAdvancedSettings
-
-`func (o *EnhancedTunnelBase) SetAdvancedSettings(v IPSecAdvancedSettingsV23)`
-
-SetAdvancedSettings sets AdvancedSettings field to given value.
-
-### HasAdvancedSettings
-
-`func (o *EnhancedTunnelBase) HasAdvancedSettings() bool`
-
-HasAdvancedSettings returns a boolean if a field has been set.
 
 ### GetRoutingType
 
@@ -255,30 +264,255 @@ SetRoutingType sets RoutingType field to given value.
 
 HasRoutingType returns a boolean if a field has been set.
 
-### GetPeakBandwidthMbps
+### GetIkeLifeTime
 
-`func (o *EnhancedTunnelBase) GetPeakBandwidthMbps() int32`
+`func (o *EnhancedTunnelBase) GetIkeLifeTime() string`
 
-GetPeakBandwidthMbps returns the PeakBandwidthMbps field if non-nil, zero value otherwise.
+GetIkeLifeTime returns the IkeLifeTime field if non-nil, zero value otherwise.
 
-### GetPeakBandwidthMbpsOk
+### GetIkeLifeTimeOk
 
-`func (o *EnhancedTunnelBase) GetPeakBandwidthMbpsOk() (*int32, bool)`
+`func (o *EnhancedTunnelBase) GetIkeLifeTimeOk() (*string, bool)`
 
-GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field if it's non-nil, zero value otherwise
+GetIkeLifeTimeOk returns a tuple with the IkeLifeTime field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetPeakBandwidthMbps
+### SetIkeLifeTime
 
-`func (o *EnhancedTunnelBase) SetPeakBandwidthMbps(v int32)`
+`func (o *EnhancedTunnelBase) SetIkeLifeTime(v string)`
 
-SetPeakBandwidthMbps sets PeakBandwidthMbps field to given value.
+SetIkeLifeTime sets IkeLifeTime field to given value.
 
-### HasPeakBandwidthMbps
+### HasIkeLifeTime
 
-`func (o *EnhancedTunnelBase) HasPeakBandwidthMbps() bool`
+`func (o *EnhancedTunnelBase) HasIkeLifeTime() bool`
 
-HasPeakBandwidthMbps returns a boolean if a field has been set.
+HasIkeLifeTime returns a boolean if a field has been set.
+
+### GetLifetime
+
+`func (o *EnhancedTunnelBase) GetLifetime() string`
+
+GetLifetime returns the Lifetime field if non-nil, zero value otherwise.
+
+### GetLifetimeOk
+
+`func (o *EnhancedTunnelBase) GetLifetimeOk() (*string, bool)`
+
+GetLifetimeOk returns a tuple with the Lifetime field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLifetime
+
+`func (o *EnhancedTunnelBase) SetLifetime(v string)`
+
+SetLifetime sets Lifetime field to given value.
+
+### HasLifetime
+
+`func (o *EnhancedTunnelBase) HasLifetime() bool`
+
+HasLifetime returns a boolean if a field has been set.
+
+### GetDpdDelay
+
+`func (o *EnhancedTunnelBase) GetDpdDelay() string`
+
+GetDpdDelay returns the DpdDelay field if non-nil, zero value otherwise.
+
+### GetDpdDelayOk
+
+`func (o *EnhancedTunnelBase) GetDpdDelayOk() (*string, bool)`
+
+GetDpdDelayOk returns a tuple with the DpdDelay field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDpdDelay
+
+`func (o *EnhancedTunnelBase) SetDpdDelay(v string)`
+
+SetDpdDelay sets DpdDelay field to given value.
+
+### HasDpdDelay
+
+`func (o *EnhancedTunnelBase) HasDpdDelay() bool`
+
+HasDpdDelay returns a boolean if a field has been set.
+
+### GetDpdTimeout
+
+`func (o *EnhancedTunnelBase) GetDpdTimeout() string`
+
+GetDpdTimeout returns the DpdTimeout field if non-nil, zero value otherwise.
+
+### GetDpdTimeoutOk
+
+`func (o *EnhancedTunnelBase) GetDpdTimeoutOk() (*string, bool)`
+
+GetDpdTimeoutOk returns a tuple with the DpdTimeout field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDpdTimeout
+
+`func (o *EnhancedTunnelBase) SetDpdTimeout(v string)`
+
+SetDpdTimeout sets DpdTimeout field to given value.
+
+### HasDpdTimeout
+
+`func (o *EnhancedTunnelBase) HasDpdTimeout() bool`
+
+HasDpdTimeout returns a boolean if a field has been set.
+
+### GetPhase1
+
+`func (o *EnhancedTunnelBase) GetPhase1() IPSecPhaseConfigV23`
+
+GetPhase1 returns the Phase1 field if non-nil, zero value otherwise.
+
+### GetPhase1Ok
+
+`func (o *EnhancedTunnelBase) GetPhase1Ok() (*IPSecPhaseConfigV23, bool)`
+
+GetPhase1Ok returns a tuple with the Phase1 field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPhase1
+
+`func (o *EnhancedTunnelBase) SetPhase1(v IPSecPhaseConfigV23)`
+
+SetPhase1 sets Phase1 field to given value.
+
+### HasPhase1
+
+`func (o *EnhancedTunnelBase) HasPhase1() bool`
+
+HasPhase1 returns a boolean if a field has been set.
+
+### GetPhase2
+
+`func (o *EnhancedTunnelBase) GetPhase2() IPSecPhaseConfigV23`
+
+GetPhase2 returns the Phase2 field if non-nil, zero value otherwise.
+
+### GetPhase2Ok
+
+`func (o *EnhancedTunnelBase) GetPhase2Ok() (*IPSecPhaseConfigV23, bool)`
+
+GetPhase2Ok returns a tuple with the Phase2 field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPhase2
+
+`func (o *EnhancedTunnelBase) SetPhase2(v IPSecPhaseConfigV23)`
+
+SetPhase2 sets Phase2 field to given value.
+
+### HasPhase2
+
+`func (o *EnhancedTunnelBase) HasPhase2() bool`
+
+HasPhase2 returns a boolean if a field has been set.
+
+### GetRemotePublicIP
+
+`func (o *EnhancedTunnelBase) GetRemotePublicIP() string`
+
+GetRemotePublicIP returns the RemotePublicIP field if non-nil, zero value otherwise.
+
+### GetRemotePublicIPOk
+
+`func (o *EnhancedTunnelBase) GetRemotePublicIPOk() (*string, bool)`
+
+GetRemotePublicIPOk returns a tuple with the RemotePublicIP field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRemotePublicIP
+
+`func (o *EnhancedTunnelBase) SetRemotePublicIP(v string)`
+
+SetRemotePublicIP sets RemotePublicIP field to given value.
+
+### HasRemotePublicIP
+
+`func (o *EnhancedTunnelBase) HasRemotePublicIP() bool`
+
+HasRemotePublicIP returns a boolean if a field has been set.
+
+### GetRemoteID
+
+`func (o *EnhancedTunnelBase) GetRemoteID() string`
+
+GetRemoteID returns the RemoteID field if non-nil, zero value otherwise.
+
+### GetRemoteIDOk
+
+`func (o *EnhancedTunnelBase) GetRemoteIDOk() (*string, bool)`
+
+GetRemoteIDOk returns a tuple with the RemoteID field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRemoteID
+
+`func (o *EnhancedTunnelBase) SetRemoteID(v string)`
+
+SetRemoteID sets RemoteID field to given value.
+
+### HasRemoteID
+
+`func (o *EnhancedTunnelBase) HasRemoteID() bool`
+
+HasRemoteID returns a boolean if a field has been set.
+
+### GetDescription
+
+`func (o *EnhancedTunnelBase) GetDescription() string`
+
+GetDescription returns the Description field if non-nil, zero value otherwise.
+
+### GetDescriptionOk
+
+`func (o *EnhancedTunnelBase) GetDescriptionOk() (*string, bool)`
+
+GetDescriptionOk returns a tuple with the Description field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDescription
+
+`func (o *EnhancedTunnelBase) SetDescription(v string)`
+
+SetDescription sets Description field to given value.
+
+### HasDescription
+
+`func (o *EnhancedTunnelBase) HasDescription() bool`
+
+HasDescription returns a boolean if a field has been set.
+
+### GetIsHA
+
+`func (o *EnhancedTunnelBase) GetIsHA() bool`
+
+GetIsHA returns the IsHA field if non-nil, zero value otherwise.
+
+### GetIsHAOk
+
+`func (o *EnhancedTunnelBase) GetIsHAOk() (*bool, bool)`
+
+GetIsHAOk returns a tuple with the IsHA field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIsHA
+
+`func (o *EnhancedTunnelBase) SetIsHA(v bool)`
+
+SetIsHA sets IsHA field to given value.
+
+### HasIsHA
+
+`func (o *EnhancedTunnelBase) HasIsHA() bool`
+
+HasIsHA returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

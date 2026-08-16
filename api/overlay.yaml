@@ -740,3 +740,165 @@ entries:
         required:
           - groups
         additionalProperties: true
+
+  # --- Task 34 (2026-08-16): the enhanced-tunnel READ shape. Unlike every
+  # entry above, this one is grounded in a captured live response, not in
+  # generator behaviour or v2.3 hand-patch archaeology. See A19's reason.
+
+  - id: A19-enhanced-tunnel-base-real-read-shape
+    reason: >
+      EnhancedTunnelBase describes the wrong shape for the four operations
+      that return it (GET /v3/networks/enhanced/{networkId}/tunnels, GET
+      .../regions/{regionId}/tunnels, GET .../tunnels/ipsec/static/{tunnelId},
+      GET .../tunnels/ipsec/dynamic/{dynamicTunnelId}). Verified against a
+      live response captured 2026-08-16 from GET
+      /v3/networks/enhanced/{networkId}/tunnels on a real static tunnel: the
+      server returns ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1,
+      phase2, remotePublicIP, remoteID, description and isHA as TOP-LEVEL
+      keys, and returns no `advancedSettings` object at all. Upstream declares
+      the exact opposite — one `advancedSettings: $ref
+      IPSecAdvancedSettingsV2_3` property, and none of those ten fields.
+      The concrete damage: the generated EnhancedTunnel model's
+      AdvancedSettings pointer is nil on every real response, its nil-safe
+      getters all return "", and the Terraform provider's Read functions —
+      which sourced ike_life_time/lifetime/dpd_delay/dpd_timeout/phase1/phase2
+      from it — blanked the user's configured values on every refresh
+      (TestAccEnhancedStaticTunnel_basic / TestAccEnhancedDynamicTunnel_basic:
+      `got ike_life_time ""; want "9h"`). remotePublicIP and remoteID had no
+      field at all, which is the separately-recorded
+      "enhanced_static_tunnel.remote_id can never populate" defect — the same
+      root cause, not a second bug.
+      This replaces the whole schema rather than surgically editing it because
+      the properties to add and the property to drop both live inside
+      EnhancedTunnelBase's second allOf branch, and scripts/build_spec.py's
+      path walker addresses mapping keys only — a path through a list index
+      (`allOf, 1, properties`) would silently clobber that branch rather than
+      descend into it. A whole-schema `op: set` needs no new build_spec
+      machinery and lets a future reader diff this value directly against
+      upstream's EnhancedTunnelBase to see exactly what changed.
+      WRITE PATH IS UNAFFECTED, and that is checkable, not assumed:
+      EnhancedTunnelBase has exactly one reference in the whole spec —
+      EnhancedTunnel's allOf (`grep -c EnhancedTunnelBase api/swagger.yaml`
+      = 2: this definition plus that one $ref). The four write models
+      (StaticTunnelCreate, StaticTunnelUpdate, DynamicTunnelCreate,
+      DynamicTunnelUpdate) compose TunnelAuthConfig and
+      IPSecAdvancedSettingsV2_3 directly and never touch EnhancedTunnelBase,
+      so nothing here can reach a request body. Confirmed empirically:
+      regenerating with this entry applied leaves model_static_tunnel_create.go,
+      model_static_tunnel_update.go, model_dynamic_tunnel_create.go,
+      model_dynamic_tunnel_update.go, model_dynamic_tunnel_details.go and
+      model_dynamic_tunnel_details_update.go byte-identical, and the
+      provider's golden-body tests in checkpointsase/payload_marshal_test.go
+      still pass unchanged.
+      Three deliberate decisions inside this value:
+      (1) `required` is trimmed to the six fields the generator already
+      enforced before this entry (regionID, tunnelName, p81GatewaySubnets,
+      remoteGatewaySubnets, keyExchange, authType). Upstream's required list
+      also names phase1, phase2, remotePublicIP, remoteID, features,
+      ikeLifeTime, lifetime, dpdDelay and dpdTimeout, but the generator
+      silently drops any required name that is not also a declared property,
+      so those nine never reached the generated required-property check
+      (confirmed: model_enhanced_tunnel.go's requiredProperties listed nine
+      names, none of them these). Declaring the properties without also
+      trimming `required` would therefore have quietly promoted nine fields
+      to strictly-required on a read model — the exact over-strict-read-model
+      failure mode A6, A10 and A16 exist to undo. Keeping the effective
+      required set identical to the pre-A19 one means this entry cannot
+      introduce a new decode failure; the added fields all generate as
+      nil-safe optional pointers.
+      (2) `features` is deliberately NOT declared, even though the live
+      response contains it. The capture abridged its contents to `{...}`, so
+      its real nested shape is unverified, and the obvious $ref
+      (NetworkFeatures) has nested objects that require `enabled` /
+      `redirectToResolver` — declaring it would add a strict-decode surface
+      over an unverified payload for a field no caller reads. Because this
+      schema sets `additionalProperties: true`, an undeclared `features`
+      lands harmlessly in the generated AdditionalProperties map instead.
+      Declare it once a full capture of the object exists.
+      (3) `peakBandwidth` is written here already renamed to
+      `peakBandwidthMbps`. A8-rename-peak-bandwidth runs earlier (entries
+      apply in file order) and does that rename in place, but this entry then
+      replaces the whole schema, so writing the pre-rename name would
+      reintroduce the wrong one. A8 still applies to StaticTunnelCreate, the
+      other schema it covers, so it stays; only its effect on
+      EnhancedTunnelBase is superseded here — the same
+      earlier-entry-superseded-by-a-later-flatten relationship A17d already
+      documents with respect to A6.
+    remove_when: >
+      upstream's EnhancedTunnelBase declares the fields the read endpoints
+      actually return at top level (ikeLifeTime, lifetime, dpdDelay,
+      dpdTimeout, phase1, phase2, remotePublicIP, remoteID, description,
+      isHA) and drops `advancedSettings`, or upstream introduces a separate,
+      purpose-built response schema for the four enhanced-tunnel GETs so this
+      one no longer has to describe both a real read shape and a
+      v2.3-era advancedSettings wrapper.
+    op: set
+    path: [components, schemas, EnhancedTunnelBase]
+    value:
+      allOf:
+      - $ref: '#/components/schemas/TunnelAuthConfig'
+      - type: object
+        properties:
+          regionID:
+            type: string
+            description: Target region ID
+          tunnelName:
+            type: string
+            description: Name of the static tunnel
+          p81GatewaySubnets:
+            type: array
+            items:
+              type: string
+            minItems: 1
+            description: Harmony Sase gateway subnets
+          remoteGatewaySubnets:
+            type: array
+            items:
+              type: string
+            minItems: 1
+            description: Remote gateway subnets
+          peakBandwidthMbps:
+            $ref: '#/components/schemas/PeakBandwidth'
+          keyExchange:
+            type: string
+            description: IKE version for key exchange
+            enum:
+            - ikev1
+            - ikev2
+            default: ikev2
+          routingType:
+            $ref: '#/components/schemas/RoutingType'
+          ikeLifeTime:
+            $ref: '#/components/schemas/Lifetime'
+          lifetime:
+            $ref: '#/components/schemas/Lifetime'
+          dpdDelay:
+            $ref: '#/components/schemas/DPDTime'
+          dpdTimeout:
+            $ref: '#/components/schemas/DPDTime'
+          phase1:
+            $ref: '#/components/schemas/IPSecPhaseConfigV2_3'
+          phase2:
+            $ref: '#/components/schemas/IPSecPhaseConfigV2_3'
+          remotePublicIP:
+            type: string
+            format: ipv4
+            description: Remote gateway public IP address
+          remoteID:
+            type: string
+            description: Remote gateway ID
+          description:
+            type: string
+            description: Optional tunnel description
+          isHA:
+            type: boolean
+            description: Whether this tunnel is part of a high-availability pair
+        additionalProperties: true
+      required:
+      - regionID
+      - tunnelName
+      - p81GatewaySubnets
+      - remoteGatewaySubnets
+      - keyExchange
+      - authType
+      additionalProperties: true

@@ -7861,35 +7861,37 @@ components:
         remoteGatewaySubnets:
         - remoteGatewaySubnets
         - remoteGatewaySubnets
-        keyExchange: ikev2
-        advancedSettings:
-          keyExchange: ikev1
-          ikeLifeTime: ikeLifeTime
-          lifetime: lifetime
-          dpdDelay: dpdDelay
-          dpdTimeout: dpdTimeout
-          phase1:
-            auth:
-            - md5
-            - md5
-            encryption:
-            - 3des
-            - 3des
-            keyExchangeMethod:
-            - modp1024
-            - modp1024
-          phase2:
-            auth:
-            - md5
-            - md5
-            encryption:
-            - 3des
-            - 3des
-            keyExchangeMethod:
-            - modp1024
-            - modp1024
-        routingType: route
         peakBandwidthMbps: null
+        keyExchange: ikev2
+        routingType: route
+        ikeLifeTime: null
+        lifetime: null
+        dpdDelay: null
+        dpdTimeout: null
+        phase1:
+          auth:
+          - md5
+          - md5
+          encryption:
+          - 3des
+          - 3des
+          keyExchangeMethod:
+          - modp1024
+          - modp1024
+        phase2:
+          auth:
+          - md5
+          - md5
+          encryption:
+          - 3des
+          - 3des
+          keyExchangeMethod:
+          - modp1024
+          - modp1024
+        remotePublicIP: remotePublicIP
+        remoteID: remoteID
+        description: description
+        isHA: true
         id: id
         haTunnelID: haTunnelID
         dpdAction: dpdAction
@@ -7917,6 +7919,8 @@ components:
               type: string
             minItems: 1
             type: array
+          peakBandwidthMbps:
+            $ref: "#/components/schemas/PeakBandwidth"
           keyExchange:
             default: ikev2
             description: IKE version for key exchange
@@ -7924,28 +7928,40 @@ components:
             - ikev1
             - ikev2
             type: string
-          advancedSettings:
-            $ref: "#/components/schemas/IPSecAdvancedSettingsV2_3"
           routingType:
             $ref: "#/components/schemas/RoutingType"
-          peakBandwidthMbps:
-            $ref: "#/components/schemas/PeakBandwidth"
+          ikeLifeTime:
+            $ref: "#/components/schemas/Lifetime"
+          lifetime:
+            $ref: "#/components/schemas/Lifetime"
+          dpdDelay:
+            $ref: "#/components/schemas/DPDTime"
+          dpdTimeout:
+            $ref: "#/components/schemas/DPDTime"
+          phase1:
+            $ref: "#/components/schemas/IPSecPhaseConfigV2_3"
+          phase2:
+            $ref: "#/components/schemas/IPSecPhaseConfigV2_3"
+          remotePublicIP:
+            description: Remote gateway public IP address
+            format: ipv4
+            type: string
+          remoteID:
+            description: Remote gateway ID
+            type: string
+          description:
+            description: Optional tunnel description
+            type: string
+          isHA:
+            description: Whether this tunnel is part of a high-availability pair
+            type: boolean
         type: object
       required:
       - authType
-      - dpdDelay
-      - dpdTimeout
-      - features
-      - ikeLifeTime
       - keyExchange
-      - lifetime
       - p81GatewaySubnets
-      - phase1
-      - phase2
       - regionID
       - remoteGatewaySubnets
-      - remoteID
-      - remotePublicIP
       - tunnelName
     Error:
       additionalProperties: true
@@ -12912,35 +12928,37 @@ components:
           remoteGatewaySubnets:
           - remoteGatewaySubnets
           - remoteGatewaySubnets
-          keyExchange: ikev2
-          advancedSettings:
-            keyExchange: ikev1
-            ikeLifeTime: ikeLifeTime
-            lifetime: lifetime
-            dpdDelay: dpdDelay
-            dpdTimeout: dpdTimeout
-            phase1:
-              auth:
-              - md5
-              - md5
-              encryption:
-              - 3des
-              - 3des
-              keyExchangeMethod:
-              - modp1024
-              - modp1024
-            phase2:
-              auth:
-              - md5
-              - md5
-              encryption:
-              - 3des
-              - 3des
-              keyExchangeMethod:
-              - modp1024
-              - modp1024
-          routingType: route
           peakBandwidthMbps: null
+          keyExchange: ikev2
+          routingType: route
+          ikeLifeTime: null
+          lifetime: null
+          dpdDelay: null
+          dpdTimeout: null
+          phase1:
+            auth:
+            - md5
+            - md5
+            encryption:
+            - 3des
+            - 3des
+            keyExchangeMethod:
+            - modp1024
+            - modp1024
+          phase2:
+            auth:
+            - md5
+            - md5
+            encryption:
+            - 3des
+            - 3des
+            keyExchangeMethod:
+            - modp1024
+            - modp1024
+          remotePublicIP: remotePublicIP
+          remoteID: remoteID
+          description: description
+          isHA: true
           id: id
           haTunnelID: haTunnelID
           dpdAction: dpdAction
@@ -12955,35 +12973,37 @@ components:
           remoteGatewaySubnets:
           - remoteGatewaySubnets
           - remoteGatewaySubnets
-          keyExchange: ikev2
-          advancedSettings:
-            keyExchange: ikev1
-            ikeLifeTime: ikeLifeTime
-            lifetime: lifetime
-            dpdDelay: dpdDelay
-            dpdTimeout: dpdTimeout
-            phase1:
-              auth:
-              - md5
-              - md5
-              encryption:
-              - 3des
-              - 3des
-              keyExchangeMethod:
-              - modp1024
-              - modp1024
-            phase2:
-              auth:
-              - md5
-              - md5
-              encryption:
-              - 3des
-              - 3des
-              keyExchangeMethod:
-              - modp1024
-              - modp1024
-          routingType: route
           peakBandwidthMbps: null
+          keyExchange: ikev2
+          routingType: route
+          ikeLifeTime: null
+          lifetime: null
+          dpdDelay: null
+          dpdTimeout: null
+          phase1:
+            auth:
+            - md5
+            - md5
+            encryption:
+            - 3des
+            - 3des
+            keyExchangeMethod:
+            - modp1024
+            - modp1024
+          phase2:
+            auth:
+            - md5
+            - md5
+            encryption:
+            - 3des
+            - 3des
+            keyExchangeMethod:
+            - modp1024
+            - modp1024
+          remotePublicIP: remotePublicIP
+          remoteID: remoteID
+          description: description
+          isHA: true
           id: id
           haTunnelID: haTunnelID
           dpdAction: dpdAction

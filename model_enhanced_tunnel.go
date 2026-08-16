@@ -34,12 +34,25 @@ type EnhancedTunnel struct {
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
 	// Remote gateway subnets
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
-	// IKE version for key exchange
-	KeyExchange string `json:"keyExchange"`
-	AdvancedSettings *IPSecAdvancedSettingsV23 `json:"advancedSettings,omitempty"`
-	RoutingType *RoutingType `json:"routingType,omitempty"`
 	// Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps.
 	PeakBandwidthMbps *int32 `json:"peakBandwidthMbps,omitempty"`
+	// IKE version for key exchange
+	KeyExchange string `json:"keyExchange"`
+	RoutingType *RoutingType `json:"routingType,omitempty"`
+	IkeLifeTime *string `json:"ikeLifeTime,omitempty" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
+	Lifetime *string `json:"lifetime,omitempty" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
+	DpdDelay *string `json:"dpdDelay,omitempty" validate:"regexp=^([5-9]|[1-5][0-9]|60)s$"`
+	DpdTimeout *string `json:"dpdTimeout,omitempty" validate:"regexp=^([5-9]|[1-5][0-9]|60)s$"`
+	Phase1 *IPSecPhaseConfigV23 `json:"phase1,omitempty"`
+	Phase2 *IPSecPhaseConfigV23 `json:"phase2,omitempty"`
+	// Remote gateway public IP address
+	RemotePublicIP *string `json:"remotePublicIP,omitempty"`
+	// Remote gateway ID
+	RemoteID *string `json:"remoteID,omitempty"`
+	// Optional tunnel description
+	Description *string `json:"description,omitempty"`
+	// Whether this tunnel is part of a high-availability pair
+	IsHA *bool `json:"isHA,omitempty"`
 	// Enhanced tunnel ID
 	Id string `json:"id"`
 	// Enhanced dynamic tunnel group ID (or tunnel ID for static tunnel)
@@ -62,11 +75,11 @@ func NewEnhancedTunnel(authType string, regionID string, tunnelName string, p81G
 	this.TunnelName = tunnelName
 	this.P81GatewaySubnets = p81GatewaySubnets
 	this.RemoteGatewaySubnets = remoteGatewaySubnets
+	var peakBandwidthMbps int32 = 1000
+	this.PeakBandwidthMbps = &peakBandwidthMbps
 	this.KeyExchange = keyExchange
 	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = &routingType
-	var peakBandwidthMbps int32 = 1000
-	this.PeakBandwidthMbps = &peakBandwidthMbps
 	this.Id = id
 	this.HaTunnelID = haTunnelID
 	this.DpdAction = dpdAction
@@ -78,12 +91,12 @@ func NewEnhancedTunnel(authType string, regionID string, tunnelName string, p81G
 // but it doesn't guarantee that properties required by API are set
 func NewEnhancedTunnelWithDefaults() *EnhancedTunnel {
 	this := EnhancedTunnel{}
+	var peakBandwidthMbps int32 = 1000
+	this.PeakBandwidthMbps = &peakBandwidthMbps
 	var keyExchange string = "ikev2"
 	this.KeyExchange = keyExchange
 	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = &routingType
-	var peakBandwidthMbps int32 = 1000
-	this.PeakBandwidthMbps = &peakBandwidthMbps
 	return &this
 }
 
@@ -271,6 +284,38 @@ func (o *EnhancedTunnel) SetRemoteGatewaySubnets(v []string) {
 	o.RemoteGatewaySubnets = v
 }
 
+// GetPeakBandwidthMbps returns the PeakBandwidthMbps field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetPeakBandwidthMbps() int32 {
+	if o == nil || IsNil(o.PeakBandwidthMbps) {
+		var ret int32
+		return ret
+	}
+	return *o.PeakBandwidthMbps
+}
+
+// GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetPeakBandwidthMbpsOk() (*int32, bool) {
+	if o == nil || IsNil(o.PeakBandwidthMbps) {
+		return nil, false
+	}
+	return o.PeakBandwidthMbps, true
+}
+
+// HasPeakBandwidthMbps returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasPeakBandwidthMbps() bool {
+	if o != nil && !IsNil(o.PeakBandwidthMbps) {
+		return true
+	}
+
+	return false
+}
+
+// SetPeakBandwidthMbps gets a reference to the given int32 and assigns it to the PeakBandwidthMbps field.
+func (o *EnhancedTunnel) SetPeakBandwidthMbps(v int32) {
+	o.PeakBandwidthMbps = &v
+}
+
 // GetKeyExchange returns the KeyExchange field value
 func (o *EnhancedTunnel) GetKeyExchange() string {
 	if o == nil {
@@ -293,38 +338,6 @@ func (o *EnhancedTunnel) GetKeyExchangeOk() (*string, bool) {
 // SetKeyExchange sets field value
 func (o *EnhancedTunnel) SetKeyExchange(v string) {
 	o.KeyExchange = v
-}
-
-// GetAdvancedSettings returns the AdvancedSettings field value if set, zero value otherwise.
-func (o *EnhancedTunnel) GetAdvancedSettings() IPSecAdvancedSettingsV23 {
-	if o == nil || IsNil(o.AdvancedSettings) {
-		var ret IPSecAdvancedSettingsV23
-		return ret
-	}
-	return *o.AdvancedSettings
-}
-
-// GetAdvancedSettingsOk returns a tuple with the AdvancedSettings field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *EnhancedTunnel) GetAdvancedSettingsOk() (*IPSecAdvancedSettingsV23, bool) {
-	if o == nil || IsNil(o.AdvancedSettings) {
-		return nil, false
-	}
-	return o.AdvancedSettings, true
-}
-
-// HasAdvancedSettings returns a boolean if a field has been set.
-func (o *EnhancedTunnel) HasAdvancedSettings() bool {
-	if o != nil && !IsNil(o.AdvancedSettings) {
-		return true
-	}
-
-	return false
-}
-
-// SetAdvancedSettings gets a reference to the given IPSecAdvancedSettingsV23 and assigns it to the AdvancedSettings field.
-func (o *EnhancedTunnel) SetAdvancedSettings(v IPSecAdvancedSettingsV23) {
-	o.AdvancedSettings = &v
 }
 
 // GetRoutingType returns the RoutingType field value if set, zero value otherwise.
@@ -359,36 +372,324 @@ func (o *EnhancedTunnel) SetRoutingType(v RoutingType) {
 	o.RoutingType = &v
 }
 
-// GetPeakBandwidthMbps returns the PeakBandwidthMbps field value if set, zero value otherwise.
-func (o *EnhancedTunnel) GetPeakBandwidthMbps() int32 {
-	if o == nil || IsNil(o.PeakBandwidthMbps) {
-		var ret int32
+// GetIkeLifeTime returns the IkeLifeTime field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetIkeLifeTime() string {
+	if o == nil || IsNil(o.IkeLifeTime) {
+		var ret string
 		return ret
 	}
-	return *o.PeakBandwidthMbps
+	return *o.IkeLifeTime
 }
 
-// GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field value if set, nil otherwise
+// GetIkeLifeTimeOk returns a tuple with the IkeLifeTime field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EnhancedTunnel) GetPeakBandwidthMbpsOk() (*int32, bool) {
-	if o == nil || IsNil(o.PeakBandwidthMbps) {
+func (o *EnhancedTunnel) GetIkeLifeTimeOk() (*string, bool) {
+	if o == nil || IsNil(o.IkeLifeTime) {
 		return nil, false
 	}
-	return o.PeakBandwidthMbps, true
+	return o.IkeLifeTime, true
 }
 
-// HasPeakBandwidthMbps returns a boolean if a field has been set.
-func (o *EnhancedTunnel) HasPeakBandwidthMbps() bool {
-	if o != nil && !IsNil(o.PeakBandwidthMbps) {
+// HasIkeLifeTime returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasIkeLifeTime() bool {
+	if o != nil && !IsNil(o.IkeLifeTime) {
 		return true
 	}
 
 	return false
 }
 
-// SetPeakBandwidthMbps gets a reference to the given int32 and assigns it to the PeakBandwidthMbps field.
-func (o *EnhancedTunnel) SetPeakBandwidthMbps(v int32) {
-	o.PeakBandwidthMbps = &v
+// SetIkeLifeTime gets a reference to the given string and assigns it to the IkeLifeTime field.
+func (o *EnhancedTunnel) SetIkeLifeTime(v string) {
+	o.IkeLifeTime = &v
+}
+
+// GetLifetime returns the Lifetime field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetLifetime() string {
+	if o == nil || IsNil(o.Lifetime) {
+		var ret string
+		return ret
+	}
+	return *o.Lifetime
+}
+
+// GetLifetimeOk returns a tuple with the Lifetime field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetLifetimeOk() (*string, bool) {
+	if o == nil || IsNil(o.Lifetime) {
+		return nil, false
+	}
+	return o.Lifetime, true
+}
+
+// HasLifetime returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasLifetime() bool {
+	if o != nil && !IsNil(o.Lifetime) {
+		return true
+	}
+
+	return false
+}
+
+// SetLifetime gets a reference to the given string and assigns it to the Lifetime field.
+func (o *EnhancedTunnel) SetLifetime(v string) {
+	o.Lifetime = &v
+}
+
+// GetDpdDelay returns the DpdDelay field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetDpdDelay() string {
+	if o == nil || IsNil(o.DpdDelay) {
+		var ret string
+		return ret
+	}
+	return *o.DpdDelay
+}
+
+// GetDpdDelayOk returns a tuple with the DpdDelay field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetDpdDelayOk() (*string, bool) {
+	if o == nil || IsNil(o.DpdDelay) {
+		return nil, false
+	}
+	return o.DpdDelay, true
+}
+
+// HasDpdDelay returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasDpdDelay() bool {
+	if o != nil && !IsNil(o.DpdDelay) {
+		return true
+	}
+
+	return false
+}
+
+// SetDpdDelay gets a reference to the given string and assigns it to the DpdDelay field.
+func (o *EnhancedTunnel) SetDpdDelay(v string) {
+	o.DpdDelay = &v
+}
+
+// GetDpdTimeout returns the DpdTimeout field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetDpdTimeout() string {
+	if o == nil || IsNil(o.DpdTimeout) {
+		var ret string
+		return ret
+	}
+	return *o.DpdTimeout
+}
+
+// GetDpdTimeoutOk returns a tuple with the DpdTimeout field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetDpdTimeoutOk() (*string, bool) {
+	if o == nil || IsNil(o.DpdTimeout) {
+		return nil, false
+	}
+	return o.DpdTimeout, true
+}
+
+// HasDpdTimeout returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasDpdTimeout() bool {
+	if o != nil && !IsNil(o.DpdTimeout) {
+		return true
+	}
+
+	return false
+}
+
+// SetDpdTimeout gets a reference to the given string and assigns it to the DpdTimeout field.
+func (o *EnhancedTunnel) SetDpdTimeout(v string) {
+	o.DpdTimeout = &v
+}
+
+// GetPhase1 returns the Phase1 field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetPhase1() IPSecPhaseConfigV23 {
+	if o == nil || IsNil(o.Phase1) {
+		var ret IPSecPhaseConfigV23
+		return ret
+	}
+	return *o.Phase1
+}
+
+// GetPhase1Ok returns a tuple with the Phase1 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetPhase1Ok() (*IPSecPhaseConfigV23, bool) {
+	if o == nil || IsNil(o.Phase1) {
+		return nil, false
+	}
+	return o.Phase1, true
+}
+
+// HasPhase1 returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasPhase1() bool {
+	if o != nil && !IsNil(o.Phase1) {
+		return true
+	}
+
+	return false
+}
+
+// SetPhase1 gets a reference to the given IPSecPhaseConfigV23 and assigns it to the Phase1 field.
+func (o *EnhancedTunnel) SetPhase1(v IPSecPhaseConfigV23) {
+	o.Phase1 = &v
+}
+
+// GetPhase2 returns the Phase2 field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetPhase2() IPSecPhaseConfigV23 {
+	if o == nil || IsNil(o.Phase2) {
+		var ret IPSecPhaseConfigV23
+		return ret
+	}
+	return *o.Phase2
+}
+
+// GetPhase2Ok returns a tuple with the Phase2 field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetPhase2Ok() (*IPSecPhaseConfigV23, bool) {
+	if o == nil || IsNil(o.Phase2) {
+		return nil, false
+	}
+	return o.Phase2, true
+}
+
+// HasPhase2 returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasPhase2() bool {
+	if o != nil && !IsNil(o.Phase2) {
+		return true
+	}
+
+	return false
+}
+
+// SetPhase2 gets a reference to the given IPSecPhaseConfigV23 and assigns it to the Phase2 field.
+func (o *EnhancedTunnel) SetPhase2(v IPSecPhaseConfigV23) {
+	o.Phase2 = &v
+}
+
+// GetRemotePublicIP returns the RemotePublicIP field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetRemotePublicIP() string {
+	if o == nil || IsNil(o.RemotePublicIP) {
+		var ret string
+		return ret
+	}
+	return *o.RemotePublicIP
+}
+
+// GetRemotePublicIPOk returns a tuple with the RemotePublicIP field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetRemotePublicIPOk() (*string, bool) {
+	if o == nil || IsNil(o.RemotePublicIP) {
+		return nil, false
+	}
+	return o.RemotePublicIP, true
+}
+
+// HasRemotePublicIP returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasRemotePublicIP() bool {
+	if o != nil && !IsNil(o.RemotePublicIP) {
+		return true
+	}
+
+	return false
+}
+
+// SetRemotePublicIP gets a reference to the given string and assigns it to the RemotePublicIP field.
+func (o *EnhancedTunnel) SetRemotePublicIP(v string) {
+	o.RemotePublicIP = &v
+}
+
+// GetRemoteID returns the RemoteID field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetRemoteID() string {
+	if o == nil || IsNil(o.RemoteID) {
+		var ret string
+		return ret
+	}
+	return *o.RemoteID
+}
+
+// GetRemoteIDOk returns a tuple with the RemoteID field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetRemoteIDOk() (*string, bool) {
+	if o == nil || IsNil(o.RemoteID) {
+		return nil, false
+	}
+	return o.RemoteID, true
+}
+
+// HasRemoteID returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasRemoteID() bool {
+	if o != nil && !IsNil(o.RemoteID) {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteID gets a reference to the given string and assigns it to the RemoteID field.
+func (o *EnhancedTunnel) SetRemoteID(v string) {
+	o.RemoteID = &v
+}
+
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetDescription() string {
+	if o == nil || IsNil(o.Description) {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetDescriptionOk() (*string, bool) {
+	if o == nil || IsNil(o.Description) {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasDescription() bool {
+	if o != nil && !IsNil(o.Description) {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *EnhancedTunnel) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetIsHA returns the IsHA field value if set, zero value otherwise.
+func (o *EnhancedTunnel) GetIsHA() bool {
+	if o == nil || IsNil(o.IsHA) {
+		var ret bool
+		return ret
+	}
+	return *o.IsHA
+}
+
+// GetIsHAOk returns a tuple with the IsHA field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EnhancedTunnel) GetIsHAOk() (*bool, bool) {
+	if o == nil || IsNil(o.IsHA) {
+		return nil, false
+	}
+	return o.IsHA, true
+}
+
+// HasIsHA returns a boolean if a field has been set.
+func (o *EnhancedTunnel) HasIsHA() bool {
+	if o != nil && !IsNil(o.IsHA) {
+		return true
+	}
+
+	return false
+}
+
+// SetIsHA gets a reference to the given bool and assigns it to the IsHA field.
+func (o *EnhancedTunnel) SetIsHA(v bool) {
+	o.IsHA = &v
 }
 
 // GetId returns the Id field value
@@ -484,15 +785,42 @@ func (o EnhancedTunnel) ToMap() (map[string]interface{}, error) {
 	toSerialize["tunnelName"] = o.TunnelName
 	toSerialize["p81GatewaySubnets"] = o.P81GatewaySubnets
 	toSerialize["remoteGatewaySubnets"] = o.RemoteGatewaySubnets
-	toSerialize["keyExchange"] = o.KeyExchange
-	if !IsNil(o.AdvancedSettings) {
-		toSerialize["advancedSettings"] = o.AdvancedSettings
+	if !IsNil(o.PeakBandwidthMbps) {
+		toSerialize["peakBandwidthMbps"] = o.PeakBandwidthMbps
 	}
+	toSerialize["keyExchange"] = o.KeyExchange
 	if !IsNil(o.RoutingType) {
 		toSerialize["routingType"] = o.RoutingType
 	}
-	if !IsNil(o.PeakBandwidthMbps) {
-		toSerialize["peakBandwidthMbps"] = o.PeakBandwidthMbps
+	if !IsNil(o.IkeLifeTime) {
+		toSerialize["ikeLifeTime"] = o.IkeLifeTime
+	}
+	if !IsNil(o.Lifetime) {
+		toSerialize["lifetime"] = o.Lifetime
+	}
+	if !IsNil(o.DpdDelay) {
+		toSerialize["dpdDelay"] = o.DpdDelay
+	}
+	if !IsNil(o.DpdTimeout) {
+		toSerialize["dpdTimeout"] = o.DpdTimeout
+	}
+	if !IsNil(o.Phase1) {
+		toSerialize["phase1"] = o.Phase1
+	}
+	if !IsNil(o.Phase2) {
+		toSerialize["phase2"] = o.Phase2
+	}
+	if !IsNil(o.RemotePublicIP) {
+		toSerialize["remotePublicIP"] = o.RemotePublicIP
+	}
+	if !IsNil(o.RemoteID) {
+		toSerialize["remoteID"] = o.RemoteID
+	}
+	if !IsNil(o.Description) {
+		toSerialize["description"] = o.Description
+	}
+	if !IsNil(o.IsHA) {
+		toSerialize["isHA"] = o.IsHA
 	}
 	toSerialize["id"] = o.Id
 	toSerialize["haTunnelID"] = o.HaTunnelID
@@ -555,10 +883,19 @@ func (o *EnhancedTunnel) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "tunnelName")
 		delete(additionalProperties, "p81GatewaySubnets")
 		delete(additionalProperties, "remoteGatewaySubnets")
-		delete(additionalProperties, "keyExchange")
-		delete(additionalProperties, "advancedSettings")
-		delete(additionalProperties, "routingType")
 		delete(additionalProperties, "peakBandwidthMbps")
+		delete(additionalProperties, "keyExchange")
+		delete(additionalProperties, "routingType")
+		delete(additionalProperties, "ikeLifeTime")
+		delete(additionalProperties, "lifetime")
+		delete(additionalProperties, "dpdDelay")
+		delete(additionalProperties, "dpdTimeout")
+		delete(additionalProperties, "phase1")
+		delete(additionalProperties, "phase2")
+		delete(additionalProperties, "remotePublicIP")
+		delete(additionalProperties, "remoteID")
+		delete(additionalProperties, "description")
+		delete(additionalProperties, "isHA")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "haTunnelID")
 		delete(additionalProperties, "dpdAction")
