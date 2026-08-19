@@ -7836,7 +7836,6 @@ components:
       required:
       - id
       - name
-      - codes
       properties:
         id:
           type: string

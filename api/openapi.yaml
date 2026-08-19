@@ -12512,7 +12512,6 @@ components:
             type: string
           type: array
       required:
-      - codes
       - id
       - name
       type: object

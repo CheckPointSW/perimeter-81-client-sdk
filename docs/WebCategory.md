@@ -6,13 +6,13 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **string** | Web Category ID | 
 **Name** | **string** | Web Category name | 
-**Codes** | **[]string** | Web Category code identifiers | 
+**Codes** | Pointer to **[]string** | Web Category code identifiers | [optional] 
 
 ## Methods
 
 ### NewWebCategory
 
-`func NewWebCategory(id string, name string, codes []string, ) *WebCategory`
+`func NewWebCategory(id string, name string, ) *WebCategory`
 
 NewWebCategory instantiates a new WebCategory object
 This constructor will assign default values to properties that have it defined,
@@ -86,6 +86,11 @@ and a boolean to check if the value has been set.
 
 SetCodes sets Codes field to given value.
 
+### HasCodes
+
+`func (o *WebCategory) HasCodes() bool`
+
+HasCodes returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

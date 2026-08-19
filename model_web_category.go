@@ -25,7 +25,7 @@ type WebCategory struct {
 	// Web Category name
 	Name string `json:"name"`
 	// Web Category code identifiers
-	Codes []string `json:"codes"`
+	Codes []string `json:"codes,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -35,11 +35,10 @@ type _WebCategory WebCategory
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewWebCategory(id string, name string, codes []string) *WebCategory {
+func NewWebCategory(id string, name string) *WebCategory {
 	this := WebCategory{}
 	this.Id = id
 	this.Name = name
-	this.Codes = codes
 	return &this
 }
 
@@ -99,26 +98,34 @@ func (o *WebCategory) SetName(v string) {
 	o.Name = v
 }
 
-// GetCodes returns the Codes field value
+// GetCodes returns the Codes field value if set, zero value otherwise.
 func (o *WebCategory) GetCodes() []string {
-	if o == nil {
+	if o == nil || IsNil(o.Codes) {
 		var ret []string
 		return ret
 	}
-
 	return o.Codes
 }
 
-// GetCodesOk returns a tuple with the Codes field value
+// GetCodesOk returns a tuple with the Codes field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *WebCategory) GetCodesOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Codes) {
 		return nil, false
 	}
 	return o.Codes, true
 }
 
-// SetCodes sets field value
+// HasCodes returns a boolean if a field has been set.
+func (o *WebCategory) HasCodes() bool {
+	if o != nil && !IsNil(o.Codes) {
+		return true
+	}
+
+	return false
+}
+
+// SetCodes gets a reference to the given []string and assigns it to the Codes field.
 func (o *WebCategory) SetCodes(v []string) {
 	o.Codes = v
 }
@@ -135,7 +142,9 @@ func (o WebCategory) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["id"] = o.Id
 	toSerialize["name"] = o.Name
-	toSerialize["codes"] = o.Codes
+	if !IsNil(o.Codes) {
+		toSerialize["codes"] = o.Codes
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -151,7 +160,6 @@ func (o *WebCategory) UnmarshalJSON(data []byte) (err error) {
 	requiredProperties := []string{
 		"id",
 		"name",
-		"codes",
 	}
 
 	allProperties := make(map[string]interface{})

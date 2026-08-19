@@ -902,3 +902,60 @@ entries:
       - keyExchange
       - authType
       additionalProperties: true
+
+  - id: A20-web-category-codes-not-required
+    reason: >
+      WebCategory declares id, name AND codes required, but the server does not
+      send codes at all. Measured live 2026-08-19 against GET
+      /v3/objects/web-category (the run of
+      TestAccDataSourceObjectsCatalog_basic that this entry exists to unblock):
+      the endpoint answered 200 with a full, valid catalog in which every entry
+      carries exactly id and name, and the string "codes" appears nowhere in
+      the payload. Two entries verbatim from that response:
+
+        {"id":"100000001","name":"Computers / Internet"}
+        {"id":"100000034","name":"Real Estate"}
+
+      The concrete damage: because `codes` is in the generated
+      model_web_category.go requiredProperties list, WebCategory.UnmarshalJSON
+      checks the raw JSON object for the key before it unmarshals anything and
+      returns "no value given for required property codes". That is a
+      whole-payload rejection, not a per-entry one — the entire catalog read
+      fails and checkpointsase_web_categories reports "Unable to get Web
+      categories" on a 200 response that is entirely well-formed. There is no
+      partial-success path and no way for a caller to recover, which is why
+      this cannot be worked around above the SDK.
+      Only `codes` is dropped from `required`; id and name stay. This is
+      deliberately narrower than A6 and A10, which emptied their schemas'
+      required lists outright, for two reasons. First, the measurement
+      positively supports keeping them: id and name were present on every entry
+      of the live response, so trimming them would discard strictness that real
+      data justifies. Second, emptying the list would change the generated
+      Id/Name from plain `string` to `*string` and push a pointer-dereference
+      change into the provider's flattenWebCategories for no measured benefit —
+      A19's own reason warns against exactly this kind of incidental
+      strictness change on a read model, in the opposite direction.
+      WRITE PATH CANNOT BE AFFECTED, and that is checkable rather than assumed.
+      WebCategory has exactly one reference in the whole spec
+      (`grep -c "schemas/WebCategory'" api/swagger.yaml` = 1):
+      WebCategoryResponse.data.items. WebCategoryResponse in turn has exactly
+      one reference: the 200 response of GET /v3/objects/web-category. That
+      operation declares no request body, so no request schema in the document
+      can reach this one and no golden-body test can move.
+      Consequence for the provider, recorded here because it is easy to miss:
+      flattenWebCategories already coerces a nil Codes to an empty []string.
+      Before this entry that guard was unreachable defence; after it, it is the
+      only thing standing between an absent `codes` and a nil slice in state,
+      so it is load-bearing and must not be tidied away.
+    remove_when: >
+      upstream drops `codes` from WebCategory.required, or GET
+      /v3/objects/web-category starts sending a `codes` array on every catalog
+      entry — whichever happens first. Re-measure before deleting this entry:
+      the field is still declared as a property, so a server that begins
+      populating it will decode into Codes with no further change here, and
+      only the `required` trim needs reverting.
+    op: set
+    path: [components, schemas, WebCategory, required]
+    value:
+    - id
+    - name
