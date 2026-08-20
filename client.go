@@ -269,16 +269,38 @@ func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix stri
 			// is what Elem() yields for a typed-nil pointer (the `obj == nil`
 			// guard above does not catch a typed nil inside an interface).
 			//
-			// NOT CHANGED HERE, DELIBERATELY: the `map[string]string` branch
-			// below has the identical `fmt.Sprintf("%v", obj)` defect for HEADER
-			// parameters, and it is live -- api_settings.go passes the *string
-			// `x-auth-lambda-authorization` through it at two call sites. Left
-			// alone to keep this change to the one line the task authorised;
-			// reported as a follow-up rather than fixed silently.
+			// The `map[string]string` branch below carried the identical defect
+			// for HEADER parameters and is now fixed the same way; see its own
+			// comment for why that one mattered more.
 			queryParams.Add(keyPrefix, fmt.Sprintf("%v", v))
 		}
 	case map[string]string:
-		queryParams[keyPrefix] = fmt.Sprintf("%v", obj)
+		// LOCAL HAND FIX (not a templates/ override), the header-parameter twin
+		// of the query-parameter fix above. Same defect, same one-word cause:
+		// `v` holds the dereferenced value, `obj` is still the pointer, and
+		// formatting `obj` put an address on the wire.
+		//
+		// WHY IT MATTERED MORE HERE THAN ABOVE: the only live callers are
+		// api_settings.go:94 and :211, both passing the *string
+		// `x-auth-lambda-authorization`. An explicitly-set value therefore
+		// travelled as `0x14000112028` in an HTTP AUTH header -- so the request
+		// would not fail loudly on a malformed number the way the query-string
+		// case did against /v3/objects/updatable-objects; it would present a
+		// meaningless credential and be rejected as unauthorized, which is a
+		// far harder failure to trace back to serialisation. No token value is
+		// leaked either way: an address is not the secret. Nothing in the
+		// provider sets that header today, so this was latent, not active.
+		//
+		// See the query-parameter comment above for why this is a hand edit:
+		// client.go is line 1 of .openapi-generator-ignore, is absent from
+		// .openapi-generator/FILES, and is never written by the generator, so a
+		// templates/ override for it would be inert. Stock 7.24.0
+		// go/client.mustache does not carry either defect -- both are local to
+		// this repo's hand-carried v2.3-era client.go.
+		//
+		// DROPPABLE WHEN: client.go is ever replaced by genuine generator
+		// output, at which point both fixes become redundant rather than wrong.
+		queryParams[keyPrefix] = fmt.Sprintf("%v", v)
 	}
 }
 
