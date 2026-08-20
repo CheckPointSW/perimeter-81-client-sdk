@@ -373,47 +373,120 @@ def test_a21_a22_user_and_group_declare_id():
     generated models have no Id field and neither resource can address itself."""
     doc = build()
     for name in ("User", "Group"):
-        props = doc["components"]["schemas"][name]["properties"]
+        schema = doc["components"]["schemas"][name]
+        props = schema["properties"]
         assert "id" in props, f"{name} must declare id"
         assert props["id"]["type"] == "string"
-        assert "id" not in doc["components"]["schemas"][name].get("required", []), (
+        assert "id" not in schema.get("required", []), (
             f"{name}.id must stay optional: making it required would put it in the "
             "generated requiredProperties list and turn an omission into a whole-page "
             "decode failure"
         )
 
 
-def test_a21b_a22b_required_lists_are_trimmed():
+def test_a21b_a22b_required_lists_are_gone_entirely():
     """The two read models whose `required` lists over-promised. A strict
-    UnmarshalJSON turns one absent key into a failure for the entire list
-    response, so these lists must name only fields the wire guarantees.
+    UnmarshalJSON turns one absent key into a failure for the ENTIRE list
+    response, so any field left in these lists is a way for one bad record to
+    fail a whole page.
+
+    The list goes completely rather than down to one field. An earlier version
+    of A21b kept `email`, on the grounds that CreateUserDto marks it required --
+    but IdP-synced accounts never pass through that DTO and Active Directory's
+    `mail` attribute is optional, so a mail-less user is a real shape and
+    keeping `email` would have left the defect fully live, one field over.
+
+    The key is REMOVED, not set to []: OpenAPI 3.0 inherits JSON-Schema
+    draft-4's "required MUST have at least one element", so `required: []`
+    would be an invalid document.
 
     PermissionCategory has the same defect and is deliberately NOT corrected:
     nothing in this phase reads it, and a required trim with no consumer is
     churn. See LEFTOVERS L18."""
     doc = build()
-    assert doc["components"]["schemas"]["User"]["required"] == ["email"]
-    assert doc["components"]["schemas"]["Group"]["required"] == ["name"]
+    for name in ("User", "Group"):
+        schema = doc["components"]["schemas"][name]
+        assert "required" not in schema, (
+            f"{name} must declare no `required` list at all, got "
+            f"{schema.get('required')!r}"
+        )
+
+
+def test_a21b_a22b_removal_did_not_disturb_the_properties():
+    """op_remove deletes a key from a container it reaches by walking a path, so
+    a wrong path could delete the wrong thing and still leave a valid document.
+    Pin that both schemas kept their full property sets, so the only thing the
+    two remove entries changed is strictness."""
+    doc = build()
+    schemas = doc["components"]["schemas"]
+    # The upstream property set, plus `id` from A21a/A22a.
+    assert set(schemas["User"]["properties"]) == {
+        "email", "emailVerified", "firstName", "idProviderGroups", "idProviders",
+        "initials", "initialsColor", "invitationAttempts", "invitationToken",
+        "inviteMessage", "lastName", "role", "roleName", "roles", "terminated",
+        "username", "id",
+    }
+    assert set(schemas["Group"]["properties"]) == {
+        "applications", "isDefault", "name", "networks", "users", "vpnLocations",
+        "id",
+    }
 
 
 def test_a24_profile_name_patterns_allow_uppercase():
     """The upstream regex is /^[a-z '-]+$/i; the export dropped the i flag. A
-    ValidateFunc built from the exported pattern would reject "John"."""
+    ValidateFunc built from the exported pattern would reject "John".
+
+    A24/A24b use `op: set` on a whole property node, so each entry OWNS every
+    key in that node -- if upstream later raises maxLength or changes the type,
+    the entry silently reverts it. Every key the entry carries is therefore
+    asserted here, not just the one it exists to fix."""
     doc = build()
     props = doc["components"]["schemas"]["UserProfileDto"]["properties"]
     for field in ("firstName", "lastName"):
         assert props[field]["pattern"] == "^[a-zA-Z '-]+$", (
             f"{field} pattern must accept uppercase"
         )
+        assert props[field]["maxLength"] == 30, (
+            f"{field} must keep upstream's 30-character cap: op_set replaced the "
+            "whole property node, so a changed cap upstream would be silently "
+            "reverted by this entry"
+        )
+        assert props[field]["type"] == "string", f"{field} must stay a string"
+        assert set(props[field]) == {"type", "maxLength", "pattern"}, (
+            f"{field} has keys {sorted(props[field])}: op_set replaced the whole "
+            "node, so an added upstream key (a description, a format) would be "
+            "dropped here without any other test noticing"
+        )
 
 
 def test_upstream_still_has_the_defects_a21_a22_a24_correct():
     """Guards against the entries outliving their reason: if upstream fixes any
     of these, this test fails and the corresponding entry should be deleted
-    rather than silently kept forever."""
-    up = yaml.safe_load(open(ROOT / "api" / "v3.upstream.yaml"))["components"]["schemas"]
+    rather than silently kept forever.
+
+    One assertion per entry. A21b/A22b additionally have a self-firing trigger
+    -- build_spec.py's op_remove raises once its target is absent -- but these
+    asserts name the entry, so they fail with a clearer message than a KeyError
+    out of the build."""
+    with open(ROOT / "api" / "v3.upstream.yaml") as fh:
+        up = yaml.safe_load(fh)["components"]["schemas"]
+
     assert "id" not in up["User"]["properties"], "A21a is obsolete; delete it"
     assert "id" not in up["Group"]["properties"], "A22a is obsolete; delete it"
+
+    # A21b / A22b: upstream must still declare an over-promising `required`.
+    assert up["User"].get("required") == [
+        "email", "emailVerified", "initials", "roleName", "lastName",
+        "firstName", "username", "terminated",
+    ], "A21b is obsolete or upstream's required list changed; re-measure and delete or narrow it"
+    assert up["Group"].get("required") == [
+        "name", "isDefault", "applications", "networks", "vpnLocations", "users",
+    ], "A22b is obsolete or upstream's required list changed; re-measure and delete or narrow it"
+
+    # A24 / A24b: one assert each, so fixing only one upstream still fires.
     assert up["UserProfileDto"]["properties"]["firstName"]["pattern"] == "^[a-z '-]+$", (
         "A24 is obsolete; delete it"
+    )
+    assert up["UserProfileDto"]["properties"]["lastName"]["pattern"] == "^[a-z '-]+$", (
+        "A24b is obsolete; delete it"
     )

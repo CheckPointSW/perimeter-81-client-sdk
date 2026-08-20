@@ -12,7 +12,6 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the Group type satisfies the MappedNullable interface at compile time
@@ -21,7 +20,7 @@ var _ MappedNullable = &Group{}
 // Group struct for Group
 type Group struct {
 	// Name of the group.
-	Name string `json:"name"`
+	Name *string `json:"name,omitempty"`
 	// Indicates that the group is default.
 	IsDefault *bool `json:"isDefault,omitempty"`
 	// Group applications.
@@ -43,9 +42,8 @@ type _Group Group
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewGroup(name string) *Group {
+func NewGroup() *Group {
 	this := Group{}
-	this.Name = name
 	return &this
 }
 
@@ -57,28 +55,36 @@ func NewGroupWithDefaults() *Group {
 	return &this
 }
 
-// GetName returns the Name field value
+// GetName returns the Name field value if set, zero value otherwise.
 func (o *Group) GetName() string {
-	if o == nil {
+	if o == nil || IsNil(o.Name) {
 		var ret string
 		return ret
 	}
-
-	return o.Name
+	return *o.Name
 }
 
-// GetNameOk returns a tuple with the Name field value
+// GetNameOk returns a tuple with the Name field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetNameOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Name) {
 		return nil, false
 	}
-	return &o.Name, true
+	return o.Name, true
 }
 
-// SetName sets field value
+// HasName returns a boolean if a field has been set.
+func (o *Group) HasName() bool {
+	if o != nil && !IsNil(o.Name) {
+		return true
+	}
+
+	return false
+}
+
+// SetName gets a reference to the given string and assigns it to the Name field.
 func (o *Group) SetName(v string) {
-	o.Name = v
+	o.Name = &v
 }
 
 // GetIsDefault returns the IsDefault field value if set, zero value otherwise.
@@ -283,7 +289,9 @@ func (o Group) MarshalJSON() ([]byte, error) {
 
 func (o Group) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["name"] = o.Name
+	if !IsNil(o.Name) {
+		toSerialize["name"] = o.Name
+	}
 	if !IsNil(o.IsDefault) {
 		toSerialize["isDefault"] = o.IsDefault
 	}
@@ -311,27 +319,6 @@ func (o Group) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *Group) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"name",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
 	varGroup := _Group{}
 
 	err = json.Unmarshal(data, &varGroup)

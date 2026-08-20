@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Name** | **string** | Name of the group. | 
+**Name** | Pointer to **string** | Name of the group. | [optional] 
 **IsDefault** | Pointer to **bool** | Indicates that the group is default. | [optional] 
 **Applications** | Pointer to **[]string** | Group applications. | [optional] 
 **Networks** | Pointer to **[]string** | Group networks. | [optional] 
@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewGroup
 
-`func NewGroup(name string, ) *Group`
+`func NewGroup() *Group`
 
 NewGroup instantiates a new Group object
 This constructor will assign default values to properties that have it defined,
@@ -50,6 +50,11 @@ and a boolean to check if the value has been set.
 
 SetName sets Name field to given value.
 
+### HasName
+
+`func (o *Group) HasName() bool`
+
+HasName returns a boolean if a field has been set.
 
 ### GetIsDefault
 

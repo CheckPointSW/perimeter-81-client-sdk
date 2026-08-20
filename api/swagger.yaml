@@ -5291,8 +5291,6 @@ components:
         id:
           type: string
           description: Unique identifier of the group.
-      required:
-      - name
       additionalProperties: true
     GroupList:
       type: object
@@ -7730,8 +7728,6 @@ components:
         id:
           type: string
           description: Unique identifier of the user.
-      required:
-      - email
       additionalProperties: true
     UserList:
       type: object

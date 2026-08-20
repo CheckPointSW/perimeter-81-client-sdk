@@ -8220,8 +8220,6 @@ components:
         id:
           description: Unique identifier of the group.
           type: string
-      required:
-      - name
       type: object
     GroupList:
       additionalProperties: true
@@ -12262,8 +12260,6 @@ components:
         id:
           description: Unique identifier of the user.
           type: string
-      required:
-      - email
       type: object
     UserList:
       additionalProperties: true

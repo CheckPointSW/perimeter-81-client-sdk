@@ -241,15 +241,36 @@ func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix stri
 			// WHY BRACKETS UNCONDITIONALLY, NOT ONLY FOR style == "deepObject":
 			// this matches stock openapi-generator 7.24.0's own
 			// go/client.mustache, whose reflect.Map case recurses on
-			// fmt.Sprintf("%s[%s]", keyPrefix, k) regardless of style. Keeping
-			// the two implementations identical is what makes this fix
+			// fmt.Sprintf("%s[%s]", keyPrefix, k) regardless of style. Matching
+			// stock FOR THE MAP-IN-QUERY CASE -- the case this fix covers and
+			// the only one a live parameter reaches -- is what makes the fix
 			// redundant rather than wrong on the day client.go is regenerated
-			// stock -- the same disposal condition the other two fixes carry.
+			// stock, which is the same disposal condition the other two fixes
+			// carry.
+			//
+			// That is deliberately NOT a claim that the two implementations are
+			// identical overall. Stock is broader in two ways this case does not
+			// reach, neither of them exercised by anything in this SDK today:
+			//   * stock's map case sits in the TOP-LEVEL kind switch, ahead of
+			//     the destination type switch, so it also expands a map passed
+			//     as a HEADER parameter. This case is inside `case url.Values:`,
+			//     so a map header parameter would still fall through to the
+			//     map[string]string branch below. No map header parameter
+			//     exists in this SDK (the only two header params are the
+			//     *string x-auth-lambda-authorization in api_settings.go).
+			//   * stock's reflect.Slice case INDEXES elements when
+			//     style == "deepObject" (sort[email][0]=a&sort[email][1]=b),
+			//     whereas the local Slice case above always comma-joins
+			//     (sort[email]=a,b). A map[string][]string recursing into it
+			//     therefore diverges from stock. Pinned by
+			//     TestDeepObjectMapOfSlicesUsesTheLocalCommaJoinedForm so the
+			//     divergence is a recorded fact rather than a later surprise.
 			//
 			// Recursing rather than formatting inline is deliberate: it reuses
 			// the pointer-dereference and slice handling above, so a
 			// map[string][]string or a map of pointers works without a second
-			// implementation of either.
+			// implementation of either -- subject to the slice-form caveat just
+			// noted, and both shapes are pinned by tests rather than assumed.
 			iter := v.MapRange()
 			for iter.Next() {
 				parameterAddToHeaderOrQuery(queryParams,

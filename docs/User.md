@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **IdProviders** | Pointer to [**IdProviderMap**](IdProviderMap.md) |  | [optional] 
 **InviteMessage** | Pointer to **string** | Invitation message sent to the user. | [optional] 
 **Terminated** | Pointer to **bool** | Indicates that the user has been deleted. | [optional] 
-**Email** | **string** | User email. | 
+**Email** | Pointer to **string** | User email. | [optional] 
 **EmailVerified** | Pointer to **bool** | Whether the user verified his email. | [optional] 
 **Initials** | Pointer to **string** | User initials. | [optional] 
 **RoleName** | Pointer to **string** | User role name. | [optional] 
@@ -26,7 +26,7 @@ Name | Type | Description | Notes
 
 ### NewUser
 
-`func NewUser(email string, ) *User`
+`func NewUser() *User`
 
 NewUser instantiates a new User object
 This constructor will assign default values to properties that have it defined,
@@ -285,6 +285,11 @@ and a boolean to check if the value has been set.
 
 SetEmail sets Email field to given value.
 
+### HasEmail
+
+`func (o *User) HasEmail() bool`
+
+HasEmail returns a boolean if a field has been set.
 
 ### GetEmailVerified
 

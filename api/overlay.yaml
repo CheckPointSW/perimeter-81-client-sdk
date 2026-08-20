@@ -994,7 +994,7 @@ entries:
       type: string
       description: Unique identifier of the user.
 
-  - id: A21b-user-required-trim
+  - id: A21b-user-required-drop
     reason: >
       User.required lists eight fields: email, emailVerified, initials,
       roleName, lastName, firstName, username, terminated. openapi-generator
@@ -1005,25 +1005,49 @@ entries:
       A20 records, where a required-but-absent field made a valid 200 read as
       "Unable to get Web categories".
       Directory-sourced accounts (idpType saml/gsuite/okta/azureAD/adLdap) are
-      the plausible gap: initials and roleName are Harmony-SASE-derived
-      presentation fields, not attributes an IdP is obliged to supply.
-      Trimmed to `email` alone -- the one field CreateUserDto itself marks
-      required, so no user can exist without it.
-      THE PROVIDER-SIDE COST IS ZERO THIS ONCE, which is why the trim is
-      defensible here and A20 argues against it in its own case: User has no
-      provider consumer yet, so nothing has to be rewritten for the
-      value-to-pointer change. Task 3 reads every one of these through its
-      nil-safe Get* accessor from the start.
+      the gap: initials and roleName are Harmony-SASE-derived presentation
+      fields, not attributes an IdP is obliged to supply.
+      THE WHOLE LIST GOES, `email` INCLUDED. An earlier draft of this entry kept
+      `email` on the grounds that CreateUserDto marks it required, so no user
+      could exist without one. That argument does not survive contact with the
+      same directory-sync case the paragraph above rests on: IdP-provisioned
+      accounts are created by sync and never pass through CreateUserDto, and
+      Active Directory's own `mail` attribute is optional, so a mail-less
+      AD-sourced account is a real shape. Keeping one field required would have
+      left the A20 failure fully live, just moved one field over -- a single
+      mail-less account failing the entire GET /v3/users page. A partial trim
+      buys nothing here: the cost of being wrong is the same whole-page decode
+      error whichever field is the one that turns up absent.
+      `op: remove` rather than `op: set` with an empty list, for two independent
+      reasons. OpenAPI 3.0 inherits JSON-Schema draft-4's "required MUST have at
+      least one element", so `required: []` would be an invalid document. And
+      removing the key gives this entry a disposal trigger that fires by itself:
+      build_spec.py's op_remove raises when its target is already absent, so the
+      day upstream drops this list the build breaks loudly instead of carrying a
+      dead entry forever.
+      THE PROVIDER-SIDE COST IS ZERO THIS ONCE, which is why the removal is
+      defensible here and A20 argues against it in its own case. User is a
+      RESPONSE-ONLY model -- request bodies use CreateUserDto, so no request
+      shape and no golden body can move -- and it has no provider consumer yet,
+      so nothing has to be rewritten for the value-to-pointer change. Task 3
+      reads every one of these, Email included, through its nil-safe Get*
+      accessor from the start.
     remove_when: >
-      a live GET /v3/users over a tenant containing at least one
-      directory-sourced user is measured to carry all eight keys on every
-      record. Re-measure before restoring: the fields are still declared as
-      properties, so a server that always populates them decodes fine either
-      way, and only strictness changes.
-    op: set
+      upstream stops declaring a `required` list on User at all. That condition
+      is self-firing rather than something to remember: op_remove raises
+      "remove target 'components/schemas/User/required' is already absent" and
+      the next `make verify` fails until this entry is deleted. To check by hand
+      before then:
+      python3 -c "import yaml;d=yaml.safe_load(open('api/v3.upstream.yaml'));print(d['components']['schemas']['User'].get('required'))"
+      Deliberately NOT "the wire is measured to always carry these fields": that
+      is a universal claim over every record on every tenant, so it can only
+      fail to be falsified, never established, and an entry gated on it would
+      live forever. If upstream instead keeps `required` but narrows it to
+      fields the wire genuinely guarantees, that is not a trigger for deletion
+      -- op_remove still fires and is still correct -- but this entry should
+      then be replaced by an `op: set` carrying upstream's own narrowed list.
+    op: remove
     path: [components, schemas, User, required]
-    value:
-    - email
 
   - id: A22a-group-declares-id
     reason: >
@@ -1044,7 +1068,7 @@ entries:
       type: string
       description: Unique identifier of the group.
 
-  - id: A22b-group-required-trim
+  - id: A22b-group-required-drop
     reason: >
       Group.required lists name, isDefault, applications, networks,
       vpnLocations and users. Same strict-decode hazard as A21b on a list
@@ -1053,16 +1077,35 @@ entries:
       attributes, which is precisely the kind of field a server omits when it is
       empty -- and the default "All Users" group, present on every tenant, is
       the likeliest first casualty.
-      Trimmed to `name`, the only field CreateGroupDto marks required.
+      `name` GOES TOO, and that is the weaker half of this entry, so it is worth
+      being straight about. A nameless group is much less plausible than a
+      mail-less user: CreateGroupDto marks name required and group.name is
+      @IsNotEmpty() in the backend. It comes out anyway for consistency with
+      A21b and because there is no upside to keeping it -- one required field is
+      not meaningfully safer than none, it is just one remaining way for the
+      whole page to fail, and the alternative (`required: []`) is not a valid
+      OpenAPI 3.0 document. `op: remove` also buys the self-firing disposal
+      trigger A21b describes: op_remove raises once the target is absent.
+      THE BLAST RADIUS IS WIDER THAN GET /v3/groups, which is the real argument
+      here. Group is response-only, but it is the return type of THREE
+      operations beyond the list: CreateGroup, AddGroupMember and
+      RemoveGroupMember all return *Group. A minimal Group in any of those
+      responses -- exactly what a just-created empty group looks like -- would
+      previously have failed to decode, which would have broken Tasks 4 and 5
+      outright rather than only degrading a data source.
       No provider consumer exists yet, so the pointer churn is free; Task 4
       reads all six through nil-safe accessors from the start.
     remove_when: >
-      a live GET /v3/groups is measured to carry all six keys on every group,
-      including the tenant default group.
-    op: set
+      upstream stops declaring a `required` list on Group at all. Self-firing,
+      exactly as A21b: op_remove raises
+      "remove target 'components/schemas/Group/required' is already absent"
+      and `make verify` fails until this entry is deleted. Hand check:
+      python3 -c "import yaml;d=yaml.safe_load(open('api/v3.upstream.yaml'));print(d['components']['schemas']['Group'].get('required'))"
+      Not gated on measuring the wire, for the reason A21b's remove_when spells
+      out at length: "every group on every tenant carries all six keys" is
+      unfalsifiable in practice and would keep this entry alive forever.
+    op: remove
     path: [components, schemas, Group, required]
-    value:
-    - name
 
   - id: A24-user-profile-name-pattern-allows-uppercase
     reason: >

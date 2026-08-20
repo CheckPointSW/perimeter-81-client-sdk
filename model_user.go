@@ -12,7 +12,6 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the User type satisfies the MappedNullable interface at compile time
@@ -35,7 +34,7 @@ type User struct {
 	// Indicates that the user has been deleted.
 	Terminated *bool `json:"terminated,omitempty"`
 	// User email.
-	Email string `json:"email"`
+	Email *string `json:"email,omitempty"`
 	// Whether the user verified his email.
 	EmailVerified *bool `json:"emailVerified,omitempty"`
 	// User initials.
@@ -59,9 +58,8 @@ type _User User
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUser(email string) *User {
+func NewUser() *User {
 	this := User{}
-	this.Email = email
 	return &this
 }
 
@@ -361,28 +359,36 @@ func (o *User) SetTerminated(v bool) {
 	o.Terminated = &v
 }
 
-// GetEmail returns the Email field value
+// GetEmail returns the Email field value if set, zero value otherwise.
 func (o *User) GetEmail() string {
-	if o == nil {
+	if o == nil || IsNil(o.Email) {
 		var ret string
 		return ret
 	}
-
-	return o.Email
+	return *o.Email
 }
 
-// GetEmailOk returns a tuple with the Email field value
+// GetEmailOk returns a tuple with the Email field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetEmailOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Email) {
 		return nil, false
 	}
-	return &o.Email, true
+	return o.Email, true
 }
 
-// SetEmail sets field value
+// HasEmail returns a boolean if a field has been set.
+func (o *User) HasEmail() bool {
+	if o != nil && !IsNil(o.Email) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmail gets a reference to the given string and assigns it to the Email field.
 func (o *User) SetEmail(v string) {
-	o.Email = v
+	o.Email = &v
 }
 
 // GetEmailVerified returns the EmailVerified field value if set, zero value otherwise.
@@ -646,7 +652,9 @@ func (o User) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Terminated) {
 		toSerialize["terminated"] = o.Terminated
 	}
-	toSerialize["email"] = o.Email
+	if !IsNil(o.Email) {
+		toSerialize["email"] = o.Email
+	}
 	if !IsNil(o.EmailVerified) {
 		toSerialize["emailVerified"] = o.EmailVerified
 	}
@@ -677,27 +685,6 @@ func (o User) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *User) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"email",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
 	varUser := _User{}
 
 	err = json.Unmarshal(data, &varUser)
