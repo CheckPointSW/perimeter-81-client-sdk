@@ -942,11 +942,15 @@ entries:
       one reference: the 200 response of GET /v3/objects/web-category. That
       operation declares no request body, so no request schema in the document
       can reach this one and no golden-body test can move.
-      Consequence for the provider, recorded here because it is easy to miss:
-      flattenWebCategories already coerces a nil Codes to an empty []string.
-      Before this entry that guard was unreachable defence; after it, it is the
-      only thing standing between an absent `codes` and a nil slice in state,
-      so it is load-bearing and must not be tidied away.
+      Consequence for the provider: flattenWebCategories coerces a nil Codes to
+      an empty []string, and after this entry Codes is nil on every real
+      response. CORRECTION 2026-08-20: an earlier version of this paragraph
+      called that coercion load-bearing. It is not. A direct probe showed
+      schema.ResourceData.Set normalises a nil slice to an empty list by itself,
+      including for a list nested inside a list element, so state holds [] with
+      or without it. What this entry is load-bearing FOR is the decode: without
+      it the whole catalog response fails to unmarshal and the data source
+      reports an error on a valid 200. Do not conflate the two claims.
     remove_when: >
       upstream drops `codes` from WebCategory.required, or GET
       /v3/objects/web-category starts sending a `codes` array on every catalog
