@@ -224,6 +224,38 @@ func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix stri
 				elems[i] = fmt.Sprintf("%v", v.Index(i).Interface())
 			}
 			queryParams.Add(keyPrefix, strings.Join(elems, delimiter))
+		case reflect.Map:
+			// LOCAL HAND FIX (not a templates/ override), the third in this
+			// function. Same root cause as the two above: this client.go is a
+			// hand-carried v2.3-era file, and the case below simply did not
+			// exist when it was written.
+			//
+			// WHAT WAS WRONG: a map query parameter fell through to `default:`
+			// and was formatted with fmt.Sprintf("%v", v), so
+			// GET /v3/users?sort[email]=asc went to the wire as
+			// `?sort=map[email:asc]`. The `style` argument was never consulted
+			// at all. The only affected parameter in the SDK is ListUsers'
+			// `sort` (grep -c '"deepObject"' api_*.go is 1), so nothing else can
+			// move -- but that one parameter is the whole of test rows USR-06.
+			//
+			// WHY BRACKETS UNCONDITIONALLY, NOT ONLY FOR style == "deepObject":
+			// this matches stock openapi-generator 7.24.0's own
+			// go/client.mustache, whose reflect.Map case recurses on
+			// fmt.Sprintf("%s[%s]", keyPrefix, k) regardless of style. Keeping
+			// the two implementations identical is what makes this fix
+			// redundant rather than wrong on the day client.go is regenerated
+			// stock -- the same disposal condition the other two fixes carry.
+			//
+			// Recursing rather than formatting inline is deliberate: it reuses
+			// the pointer-dereference and slice handling above, so a
+			// map[string][]string or a map of pointers works without a second
+			// implementation of either.
+			iter := v.MapRange()
+			for iter.Next() {
+				parameterAddToHeaderOrQuery(queryParams,
+					fmt.Sprintf("%s[%s]", keyPrefix, iter.Key().String()),
+					iter.Value().Interface(), style, collectionFormat)
+			}
 		default:
 			// LOCAL HAND FIX (not a templates/ override): format the
 			// dereferenced value `v`, not the original interface `obj`.

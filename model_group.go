@@ -23,15 +23,17 @@ type Group struct {
 	// Name of the group.
 	Name string `json:"name"`
 	// Indicates that the group is default.
-	IsDefault bool `json:"isDefault"`
+	IsDefault *bool `json:"isDefault,omitempty"`
 	// Group applications.
-	Applications []string `json:"applications"`
+	Applications []string `json:"applications,omitempty"`
 	// Group networks.
-	Networks []string `json:"networks"`
+	Networks []string `json:"networks,omitempty"`
 	// Group VPN locations.
-	VpnLocations []string `json:"vpnLocations"`
+	VpnLocations []string `json:"vpnLocations,omitempty"`
 	// Group members.
-	Users []string `json:"users"`
+	Users []string `json:"users,omitempty"`
+	// Unique identifier of the group.
+	Id *string `json:"id,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -41,14 +43,9 @@ type _Group Group
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewGroup(name string, isDefault bool, applications []string, networks []string, vpnLocations []string, users []string) *Group {
+func NewGroup(name string) *Group {
 	this := Group{}
 	this.Name = name
-	this.IsDefault = isDefault
-	this.Applications = applications
-	this.Networks = networks
-	this.VpnLocations = vpnLocations
-	this.Users = users
 	return &this
 }
 
@@ -84,124 +81,196 @@ func (o *Group) SetName(v string) {
 	o.Name = v
 }
 
-// GetIsDefault returns the IsDefault field value
+// GetIsDefault returns the IsDefault field value if set, zero value otherwise.
 func (o *Group) GetIsDefault() bool {
-	if o == nil {
+	if o == nil || IsNil(o.IsDefault) {
 		var ret bool
 		return ret
 	}
-
-	return o.IsDefault
+	return *o.IsDefault
 }
 
-// GetIsDefaultOk returns a tuple with the IsDefault field value
+// GetIsDefaultOk returns a tuple with the IsDefault field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetIsDefaultOk() (*bool, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.IsDefault) {
 		return nil, false
 	}
-	return &o.IsDefault, true
+	return o.IsDefault, true
 }
 
-// SetIsDefault sets field value
+// HasIsDefault returns a boolean if a field has been set.
+func (o *Group) HasIsDefault() bool {
+	if o != nil && !IsNil(o.IsDefault) {
+		return true
+	}
+
+	return false
+}
+
+// SetIsDefault gets a reference to the given bool and assigns it to the IsDefault field.
 func (o *Group) SetIsDefault(v bool) {
-	o.IsDefault = v
+	o.IsDefault = &v
 }
 
-// GetApplications returns the Applications field value
+// GetApplications returns the Applications field value if set, zero value otherwise.
 func (o *Group) GetApplications() []string {
-	if o == nil {
+	if o == nil || IsNil(o.Applications) {
 		var ret []string
 		return ret
 	}
-
 	return o.Applications
 }
 
-// GetApplicationsOk returns a tuple with the Applications field value
+// GetApplicationsOk returns a tuple with the Applications field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetApplicationsOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Applications) {
 		return nil, false
 	}
 	return o.Applications, true
 }
 
-// SetApplications sets field value
+// HasApplications returns a boolean if a field has been set.
+func (o *Group) HasApplications() bool {
+	if o != nil && !IsNil(o.Applications) {
+		return true
+	}
+
+	return false
+}
+
+// SetApplications gets a reference to the given []string and assigns it to the Applications field.
 func (o *Group) SetApplications(v []string) {
 	o.Applications = v
 }
 
-// GetNetworks returns the Networks field value
+// GetNetworks returns the Networks field value if set, zero value otherwise.
 func (o *Group) GetNetworks() []string {
-	if o == nil {
+	if o == nil || IsNil(o.Networks) {
 		var ret []string
 		return ret
 	}
-
 	return o.Networks
 }
 
-// GetNetworksOk returns a tuple with the Networks field value
+// GetNetworksOk returns a tuple with the Networks field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetNetworksOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Networks) {
 		return nil, false
 	}
 	return o.Networks, true
 }
 
-// SetNetworks sets field value
+// HasNetworks returns a boolean if a field has been set.
+func (o *Group) HasNetworks() bool {
+	if o != nil && !IsNil(o.Networks) {
+		return true
+	}
+
+	return false
+}
+
+// SetNetworks gets a reference to the given []string and assigns it to the Networks field.
 func (o *Group) SetNetworks(v []string) {
 	o.Networks = v
 }
 
-// GetVpnLocations returns the VpnLocations field value
+// GetVpnLocations returns the VpnLocations field value if set, zero value otherwise.
 func (o *Group) GetVpnLocations() []string {
-	if o == nil {
+	if o == nil || IsNil(o.VpnLocations) {
 		var ret []string
 		return ret
 	}
-
 	return o.VpnLocations
 }
 
-// GetVpnLocationsOk returns a tuple with the VpnLocations field value
+// GetVpnLocationsOk returns a tuple with the VpnLocations field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetVpnLocationsOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.VpnLocations) {
 		return nil, false
 	}
 	return o.VpnLocations, true
 }
 
-// SetVpnLocations sets field value
+// HasVpnLocations returns a boolean if a field has been set.
+func (o *Group) HasVpnLocations() bool {
+	if o != nil && !IsNil(o.VpnLocations) {
+		return true
+	}
+
+	return false
+}
+
+// SetVpnLocations gets a reference to the given []string and assigns it to the VpnLocations field.
 func (o *Group) SetVpnLocations(v []string) {
 	o.VpnLocations = v
 }
 
-// GetUsers returns the Users field value
+// GetUsers returns the Users field value if set, zero value otherwise.
 func (o *Group) GetUsers() []string {
-	if o == nil {
+	if o == nil || IsNil(o.Users) {
 		var ret []string
 		return ret
 	}
-
 	return o.Users
 }
 
-// GetUsersOk returns a tuple with the Users field value
+// GetUsersOk returns a tuple with the Users field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Group) GetUsersOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Users) {
 		return nil, false
 	}
 	return o.Users, true
 }
 
-// SetUsers sets field value
+// HasUsers returns a boolean if a field has been set.
+func (o *Group) HasUsers() bool {
+	if o != nil && !IsNil(o.Users) {
+		return true
+	}
+
+	return false
+}
+
+// SetUsers gets a reference to the given []string and assigns it to the Users field.
 func (o *Group) SetUsers(v []string) {
 	o.Users = v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *Group) GetId() string {
+	if o == nil || IsNil(o.Id) {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Group) GetIdOk() (*string, bool) {
+	if o == nil || IsNil(o.Id) {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *Group) HasId() bool {
+	if o != nil && !IsNil(o.Id) {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *Group) SetId(v string) {
+	o.Id = &v
 }
 
 func (o Group) MarshalJSON() ([]byte, error) {
@@ -215,11 +284,24 @@ func (o Group) MarshalJSON() ([]byte, error) {
 func (o Group) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["name"] = o.Name
-	toSerialize["isDefault"] = o.IsDefault
-	toSerialize["applications"] = o.Applications
-	toSerialize["networks"] = o.Networks
-	toSerialize["vpnLocations"] = o.VpnLocations
-	toSerialize["users"] = o.Users
+	if !IsNil(o.IsDefault) {
+		toSerialize["isDefault"] = o.IsDefault
+	}
+	if !IsNil(o.Applications) {
+		toSerialize["applications"] = o.Applications
+	}
+	if !IsNil(o.Networks) {
+		toSerialize["networks"] = o.Networks
+	}
+	if !IsNil(o.VpnLocations) {
+		toSerialize["vpnLocations"] = o.VpnLocations
+	}
+	if !IsNil(o.Users) {
+		toSerialize["users"] = o.Users
+	}
+	if !IsNil(o.Id) {
+		toSerialize["id"] = o.Id
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -234,11 +316,6 @@ func (o *Group) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"name",
-		"isDefault",
-		"applications",
-		"networks",
-		"vpnLocations",
-		"users",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -274,6 +351,7 @@ func (o *Group) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "networks")
 		delete(additionalProperties, "vpnLocations")
 		delete(additionalProperties, "users")
+		delete(additionalProperties, "id")
 		o.AdditionalProperties = additionalProperties
 	}
 

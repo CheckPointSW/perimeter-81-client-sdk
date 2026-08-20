@@ -5288,13 +5288,11 @@ components:
           items:
             type: string
           description: Group members.
+        id:
+          type: string
+          description: Unique identifier of the group.
       required:
       - name
-      - isDefault
-      - applications
-      - networks
-      - vpnLocations
-      - users
       additionalProperties: true
     GroupList:
       type: object
@@ -7729,15 +7727,11 @@ components:
         username:
           type: string
           description: User name.
+        id:
+          type: string
+          description: Unique identifier of the user.
       required:
       - email
-      - emailVerified
-      - initials
-      - roleName
-      - lastName
-      - firstName
-      - username
-      - terminated
       additionalProperties: true
     UserList:
       type: object
@@ -7770,11 +7764,11 @@ components:
         firstName:
           type: string
           maxLength: 30
-          pattern: ^[a-z '-]+$
+          pattern: ^[a-zA-Z '-]+$
         lastName:
           type: string
           maxLength: 30
-          pattern: ^[a-z '-]+$
+          pattern: ^[a-zA-Z '-]+$
         roleName:
           type: string
           default: ''

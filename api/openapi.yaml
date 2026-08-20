@@ -8189,6 +8189,7 @@ components:
         users:
         - users
         - users
+        id: id
       properties:
         name:
           description: Name of the group.
@@ -8216,13 +8217,11 @@ components:
           items:
             type: string
           type: array
+        id:
+          description: Unique identifier of the group.
+          type: string
       required:
-      - applications
-      - isDefault
       - name
-      - networks
-      - users
-      - vpnLocations
       type: object
     GroupList:
       additionalProperties: true
@@ -8242,6 +8241,7 @@ components:
           users:
           - users
           - users
+          id: id
         - name: name
           isDefault: true
           applications:
@@ -8256,6 +8256,7 @@ components:
           users:
           - users
           - users
+          id: id
         page: 0
         totalPage: 6
         itemsTotal: 1
@@ -12207,6 +12208,7 @@ components:
         lastName: lastName
         firstName: firstName
         username: username
+        id: id
       properties:
         initialsColor:
           type: string
@@ -12257,15 +12259,11 @@ components:
         username:
           description: User name.
           type: string
+        id:
+          description: Unique identifier of the user.
+          type: string
       required:
       - email
-      - emailVerified
-      - firstName
-      - initials
-      - lastName
-      - roleName
-      - terminated
-      - username
       type: object
     UserList:
       additionalProperties: true
@@ -12327,6 +12325,7 @@ components:
           lastName: lastName
           firstName: firstName
           username: username
+          id: id
         - initialsColor: initialsColor
           invitationAttempts: 0
           invitationToken: invitationToken
@@ -12383,6 +12382,7 @@ components:
           lastName: lastName
           firstName: firstName
           username: username
+          id: id
         page: 1
         totalPage: 1
         itemsTotal: 10
@@ -12419,11 +12419,11 @@ components:
       properties:
         firstName:
           maxLength: 30
-          pattern: "^[a-z '-]+$"
+          pattern: "^[a-zA-Z '-]+$"
           type: string
         lastName:
           maxLength: 30
-          pattern: "^[a-z '-]+$"
+          pattern: "^[a-zA-Z '-]+$"
           type: string
         roleName:
           default: ""

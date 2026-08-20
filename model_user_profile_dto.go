@@ -19,8 +19,8 @@ var _ MappedNullable = &UserProfileDto{}
 
 // UserProfileDto struct for UserProfileDto
 type UserProfileDto struct {
-	FirstName *string `json:"firstName,omitempty" validate:"regexp=^[a-z '-]+$"`
-	LastName *string `json:"lastName,omitempty" validate:"regexp=^[a-z '-]+$"`
+	FirstName *string `json:"firstName,omitempty" validate:"regexp=^[a-zA-Z '-]+$"`
+	LastName *string `json:"lastName,omitempty" validate:"regexp=^[a-zA-Z '-]+$"`
 	RoleName *string `json:"roleName,omitempty"`
 	Phone *string `json:"phone,omitempty" validate:"regexp=^\\+?[0-9]{9\\,15}$"`
 	AdditionalProperties map[string]interface{}

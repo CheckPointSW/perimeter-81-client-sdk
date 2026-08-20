@@ -33,21 +33,23 @@ type User struct {
 	// Invitation message sent to the user.
 	InviteMessage *string `json:"inviteMessage,omitempty"`
 	// Indicates that the user has been deleted.
-	Terminated bool `json:"terminated"`
+	Terminated *bool `json:"terminated,omitempty"`
 	// User email.
 	Email string `json:"email"`
 	// Whether the user verified his email.
-	EmailVerified bool `json:"emailVerified"`
+	EmailVerified *bool `json:"emailVerified,omitempty"`
 	// User initials.
-	Initials string `json:"initials"`
+	Initials *string `json:"initials,omitempty"`
 	// User role name.
-	RoleName string `json:"roleName"`
+	RoleName *string `json:"roleName,omitempty"`
 	// User last name.
-	LastName string `json:"lastName"`
+	LastName *string `json:"lastName,omitempty"`
 	// User first name.
-	FirstName string `json:"firstName"`
+	FirstName *string `json:"firstName,omitempty"`
 	// User name.
-	Username string `json:"username"`
+	Username *string `json:"username,omitempty"`
+	// Unique identifier of the user.
+	Id *string `json:"id,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -57,16 +59,9 @@ type _User User
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUser(terminated bool, email string, emailVerified bool, initials string, roleName string, lastName string, firstName string, username string) *User {
+func NewUser(email string) *User {
 	this := User{}
-	this.Terminated = terminated
 	this.Email = email
-	this.EmailVerified = emailVerified
-	this.Initials = initials
-	this.RoleName = roleName
-	this.LastName = lastName
-	this.FirstName = firstName
-	this.Username = username
 	return &this
 }
 
@@ -334,28 +329,36 @@ func (o *User) SetInviteMessage(v string) {
 	o.InviteMessage = &v
 }
 
-// GetTerminated returns the Terminated field value
+// GetTerminated returns the Terminated field value if set, zero value otherwise.
 func (o *User) GetTerminated() bool {
-	if o == nil {
+	if o == nil || IsNil(o.Terminated) {
 		var ret bool
 		return ret
 	}
-
-	return o.Terminated
+	return *o.Terminated
 }
 
-// GetTerminatedOk returns a tuple with the Terminated field value
+// GetTerminatedOk returns a tuple with the Terminated field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetTerminatedOk() (*bool, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Terminated) {
 		return nil, false
 	}
-	return &o.Terminated, true
+	return o.Terminated, true
 }
 
-// SetTerminated sets field value
+// HasTerminated returns a boolean if a field has been set.
+func (o *User) HasTerminated() bool {
+	if o != nil && !IsNil(o.Terminated) {
+		return true
+	}
+
+	return false
+}
+
+// SetTerminated gets a reference to the given bool and assigns it to the Terminated field.
 func (o *User) SetTerminated(v bool) {
-	o.Terminated = v
+	o.Terminated = &v
 }
 
 // GetEmail returns the Email field value
@@ -382,148 +385,228 @@ func (o *User) SetEmail(v string) {
 	o.Email = v
 }
 
-// GetEmailVerified returns the EmailVerified field value
+// GetEmailVerified returns the EmailVerified field value if set, zero value otherwise.
 func (o *User) GetEmailVerified() bool {
-	if o == nil {
+	if o == nil || IsNil(o.EmailVerified) {
 		var ret bool
 		return ret
 	}
-
-	return o.EmailVerified
+	return *o.EmailVerified
 }
 
-// GetEmailVerifiedOk returns a tuple with the EmailVerified field value
+// GetEmailVerifiedOk returns a tuple with the EmailVerified field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetEmailVerifiedOk() (*bool, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.EmailVerified) {
 		return nil, false
 	}
-	return &o.EmailVerified, true
+	return o.EmailVerified, true
 }
 
-// SetEmailVerified sets field value
+// HasEmailVerified returns a boolean if a field has been set.
+func (o *User) HasEmailVerified() bool {
+	if o != nil && !IsNil(o.EmailVerified) {
+		return true
+	}
+
+	return false
+}
+
+// SetEmailVerified gets a reference to the given bool and assigns it to the EmailVerified field.
 func (o *User) SetEmailVerified(v bool) {
-	o.EmailVerified = v
+	o.EmailVerified = &v
 }
 
-// GetInitials returns the Initials field value
+// GetInitials returns the Initials field value if set, zero value otherwise.
 func (o *User) GetInitials() string {
-	if o == nil {
+	if o == nil || IsNil(o.Initials) {
 		var ret string
 		return ret
 	}
-
-	return o.Initials
+	return *o.Initials
 }
 
-// GetInitialsOk returns a tuple with the Initials field value
+// GetInitialsOk returns a tuple with the Initials field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetInitialsOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Initials) {
 		return nil, false
 	}
-	return &o.Initials, true
+	return o.Initials, true
 }
 
-// SetInitials sets field value
+// HasInitials returns a boolean if a field has been set.
+func (o *User) HasInitials() bool {
+	if o != nil && !IsNil(o.Initials) {
+		return true
+	}
+
+	return false
+}
+
+// SetInitials gets a reference to the given string and assigns it to the Initials field.
 func (o *User) SetInitials(v string) {
-	o.Initials = v
+	o.Initials = &v
 }
 
-// GetRoleName returns the RoleName field value
+// GetRoleName returns the RoleName field value if set, zero value otherwise.
 func (o *User) GetRoleName() string {
-	if o == nil {
+	if o == nil || IsNil(o.RoleName) {
 		var ret string
 		return ret
 	}
-
-	return o.RoleName
+	return *o.RoleName
 }
 
-// GetRoleNameOk returns a tuple with the RoleName field value
+// GetRoleNameOk returns a tuple with the RoleName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetRoleNameOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.RoleName) {
 		return nil, false
 	}
-	return &o.RoleName, true
+	return o.RoleName, true
 }
 
-// SetRoleName sets field value
+// HasRoleName returns a boolean if a field has been set.
+func (o *User) HasRoleName() bool {
+	if o != nil && !IsNil(o.RoleName) {
+		return true
+	}
+
+	return false
+}
+
+// SetRoleName gets a reference to the given string and assigns it to the RoleName field.
 func (o *User) SetRoleName(v string) {
-	o.RoleName = v
+	o.RoleName = &v
 }
 
-// GetLastName returns the LastName field value
+// GetLastName returns the LastName field value if set, zero value otherwise.
 func (o *User) GetLastName() string {
-	if o == nil {
+	if o == nil || IsNil(o.LastName) {
 		var ret string
 		return ret
 	}
-
-	return o.LastName
+	return *o.LastName
 }
 
-// GetLastNameOk returns a tuple with the LastName field value
+// GetLastNameOk returns a tuple with the LastName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetLastNameOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.LastName) {
 		return nil, false
 	}
-	return &o.LastName, true
+	return o.LastName, true
 }
 
-// SetLastName sets field value
+// HasLastName returns a boolean if a field has been set.
+func (o *User) HasLastName() bool {
+	if o != nil && !IsNil(o.LastName) {
+		return true
+	}
+
+	return false
+}
+
+// SetLastName gets a reference to the given string and assigns it to the LastName field.
 func (o *User) SetLastName(v string) {
-	o.LastName = v
+	o.LastName = &v
 }
 
-// GetFirstName returns the FirstName field value
+// GetFirstName returns the FirstName field value if set, zero value otherwise.
 func (o *User) GetFirstName() string {
-	if o == nil {
+	if o == nil || IsNil(o.FirstName) {
 		var ret string
 		return ret
 	}
-
-	return o.FirstName
+	return *o.FirstName
 }
 
-// GetFirstNameOk returns a tuple with the FirstName field value
+// GetFirstNameOk returns a tuple with the FirstName field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetFirstNameOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.FirstName) {
 		return nil, false
 	}
-	return &o.FirstName, true
+	return o.FirstName, true
 }
 
-// SetFirstName sets field value
+// HasFirstName returns a boolean if a field has been set.
+func (o *User) HasFirstName() bool {
+	if o != nil && !IsNil(o.FirstName) {
+		return true
+	}
+
+	return false
+}
+
+// SetFirstName gets a reference to the given string and assigns it to the FirstName field.
 func (o *User) SetFirstName(v string) {
-	o.FirstName = v
+	o.FirstName = &v
 }
 
-// GetUsername returns the Username field value
+// GetUsername returns the Username field value if set, zero value otherwise.
 func (o *User) GetUsername() string {
-	if o == nil {
+	if o == nil || IsNil(o.Username) {
 		var ret string
 		return ret
 	}
-
-	return o.Username
+	return *o.Username
 }
 
-// GetUsernameOk returns a tuple with the Username field value
+// GetUsernameOk returns a tuple with the Username field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *User) GetUsernameOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Username) {
 		return nil, false
 	}
-	return &o.Username, true
+	return o.Username, true
 }
 
-// SetUsername sets field value
+// HasUsername returns a boolean if a field has been set.
+func (o *User) HasUsername() bool {
+	if o != nil && !IsNil(o.Username) {
+		return true
+	}
+
+	return false
+}
+
+// SetUsername gets a reference to the given string and assigns it to the Username field.
 func (o *User) SetUsername(v string) {
-	o.Username = v
+	o.Username = &v
+}
+
+// GetId returns the Id field value if set, zero value otherwise.
+func (o *User) GetId() string {
+	if o == nil || IsNil(o.Id) {
+		var ret string
+		return ret
+	}
+	return *o.Id
+}
+
+// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *User) GetIdOk() (*string, bool) {
+	if o == nil || IsNil(o.Id) {
+		return nil, false
+	}
+	return o.Id, true
+}
+
+// HasId returns a boolean if a field has been set.
+func (o *User) HasId() bool {
+	if o != nil && !IsNil(o.Id) {
+		return true
+	}
+
+	return false
+}
+
+// SetId gets a reference to the given string and assigns it to the Id field.
+func (o *User) SetId(v string) {
+	o.Id = &v
 }
 
 func (o User) MarshalJSON() ([]byte, error) {
@@ -560,14 +643,31 @@ func (o User) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.InviteMessage) {
 		toSerialize["inviteMessage"] = o.InviteMessage
 	}
-	toSerialize["terminated"] = o.Terminated
+	if !IsNil(o.Terminated) {
+		toSerialize["terminated"] = o.Terminated
+	}
 	toSerialize["email"] = o.Email
-	toSerialize["emailVerified"] = o.EmailVerified
-	toSerialize["initials"] = o.Initials
-	toSerialize["roleName"] = o.RoleName
-	toSerialize["lastName"] = o.LastName
-	toSerialize["firstName"] = o.FirstName
-	toSerialize["username"] = o.Username
+	if !IsNil(o.EmailVerified) {
+		toSerialize["emailVerified"] = o.EmailVerified
+	}
+	if !IsNil(o.Initials) {
+		toSerialize["initials"] = o.Initials
+	}
+	if !IsNil(o.RoleName) {
+		toSerialize["roleName"] = o.RoleName
+	}
+	if !IsNil(o.LastName) {
+		toSerialize["lastName"] = o.LastName
+	}
+	if !IsNil(o.FirstName) {
+		toSerialize["firstName"] = o.FirstName
+	}
+	if !IsNil(o.Username) {
+		toSerialize["username"] = o.Username
+	}
+	if !IsNil(o.Id) {
+		toSerialize["id"] = o.Id
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -581,14 +681,7 @@ func (o *User) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"terminated",
 		"email",
-		"emailVerified",
-		"initials",
-		"roleName",
-		"lastName",
-		"firstName",
-		"username",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -634,6 +727,7 @@ func (o *User) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "lastName")
 		delete(additionalProperties, "firstName")
 		delete(additionalProperties, "username")
+		delete(additionalProperties, "id")
 		o.AdditionalProperties = additionalProperties
 	}
 

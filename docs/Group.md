@@ -5,17 +5,18 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | **string** | Name of the group. | 
-**IsDefault** | **bool** | Indicates that the group is default. | 
-**Applications** | **[]string** | Group applications. | 
-**Networks** | **[]string** | Group networks. | 
-**VpnLocations** | **[]string** | Group VPN locations. | 
-**Users** | **[]string** | Group members. | 
+**IsDefault** | Pointer to **bool** | Indicates that the group is default. | [optional] 
+**Applications** | Pointer to **[]string** | Group applications. | [optional] 
+**Networks** | Pointer to **[]string** | Group networks. | [optional] 
+**VpnLocations** | Pointer to **[]string** | Group VPN locations. | [optional] 
+**Users** | Pointer to **[]string** | Group members. | [optional] 
+**Id** | Pointer to **string** | Unique identifier of the group. | [optional] 
 
 ## Methods
 
 ### NewGroup
 
-`func NewGroup(name string, isDefault bool, applications []string, networks []string, vpnLocations []string, users []string, ) *Group`
+`func NewGroup(name string, ) *Group`
 
 NewGroup instantiates a new Group object
 This constructor will assign default values to properties that have it defined,
@@ -69,6 +70,11 @@ and a boolean to check if the value has been set.
 
 SetIsDefault sets IsDefault field to given value.
 
+### HasIsDefault
+
+`func (o *Group) HasIsDefault() bool`
+
+HasIsDefault returns a boolean if a field has been set.
 
 ### GetApplications
 
@@ -89,6 +95,11 @@ and a boolean to check if the value has been set.
 
 SetApplications sets Applications field to given value.
 
+### HasApplications
+
+`func (o *Group) HasApplications() bool`
+
+HasApplications returns a boolean if a field has been set.
 
 ### GetNetworks
 
@@ -109,6 +120,11 @@ and a boolean to check if the value has been set.
 
 SetNetworks sets Networks field to given value.
 
+### HasNetworks
+
+`func (o *Group) HasNetworks() bool`
+
+HasNetworks returns a boolean if a field has been set.
 
 ### GetVpnLocations
 
@@ -129,6 +145,11 @@ and a boolean to check if the value has been set.
 
 SetVpnLocations sets VpnLocations field to given value.
 
+### HasVpnLocations
+
+`func (o *Group) HasVpnLocations() bool`
+
+HasVpnLocations returns a boolean if a field has been set.
 
 ### GetUsers
 
@@ -149,6 +170,36 @@ and a boolean to check if the value has been set.
 
 SetUsers sets Users field to given value.
 
+### HasUsers
+
+`func (o *Group) HasUsers() bool`
+
+HasUsers returns a boolean if a field has been set.
+
+### GetId
+
+`func (o *Group) GetId() string`
+
+GetId returns the Id field if non-nil, zero value otherwise.
+
+### GetIdOk
+
+`func (o *Group) GetIdOk() (*string, bool)`
+
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetId
+
+`func (o *Group) SetId(v string)`
+
+SetId sets Id field to given value.
+
+### HasId
+
+`func (o *Group) HasId() bool`
+
+HasId returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

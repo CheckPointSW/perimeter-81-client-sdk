@@ -12,20 +12,21 @@ Name | Type | Description | Notes
 **IdProviderGroups** | Pointer to **[]string** |  | [optional] 
 **IdProviders** | Pointer to [**IdProviderMap**](IdProviderMap.md) |  | [optional] 
 **InviteMessage** | Pointer to **string** | Invitation message sent to the user. | [optional] 
-**Terminated** | **bool** | Indicates that the user has been deleted. | 
+**Terminated** | Pointer to **bool** | Indicates that the user has been deleted. | [optional] 
 **Email** | **string** | User email. | 
-**EmailVerified** | **bool** | Whether the user verified his email. | 
-**Initials** | **string** | User initials. | 
-**RoleName** | **string** | User role name. | 
-**LastName** | **string** | User last name. | 
-**FirstName** | **string** | User first name. | 
-**Username** | **string** | User name. | 
+**EmailVerified** | Pointer to **bool** | Whether the user verified his email. | [optional] 
+**Initials** | Pointer to **string** | User initials. | [optional] 
+**RoleName** | Pointer to **string** | User role name. | [optional] 
+**LastName** | Pointer to **string** | User last name. | [optional] 
+**FirstName** | Pointer to **string** | User first name. | [optional] 
+**Username** | Pointer to **string** | User name. | [optional] 
+**Id** | Pointer to **string** | Unique identifier of the user. | [optional] 
 
 ## Methods
 
 ### NewUser
 
-`func NewUser(terminated bool, email string, emailVerified bool, initials string, roleName string, lastName string, firstName string, username string, ) *User`
+`func NewUser(email string, ) *User`
 
 NewUser instantiates a new User object
 This constructor will assign default values to properties that have it defined,
@@ -259,6 +260,11 @@ and a boolean to check if the value has been set.
 
 SetTerminated sets Terminated field to given value.
 
+### HasTerminated
+
+`func (o *User) HasTerminated() bool`
+
+HasTerminated returns a boolean if a field has been set.
 
 ### GetEmail
 
@@ -299,6 +305,11 @@ and a boolean to check if the value has been set.
 
 SetEmailVerified sets EmailVerified field to given value.
 
+### HasEmailVerified
+
+`func (o *User) HasEmailVerified() bool`
+
+HasEmailVerified returns a boolean if a field has been set.
 
 ### GetInitials
 
@@ -319,6 +330,11 @@ and a boolean to check if the value has been set.
 
 SetInitials sets Initials field to given value.
 
+### HasInitials
+
+`func (o *User) HasInitials() bool`
+
+HasInitials returns a boolean if a field has been set.
 
 ### GetRoleName
 
@@ -339,6 +355,11 @@ and a boolean to check if the value has been set.
 
 SetRoleName sets RoleName field to given value.
 
+### HasRoleName
+
+`func (o *User) HasRoleName() bool`
+
+HasRoleName returns a boolean if a field has been set.
 
 ### GetLastName
 
@@ -359,6 +380,11 @@ and a boolean to check if the value has been set.
 
 SetLastName sets LastName field to given value.
 
+### HasLastName
+
+`func (o *User) HasLastName() bool`
+
+HasLastName returns a boolean if a field has been set.
 
 ### GetFirstName
 
@@ -379,6 +405,11 @@ and a boolean to check if the value has been set.
 
 SetFirstName sets FirstName field to given value.
 
+### HasFirstName
+
+`func (o *User) HasFirstName() bool`
+
+HasFirstName returns a boolean if a field has been set.
 
 ### GetUsername
 
@@ -399,6 +430,36 @@ and a boolean to check if the value has been set.
 
 SetUsername sets Username field to given value.
 
+### HasUsername
+
+`func (o *User) HasUsername() bool`
+
+HasUsername returns a boolean if a field has been set.
+
+### GetId
+
+`func (o *User) GetId() string`
+
+GetId returns the Id field if non-nil, zero value otherwise.
+
+### GetIdOk
+
+`func (o *User) GetIdOk() (*string, bool)`
+
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetId
+
+`func (o *User) SetId(v string)`
+
+SetId sets Id field to given value.
+
+### HasId
+
+`func (o *User) HasId() bool`
+
+HasId returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

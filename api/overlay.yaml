@@ -959,3 +959,146 @@ entries:
     value:
     - id
     - name
+
+  - id: A21a-user-declares-id
+    reason: >
+      GET /v3/users returns User objects and DELETE /v3/users/{id} needs their
+      id, but the User schema declares no `id` property at all, so
+      model_user.go has no Id field and CreateUserExecute's *User cannot tell a
+      caller which user it just created. A generated client therefore cannot
+      delete, read back, or import a user without reaching into the untyped
+      AdditionalProperties map.
+      THE FIELD IS ON THE WIRE; THE EXPORT DROPS IT. In the backend,
+      src/api/entities/users/user.model.ts declares `class User extends
+      BaseModel`, and src/api/entities/common/base.model.ts declares id,
+      tenantId, createdAt and updatedAt -- annotated @ApiExcludeClass(), which
+      makes the OpenAPI exporter omit every inherited property. Only members
+      marked @Exclude() (originalTenantId, className, objectId) are actually
+      stripped from responses; id is not one of them.
+      Corroboration from the document itself: BasicApplication.users[] and
+      BasicApplication.groups[] describe the same objects through a different
+      response and both declare `id`.
+      Declared OPTIONAL, not required, on purpose. Making it required would put
+      it in the generated requiredProperties list and turn any response that
+      omits it into a hard decode failure for the whole page -- exactly the
+      failure mode A20 was written to undo. Optional gives Id *string, and the
+      provider surfaces a nil as its own diagnostic.
+    remove_when: >
+      upstream declares `id` on User -- most likely by removing
+      @ApiExcludeClass() from BaseModel or by re-declaring the field on the
+      subclass. Check with:
+      python3 -c "import yaml;d=yaml.safe_load(open('api/v3.upstream.yaml'));print('id' in d['components']['schemas']['User']['properties'])"
+    op: set
+    path: [components, schemas, User, properties, id]
+    value:
+      type: string
+      description: Unique identifier of the user.
+
+  - id: A21b-user-required-trim
+    reason: >
+      User.required lists eight fields: email, emailVerified, initials,
+      roleName, lastName, firstName, username, terminated. openapi-generator
+      emits a strict UnmarshalJSON for required properties -- an absent key
+      returns "no value given for required property X" -- and because /v3/users
+      is a LIST endpoint, one record missing one key fails the entire page, not
+      just that element. That is the exact shape of the WebCategory.codes defect
+      A20 records, where a required-but-absent field made a valid 200 read as
+      "Unable to get Web categories".
+      Directory-sourced accounts (idpType saml/gsuite/okta/azureAD/adLdap) are
+      the plausible gap: initials and roleName are Harmony-SASE-derived
+      presentation fields, not attributes an IdP is obliged to supply.
+      Trimmed to `email` alone -- the one field CreateUserDto itself marks
+      required, so no user can exist without it.
+      THE PROVIDER-SIDE COST IS ZERO THIS ONCE, which is why the trim is
+      defensible here and A20 argues against it in its own case: User has no
+      provider consumer yet, so nothing has to be rewritten for the
+      value-to-pointer change. Task 3 reads every one of these through its
+      nil-safe Get* accessor from the start.
+    remove_when: >
+      a live GET /v3/users over a tenant containing at least one
+      directory-sourced user is measured to carry all eight keys on every
+      record. Re-measure before restoring: the fields are still declared as
+      properties, so a server that always populates them decodes fine either
+      way, and only strictness changes.
+    op: set
+    path: [components, schemas, User, required]
+    value:
+    - email
+
+  - id: A22a-group-declares-id
+    reason: >
+      The same defect as A21a, in the same place, for the same upstream reason:
+      src/api/entities/groups/group.model.ts declares `class Group extends
+      BaseModel`, BaseModel is @ApiExcludeClass(), and so Group loses `id` in
+      the export while sending it on the wire.
+      Worse here than for User, because CreateGroupExecute returns *Group and
+      that is the ONLY thing POST /v3/groups gives back. Without this entry the
+      group resource cannot learn its own id at create time, so d.SetId() has
+      nothing to set and DELETE /v3/groups/{id} has nothing to send.
+      Optional rather than required, for the reason A21a gives.
+    remove_when: >
+      upstream declares `id` on Group. Same check as A21a with 'Group'.
+    op: set
+    path: [components, schemas, Group, properties, id]
+    value:
+      type: string
+      description: Unique identifier of the group.
+
+  - id: A22b-group-required-trim
+    reason: >
+      Group.required lists name, isDefault, applications, networks,
+      vpnLocations and users. Same strict-decode hazard as A21b on a list
+      endpoint: one group missing `applications` fails the whole GET /v3/groups
+      page. The four array fields are membership projections rather than stored
+      attributes, which is precisely the kind of field a server omits when it is
+      empty -- and the default "All Users" group, present on every tenant, is
+      the likeliest first casualty.
+      Trimmed to `name`, the only field CreateGroupDto marks required.
+      No provider consumer exists yet, so the pointer churn is free; Task 4
+      reads all six through nil-safe accessors from the start.
+    remove_when: >
+      a live GET /v3/groups is measured to carry all six keys on every group,
+      including the tenant default group.
+    op: set
+    path: [components, schemas, Group, required]
+    value:
+    - name
+
+  - id: A24-user-profile-name-pattern-allows-uppercase
+    reason: >
+      UserProfileDto.firstName and .lastName carry `pattern: ^[a-z '-]+$` in
+      the document, which reads as "lowercase letters only" and lands in the
+      generated model as validate:"regexp=^[a-z '-]+$". It is wrong.
+      src/api/entities/users/userProfile.dto.ts declares
+      `const nameRegex = /^[a-z '-]+$/i` -- WITH THE i FLAG -- and the OpenAPI
+      export dropped the flag while keeping the body. The server accepts "John".
+      Left uncorrected this is a trap rather than a bug: nothing in the SDK
+      enforces a validate tag, so no request would fail. The damage would come
+      from a provider author porting the pattern into a ValidateFunc, which
+      would reject "John" at plan time for a value the server takes. Task 3 is
+      told not to, and this entry removes the temptation at the source -- and
+      also from any other client generated from our swagger.yaml.
+      Character class otherwise unchanged: letters, space, apostrophe, hyphen.
+    remove_when: >
+      upstream re-exports the pattern with the case-insensitivity preserved
+      (either ^[a-zA-Z '-]+$ or an (?i) prefix), or drops the pattern.
+    op: set
+    path: [components, schemas, UserProfileDto, properties, firstName]
+    value:
+      type: string
+      maxLength: 30
+      pattern: ^[a-zA-Z '-]+$
+
+  - id: A24b-user-profile-last-name-pattern-allows-uppercase
+    reason: >
+      The twin of A24 for lastName; identical cause and identical fix. Kept as
+      a separate entry rather than folded in, because op_set replaces a whole
+      property node and one entry can only address one path.
+    remove_when: >
+      as A24.
+    op: set
+    path: [components, schemas, UserProfileDto, properties, lastName]
+    value:
+      type: string
+      maxLength: 30
+      pattern: ^[a-zA-Z '-]+$

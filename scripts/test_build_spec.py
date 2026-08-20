@@ -365,3 +365,55 @@ def test_a17_concrete_tunnel_variants_required_sets_are_unchanged():
         schema = s[name]
         assert "allOf" not in schema, (name, schema)
         assert set(schema["required"]) == want, (name, set(schema["required"]) ^ want)
+
+
+def test_a21_a22_user_and_group_declare_id():
+    """A21a/A22a: BaseModel is @ApiExcludeClass() upstream, so both schemas lose
+    `id` in the export while still sending it. Without these entries the
+    generated models have no Id field and neither resource can address itself."""
+    doc = build()
+    for name in ("User", "Group"):
+        props = doc["components"]["schemas"][name]["properties"]
+        assert "id" in props, f"{name} must declare id"
+        assert props["id"]["type"] == "string"
+        assert "id" not in doc["components"]["schemas"][name].get("required", []), (
+            f"{name}.id must stay optional: making it required would put it in the "
+            "generated requiredProperties list and turn an omission into a whole-page "
+            "decode failure"
+        )
+
+
+def test_a21b_a22b_required_lists_are_trimmed():
+    """The two read models whose `required` lists over-promised. A strict
+    UnmarshalJSON turns one absent key into a failure for the entire list
+    response, so these lists must name only fields the wire guarantees.
+
+    PermissionCategory has the same defect and is deliberately NOT corrected:
+    nothing in this phase reads it, and a required trim with no consumer is
+    churn. See LEFTOVERS L18."""
+    doc = build()
+    assert doc["components"]["schemas"]["User"]["required"] == ["email"]
+    assert doc["components"]["schemas"]["Group"]["required"] == ["name"]
+
+
+def test_a24_profile_name_patterns_allow_uppercase():
+    """The upstream regex is /^[a-z '-]+$/i; the export dropped the i flag. A
+    ValidateFunc built from the exported pattern would reject "John"."""
+    doc = build()
+    props = doc["components"]["schemas"]["UserProfileDto"]["properties"]
+    for field in ("firstName", "lastName"):
+        assert props[field]["pattern"] == "^[a-zA-Z '-]+$", (
+            f"{field} pattern must accept uppercase"
+        )
+
+
+def test_upstream_still_has_the_defects_a21_a22_a24_correct():
+    """Guards against the entries outliving their reason: if upstream fixes any
+    of these, this test fails and the corresponding entry should be deleted
+    rather than silently kept forever."""
+    up = yaml.safe_load(open(ROOT / "api" / "v3.upstream.yaml"))["components"]["schemas"]
+    assert "id" not in up["User"]["properties"], "A21a is obsolete; delete it"
+    assert "id" not in up["Group"]["properties"], "A22a is obsolete; delete it"
+    assert up["UserProfileDto"]["properties"]["firstName"]["pattern"] == "^[a-z '-]+$", (
+        "A24 is obsolete; delete it"
+    )
