@@ -1,8 +1,13 @@
 package perimeter81sdk
 
 import (
+	"context"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
+	"time"
 )
 
 // TestDecodeTextPlainIntoString covers the defect found by the live smoke
@@ -77,5 +82,113 @@ func TestDecodeUnknownContentTypeReturnsError(t *testing.T) {
 	}
 	if err.Error() != "undefined response type" {
 		t.Errorf("decode() error = %q, want %q", err.Error(), "undefined response type")
+	}
+}
+
+// TestParameterAddToHeaderOrQueryFormatsPointerScalars locks in the fix for the
+// defect that blocked the objects-catalog acceptance test:
+// parameterAddToHeaderOrQuery dereferenced a pointer argument into `v` and then
+// formatted the ORIGINAL `obj`, so an explicitly-set scalar query parameter
+// reached the server as a pointer address (`?page=0x14000112028`) instead of its
+// value (`?page=1`). The generated request methods pass a POINTER exactly when
+// the caller has set the value and a plain VALUE on the schema-default branch,
+// so omitting a parameter worked while setting it did not -- no caller had ever
+// successfully set an explicit scalar query parameter anywhere in this SDK. See
+// the comment on the fixed line in client.go.
+func TestParameterAddToHeaderOrQueryFormatsPointerScalars(t *testing.T) {
+	tests := []struct {
+		name string
+		obj  interface{}
+		want string
+	}{
+		{"pointer int32 page", PtrInt32(1), "1"},
+		{"pointer int32 limit", PtrInt32(1000), "1000"},
+		{"pointer int64", PtrInt64(9007199254740993), "9007199254740993"},
+		{"pointer float64", PtrFloat64(1.5), "1.5"},
+		{"pointer bool", PtrBool(true), "true"},
+		{"pointer string", PtrString("updatable"), "updatable"},
+		// The non-pointer rows are the generated code's schema-default branch,
+		// which always worked; they are here so the fix cannot regress it.
+		{"plain int32", int32(1), "1"},
+		{"plain string", "updatable", "updatable"},
+		{"plain bool", false, "false"},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			q := url.Values{}
+			parameterAddToHeaderOrQuery(q, "page", tc.obj, "form", "")
+			got := q.Get("page")
+			if got != tc.want {
+				t.Errorf("query value = %q, want %q", got, tc.want)
+			}
+			if strings.Contains(got, "0x") {
+				t.Errorf("query value %q is a pointer address, not a value", got)
+			}
+		})
+	}
+}
+
+// TestParameterAddToHeaderOrQueryKeepsSliceHandling guards the collection branch
+// while changing the scalar one: it already formatted the dereferenced value and
+// must keep joining elements with the collection-format delimiter.
+func TestParameterAddToHeaderOrQueryKeepsSliceHandling(t *testing.T) {
+	q := url.Values{}
+	parameterAddToHeaderOrQuery(q, "cpId", &[]string{"a", "b"}, "form", "csv")
+	if got := q.Get("cpId"); got != "a,b" {
+		t.Errorf("query value = %q, want %q", got, "a,b")
+	}
+}
+
+// TestParameterAddToHeaderOrQueryTypedNilDoesNotPanic pins the one behavioural
+// edge the fix touches. A typed nil pointer inside an interface is not == nil, so
+// it passes the function's nil guard and Elem() yields the zero reflect.Value.
+// Formatting that with %v is safe (fmt prints a placeholder); v.Interface() would
+// panic, which is why the fix formats `v` and not `v.Interface()`. No generated
+// call site can reach this -- every one guards with `if r.<param> != nil` -- so
+// the assertion is only "does not panic".
+func TestParameterAddToHeaderOrQueryTypedNilDoesNotPanic(t *testing.T) {
+	q := url.Values{}
+	var typedNil *int32
+	parameterAddToHeaderOrQuery(q, "page", typedNil, "form", "")
+	// No assertion on the emitted value: it is a diagnostic placeholder either
+	// way. Reaching this line without a panic is the whole point.
+}
+
+// TestGetUpdatableObjectsSendsExplicitPageAndLimitAsNumbers is the end-to-end
+// form of the same defect, exercised through the real generated request builder
+// rather than the helper. Before the fix this produced
+// `?limit=0x...&page=0x...`, which the live API rejected with 422
+// "limit must be >= 1, page must be >= 1".
+func TestGetUpdatableObjectsSendsExplicitPageAndLimitAsNumbers(t *testing.T) {
+	var gotQuery url.Values
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotQuery = r.URL.Query()
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"data":[]}`))
+	}))
+	defer srv.Close()
+
+	cfg := NewConfiguration("unused-api-key", srv.URL)
+	// Pre-seeded so prepareRequest does not try to exchange the API key for a
+	// bearer token over the network; this test must stay offline.
+	cfg.BearerTokenData = &TokenData{
+		TokenType:         "Bearer",
+		AccessToken:       "test-token",
+		AccessTokenExpire: time.Now().Add(time.Hour).Unix(),
+	}
+	client := NewAPIClient(cfg)
+
+	_, _, err := client.ObjectsAPI.GetUpdatableObjects(context.Background()).
+		Page(1).Limit(1000).Execute()
+	if err != nil {
+		t.Fatalf("Execute() returned error: %v", err)
+	}
+
+	if got := gotQuery.Get("page"); got != "1" {
+		t.Errorf("page query parameter = %q, want %q", got, "1")
+	}
+	if got := gotQuery.Get("limit"); got != "1000" {
+		t.Errorf("limit query parameter = %q, want %q", got, "1000")
 	}
 }

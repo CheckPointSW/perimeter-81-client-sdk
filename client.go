@@ -225,7 +225,57 @@ func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix stri
 			}
 			queryParams.Add(keyPrefix, strings.Join(elems, delimiter))
 		default:
-			queryParams.Add(keyPrefix, fmt.Sprintf("%v", obj))
+			// LOCAL HAND FIX (not a templates/ override): format the
+			// dereferenced value `v`, not the original interface `obj`.
+			//
+			// WHAT WAS WRONG: the block above dereferences a pointer argument
+			// into `v` (`v = reflect.ValueOf(obj).Elem()`), but this Add
+			// formatted `obj`, so a pointer argument reached the wire as its
+			// address -- `?page=0x14000112028` instead of `?page=1`. Every
+			// generated request method passes a POINTER when the caller has
+			// explicitly set a scalar query parameter and a plain VALUE on the
+			// `else` (schema-default) branch, so the defect only fired for
+			// explicitly-set parameters: omitting `page` worked, setting it did
+			// not. Measured against /v3/objects/updatable-objects,
+			// `?page=1&limit=1000` returns 200 while the same call through this
+			// SDK returned 422 "limit must be >= 1, page must be >= 1". No
+			// caller had ever successfully set an explicit scalar query
+			// parameter anywhere in this SDK.
+			//
+			// WHY A HAND EDIT AND NOT A templates/ OVERRIDE: client.go is listed
+			// in .openapi-generator-ignore, so ./scripts/generate.sh never
+			// writes it -- the generator logs `Ignored .../client.go (Ignored by
+			// rule in ignore file.)` and `make verify` stays green. This file is
+			// hand-maintained, carried from the v2.3 SDK, and still declares
+			// "API version: 2.3.0" in its header for exactly that reason. A
+			// templates/client.mustache override would be inert, because that
+			// template is never rendered to disk here; it would also be
+			// unnecessary, because stock openapi-generator 7.24.0's
+			// go/client.mustache does not have this defect at all (its
+			// reflect.Ptr case recurses on `v.Elem().Interface()`). The bug is
+			// local to the carried v2.3 file, not to the generator.
+			//
+			// WHEN THIS CAN BE DROPPED: when client.go leaves
+			// .openapi-generator-ignore and is regenerated stock. That first
+			// requires re-homing the hand-written code this file carries
+			// (GetBearerTokenFromApiKey, authorizeURL, the API-key/bearer
+			// injection inside prepareRequest, ChangeBasePath), none of which
+			// stock client.mustache emits. After that, stock's own reflect.Ptr
+			// handling covers this case and this fix becomes redundant.
+			//
+			// `v` rather than `v.Interface()` is deliberate: fmt replaces a
+			// reflect.Value operand with the concrete value it holds, and unlike
+			// v.Interface() it cannot panic when `v` is the zero Value -- which
+			// is what Elem() yields for a typed-nil pointer (the `obj == nil`
+			// guard above does not catch a typed nil inside an interface).
+			//
+			// NOT CHANGED HERE, DELIBERATELY: the `map[string]string` branch
+			// below has the identical `fmt.Sprintf("%v", obj)` defect for HEADER
+			// parameters, and it is live -- api_settings.go passes the *string
+			// `x-auth-lambda-authorization` through it at two call sites. Left
+			// alone to keep this change to the one line the task authorised;
+			// reported as a follow-up rather than fixed silently.
+			queryParams.Add(keyPrefix, fmt.Sprintf("%v", v))
 		}
 	case map[string]string:
 		queryParams[keyPrefix] = fmt.Sprintf("%v", obj)
