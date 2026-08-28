@@ -28,15 +28,15 @@ Name | Type | Description | Notes
 **LeftSubnets** | **[]string** |  | 
 **RightSubnets** | **[]string** |  | 
 **HaTunnelID** | [**NetworkHaTunnelID**](NetworkHaTunnelID.md) |  | 
-**RightASN** | [**ASN**](ASN.md) |  | 
-**RightPrivateIP** | **string** |  | 
-**LeftPrivateIP** | **string** |  | 
+**RightASN** | Pointer to **int32** | Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set. | [optional] 
+**RightPrivateIP** | Pointer to **string** |  | [optional] 
+**LeftPrivateIP** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
 ### NewNetworkTunnelIpsecRedundant
 
-`func NewNetworkTunnelIpsecRedundant(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, createdAt time.Time, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, passphrase string, dpdAction string, leftSubnets []string, rightSubnets []string, haTunnelID NetworkHaTunnelID, rightASN ASN, rightPrivateIP string, leftPrivateIP string, ) *NetworkTunnelIpsecRedundant`
+`func NewNetworkTunnelIpsecRedundant(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, createdAt time.Time, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, passphrase string, dpdAction string, leftSubnets []string, rightSubnets []string, haTunnelID NetworkHaTunnelID, ) *NetworkTunnelIpsecRedundant`
 
 NewNetworkTunnelIpsecRedundant instantiates a new NetworkTunnelIpsecRedundant object
 This constructor will assign default values to properties that have it defined,
@@ -538,23 +538,28 @@ SetHaTunnelID sets HaTunnelID field to given value.
 
 ### GetRightASN
 
-`func (o *NetworkTunnelIpsecRedundant) GetRightASN() ASN`
+`func (o *NetworkTunnelIpsecRedundant) GetRightASN() int32`
 
 GetRightASN returns the RightASN field if non-nil, zero value otherwise.
 
 ### GetRightASNOk
 
-`func (o *NetworkTunnelIpsecRedundant) GetRightASNOk() (*ASN, bool)`
+`func (o *NetworkTunnelIpsecRedundant) GetRightASNOk() (*int32, bool)`
 
 GetRightASNOk returns a tuple with the RightASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRightASN
 
-`func (o *NetworkTunnelIpsecRedundant) SetRightASN(v ASN)`
+`func (o *NetworkTunnelIpsecRedundant) SetRightASN(v int32)`
 
 SetRightASN sets RightASN field to given value.
 
+### HasRightASN
+
+`func (o *NetworkTunnelIpsecRedundant) HasRightASN() bool`
+
+HasRightASN returns a boolean if a field has been set.
 
 ### GetRightPrivateIP
 
@@ -575,6 +580,11 @@ and a boolean to check if the value has been set.
 
 SetRightPrivateIP sets RightPrivateIP field to given value.
 
+### HasRightPrivateIP
+
+`func (o *NetworkTunnelIpsecRedundant) HasRightPrivateIP() bool`
+
+HasRightPrivateIP returns a boolean if a field has been set.
 
 ### GetLeftPrivateIP
 
@@ -595,6 +605,11 @@ and a boolean to check if the value has been set.
 
 SetLeftPrivateIP sets LeftPrivateIP field to given value.
 
+### HasLeftPrivateIP
+
+`func (o *NetworkTunnelIpsecRedundant) HasLeftPrivateIP() bool`
+
+HasLeftPrivateIP returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

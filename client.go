@@ -48,9 +48,15 @@ type APIClient struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// API Services
-	ApplicationAPI *ApplicationAPIService
+	ApplicationsAPI *ApplicationsAPIService
+
+	AuthenticationAPI *AuthenticationAPIService
+
+	CustomRolesAPI *CustomRolesAPIService
 
 	EnhancedNetworksAPI *EnhancedNetworksAPIService
+
+	EnhancedPrivateDNSAPI *EnhancedPrivateDNSAPIService
 
 	EnhancedRegionsAPI *EnhancedRegionsAPIService
 
@@ -60,27 +66,25 @@ type APIClient struct {
 
 	FirewallPolicyAPI *FirewallPolicyAPIService
 
-	GatewaysAPI *GatewaysAPIService
-
-	IPSecRedundantAPI *IPSecRedundantAPIService
-
-	IPSecSingleAPI *IPSecSingleAPIService
+	InternetAccessPoliciesAPI *InternetAccessPoliciesAPIService
 
 	NetworksAPI *NetworksAPIService
 
-	ObjectsAddressesAPI *ObjectsAddressesAPIService
+	ObjectsAPI *ObjectsAPIService
 
-	ObjectsServicesAPI *ObjectsServicesAPIService
-
-	OpenVPNAPI *OpenVPNAPIService
-
-	RegionsAPI *RegionsAPIService
-
-	RouteTableAPI *RouteTableAPIService
+	SettingsAPI *SettingsAPIService
 
 	StandardNetworksAPI *StandardNetworksAPIService
 
-	WireguardAPI *WireguardAPIService
+	StandardPrivateDNSAPI *StandardPrivateDNSAPIService
+
+	StandardRegionsAPI *StandardRegionsAPIService
+
+	StandardRouteTablesAPI *StandardRouteTablesAPIService
+
+	StandardTunnelsAPI *StandardTunnelsAPIService
+
+	TeamAPI *TeamAPIService
 }
 
 type service struct {
@@ -99,23 +103,25 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.ApplicationAPI = (*ApplicationAPIService)(&c.common)
+	c.ApplicationsAPI = (*ApplicationsAPIService)(&c.common)
+	c.AuthenticationAPI = (*AuthenticationAPIService)(&c.common)
+	c.CustomRolesAPI = (*CustomRolesAPIService)(&c.common)
 	c.EnhancedNetworksAPI = (*EnhancedNetworksAPIService)(&c.common)
+	c.EnhancedPrivateDNSAPI = (*EnhancedPrivateDNSAPIService)(&c.common)
 	c.EnhancedRegionsAPI = (*EnhancedRegionsAPIService)(&c.common)
 	c.EnhancedRouteTablesAPI = (*EnhancedRouteTablesAPIService)(&c.common)
 	c.EnhancedTunnelsAPI = (*EnhancedTunnelsAPIService)(&c.common)
 	c.FirewallPolicyAPI = (*FirewallPolicyAPIService)(&c.common)
-	c.GatewaysAPI = (*GatewaysAPIService)(&c.common)
-	c.IPSecRedundantAPI = (*IPSecRedundantAPIService)(&c.common)
-	c.IPSecSingleAPI = (*IPSecSingleAPIService)(&c.common)
+	c.InternetAccessPoliciesAPI = (*InternetAccessPoliciesAPIService)(&c.common)
 	c.NetworksAPI = (*NetworksAPIService)(&c.common)
-	c.ObjectsAddressesAPI = (*ObjectsAddressesAPIService)(&c.common)
-	c.ObjectsServicesAPI = (*ObjectsServicesAPIService)(&c.common)
-	c.OpenVPNAPI = (*OpenVPNAPIService)(&c.common)
-	c.RegionsAPI = (*RegionsAPIService)(&c.common)
-	c.RouteTableAPI = (*RouteTableAPIService)(&c.common)
+	c.ObjectsAPI = (*ObjectsAPIService)(&c.common)
+	c.SettingsAPI = (*SettingsAPIService)(&c.common)
 	c.StandardNetworksAPI = (*StandardNetworksAPIService)(&c.common)
-	c.WireguardAPI = (*WireguardAPIService)(&c.common)
+	c.StandardPrivateDNSAPI = (*StandardPrivateDNSAPIService)(&c.common)
+	c.StandardRegionsAPI = (*StandardRegionsAPIService)(&c.common)
+	c.StandardRouteTablesAPI = (*StandardRouteTablesAPIService)(&c.common)
+	c.StandardTunnelsAPI = (*StandardTunnelsAPIService)(&c.common)
+	c.TeamAPI = (*TeamAPIService)(&c.common)
 
 	return c
 }
@@ -218,11 +224,136 @@ func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix stri
 				elems[i] = fmt.Sprintf("%v", v.Index(i).Interface())
 			}
 			queryParams.Add(keyPrefix, strings.Join(elems, delimiter))
+		case reflect.Map:
+			// LOCAL HAND FIX (not a templates/ override), the third in this
+			// function. Same root cause as the two above: this client.go is a
+			// hand-carried v2.3-era file, and the case below simply did not
+			// exist when it was written.
+			//
+			// WHAT WAS WRONG: a map query parameter fell through to `default:`
+			// and was formatted with fmt.Sprintf("%v", v), so
+			// GET /v3/users?sort[email]=asc went to the wire as
+			// `?sort=map[email:asc]`. The `style` argument was never consulted
+			// at all. The only affected parameter in the SDK is ListUsers'
+			// `sort` (grep -c '"deepObject"' api_*.go is 1), so nothing else can
+			// move -- but that one parameter is the whole of test rows USR-06.
+			//
+			// WHY BRACKETS UNCONDITIONALLY, NOT ONLY FOR style == "deepObject":
+			// this matches stock openapi-generator 7.24.0's own
+			// go/client.mustache, whose reflect.Map case recurses on
+			// fmt.Sprintf("%s[%s]", keyPrefix, k) regardless of style. Matching
+			// stock FOR THE MAP-IN-QUERY CASE -- the case this fix covers and
+			// the only one a live parameter reaches -- is what makes the fix
+			// redundant rather than wrong on the day client.go is regenerated
+			// stock, which is the same disposal condition the other two fixes
+			// carry.
+			//
+			// That is deliberately NOT a claim that the two implementations are
+			// identical overall. Stock is broader in two ways this case does not
+			// reach, neither of them exercised by anything in this SDK today:
+			//   * stock's map case sits in the TOP-LEVEL kind switch, ahead of
+			//     the destination type switch, so it also expands a map passed
+			//     as a HEADER parameter. This case is inside `case url.Values:`,
+			//     so a map header parameter would still fall through to the
+			//     map[string]string branch below. No map header parameter
+			//     exists in this SDK (the only two header params are the
+			//     *string x-auth-lambda-authorization in api_settings.go).
+			//   * stock's reflect.Slice case INDEXES elements when
+			//     style == "deepObject" (sort[email][0]=a&sort[email][1]=b),
+			//     whereas the local Slice case above always comma-joins
+			//     (sort[email]=a,b). A map[string][]string recursing into it
+			//     therefore diverges from stock. Pinned by
+			//     TestDeepObjectMapOfSlicesUsesTheLocalCommaJoinedForm so the
+			//     divergence is a recorded fact rather than a later surprise.
+			//
+			// Recursing rather than formatting inline is deliberate: it reuses
+			// the pointer-dereference and slice handling above, so a
+			// map[string][]string or a map of pointers works without a second
+			// implementation of either -- subject to the slice-form caveat just
+			// noted, and both shapes are pinned by tests rather than assumed.
+			iter := v.MapRange()
+			for iter.Next() {
+				parameterAddToHeaderOrQuery(queryParams,
+					fmt.Sprintf("%s[%s]", keyPrefix, iter.Key().String()),
+					iter.Value().Interface(), style, collectionFormat)
+			}
 		default:
-			queryParams.Add(keyPrefix, fmt.Sprintf("%v", obj))
+			// LOCAL HAND FIX (not a templates/ override): format the
+			// dereferenced value `v`, not the original interface `obj`.
+			//
+			// WHAT WAS WRONG: the block above dereferences a pointer argument
+			// into `v` (`v = reflect.ValueOf(obj).Elem()`), but this Add
+			// formatted `obj`, so a pointer argument reached the wire as its
+			// address -- `?page=0x14000112028` instead of `?page=1`. Every
+			// generated request method passes a POINTER when the caller has
+			// explicitly set a scalar query parameter and a plain VALUE on the
+			// `else` (schema-default) branch, so the defect only fired for
+			// explicitly-set parameters: omitting `page` worked, setting it did
+			// not. Measured against /v3/objects/updatable-objects,
+			// `?page=1&limit=1000` returns 200 while the same call through this
+			// SDK returned 422 "limit must be >= 1, page must be >= 1". No
+			// caller had ever successfully set an explicit scalar query
+			// parameter anywhere in this SDK.
+			//
+			// WHY A HAND EDIT AND NOT A templates/ OVERRIDE: client.go is listed
+			// in .openapi-generator-ignore, so ./scripts/generate.sh never
+			// writes it -- the generator logs `Ignored .../client.go (Ignored by
+			// rule in ignore file.)` and `make verify` stays green. This file is
+			// hand-maintained, carried from the v2.3 SDK, and still declares
+			// "API version: 2.3.0" in its header for exactly that reason. A
+			// templates/client.mustache override would be inert, because that
+			// template is never rendered to disk here; it would also be
+			// unnecessary, because stock openapi-generator 7.24.0's
+			// go/client.mustache does not have this defect at all (its
+			// reflect.Ptr case recurses on `v.Elem().Interface()`). The bug is
+			// local to the carried v2.3 file, not to the generator.
+			//
+			// WHEN THIS CAN BE DROPPED: when client.go leaves
+			// .openapi-generator-ignore and is regenerated stock. That first
+			// requires re-homing the hand-written code this file carries
+			// (GetBearerTokenFromApiKey, authorizeURL, the API-key/bearer
+			// injection inside prepareRequest, ChangeBasePath), none of which
+			// stock client.mustache emits. After that, stock's own reflect.Ptr
+			// handling covers this case and this fix becomes redundant.
+			//
+			// `v` rather than `v.Interface()` is deliberate: fmt replaces a
+			// reflect.Value operand with the concrete value it holds, and unlike
+			// v.Interface() it cannot panic when `v` is the zero Value -- which
+			// is what Elem() yields for a typed-nil pointer (the `obj == nil`
+			// guard above does not catch a typed nil inside an interface).
+			//
+			// The `map[string]string` branch below carried the identical defect
+			// for HEADER parameters and is now fixed the same way; see its own
+			// comment for why that one mattered more.
+			queryParams.Add(keyPrefix, fmt.Sprintf("%v", v))
 		}
 	case map[string]string:
-		queryParams[keyPrefix] = fmt.Sprintf("%v", obj)
+		// LOCAL HAND FIX (not a templates/ override), the header-parameter twin
+		// of the query-parameter fix above. Same defect, same one-word cause:
+		// `v` holds the dereferenced value, `obj` is still the pointer, and
+		// formatting `obj` put an address on the wire.
+		//
+		// WHY IT MATTERED MORE HERE THAN ABOVE: the only live callers are
+		// api_settings.go:94 and :211, both passing the *string
+		// `x-auth-lambda-authorization`. An explicitly-set value therefore
+		// travelled as `0x14000112028` in an HTTP AUTH header -- so the request
+		// would not fail loudly on a malformed number the way the query-string
+		// case did against /v3/objects/updatable-objects; it would present a
+		// meaningless credential and be rejected as unauthorized, which is a
+		// far harder failure to trace back to serialisation. No token value is
+		// leaked either way: an address is not the secret. Nothing in the
+		// provider sets that header today, so this was latent, not active.
+		//
+		// See the query-parameter comment above for why this is a hand edit:
+		// client.go is line 1 of .openapi-generator-ignore, is absent from
+		// .openapi-generator/FILES, and is never written by the generator, so a
+		// templates/ override for it would be inert. Stock 7.24.0
+		// go/client.mustache does not carry either defect -- both are local to
+		// this repo's hand-carried v2.3-era client.go.
+		//
+		// DROPPABLE WHEN: client.go is ever replaced by genuine generator
+		// output, at which point both fixes become redundant rather than wrong.
+		queryParams[keyPrefix] = fmt.Sprintf("%v", v)
 	}
 }
 
@@ -411,6 +542,18 @@ func (c *APIClient) decode(v interface{}, b []byte, contentType string) (err err
 			return err
 		}
 		return nil
+	} else if strings.Contains(contentType, "text/plain") {
+		// The v3 spec legitimately declares text/plain for some responses
+		// (e.g. GET /v3/status returns the bare string "Ok"), and the generator
+		// types those operations as returning a plain string. The stock decode()
+		// only knew json/xml, so every such endpoint failed with
+		// "undefined response type" despite a 200. This file is in
+		// .openapi-generator-ignore, so this branch survives regeneration.
+		if s, ok := v.(*string); ok {
+			*s = string(b)
+			return nil
+		}
+		return fmt.Errorf("text/plain response cannot be decoded into %T", v)
 	}
 	return errors.New("undefined response type")
 }
@@ -533,12 +676,22 @@ func CacheExpires(r *http.Response) time.Time {
 	return expires
 }
 
+// authorizeURL builds the token-exchange endpoint for a given API base URL.
+//
+// v2.3 used {base-without-/rest}/v1/auth/authorize. v3 documents
+// POST /v3/auth/authorize served from the /api/rest base, so the historical
+// "/rest" strip must NOT be applied. This file is listed in
+// .openapi-generator-ignore, so codegen will never update it — keep it in sync
+// with api/swagger.yaml by hand.
+func authorizeURL(baseURL string) string {
+	return strings.TrimSuffix(baseURL, "/") + "/v3/auth/authorize"
+}
+
 // GetBearerTokenFromApiKey obtains a bearer token using an API key.
 func (c *APIClient) GetBearerTokenFromApiKey(apiKey string, baseUrl string) (bearerTokenData *TokenData, err error) {
 
 	// create path and map variables
-	baseUrl = strings.Replace(baseUrl, "/rest", "", -1)
-	localVarPath := baseUrl + "/v1/auth/authorize"
+	localVarPath := authorizeURL(baseUrl)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

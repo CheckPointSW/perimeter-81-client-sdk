@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 **Name** | **string** | Application name | 
 **Type** | **string** | Application type | 
 **Network** | **string** | Application network ID. To get the ID use endpoint &#39;/networks&#39; with [network:read] permission. | 
-**Host** | [**NullableOneOfFixedHostIdpHost**](oneOf&lt;FixedHost,IdpHost&gt;.md) |  | 
-**Port** | [**NullableOneOfFixedPortIdpPort**](oneOf&lt;FixedPort,IdpPort&gt;.md) |  | 
+**Host** | [**CommonCreateApplicationHost**](CommonCreateApplicationHost.md) |  | 
+**Port** | [**CommonCreateApplicationPort**](CommonCreateApplicationPort.md) |  | 
 **Users** | Pointer to **[]string** | List of IDs of assigned users. To get the IDs use endpoint &#39;/users&#39; with [user:read] permission. | [optional] 
 **Groups** | Pointer to **[]string** | List of IDs of assigned groups. To get the IDs use endpoint &#39;/groups&#39; with [group:read] permission. | [optional] 
 
@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 
 ### NewCommonCreateApplication
 
-`func NewCommonCreateApplication(name string, type_ string, network string, host NullableOneOfFixedHostIdpHost, port NullableOneOfFixedPortIdpPort, ) *CommonCreateApplication`
+`func NewCommonCreateApplication(name string, type_ string, network string, host CommonCreateApplicationHost, port CommonCreateApplicationPort, ) *CommonCreateApplication`
 
 NewCommonCreateApplication instantiates a new CommonCreateApplication object
 This constructor will assign default values to properties that have it defined,
@@ -93,64 +93,44 @@ SetNetwork sets Network field to given value.
 
 ### GetHost
 
-`func (o *CommonCreateApplication) GetHost() OneOfFixedHostIdpHost`
+`func (o *CommonCreateApplication) GetHost() CommonCreateApplicationHost`
 
 GetHost returns the Host field if non-nil, zero value otherwise.
 
 ### GetHostOk
 
-`func (o *CommonCreateApplication) GetHostOk() (*OneOfFixedHostIdpHost, bool)`
+`func (o *CommonCreateApplication) GetHostOk() (*CommonCreateApplicationHost, bool)`
 
 GetHostOk returns a tuple with the Host field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetHost
 
-`func (o *CommonCreateApplication) SetHost(v OneOfFixedHostIdpHost)`
+`func (o *CommonCreateApplication) SetHost(v CommonCreateApplicationHost)`
 
 SetHost sets Host field to given value.
 
 
-### SetHostNil
-
-`func (o *CommonCreateApplication) SetHostNil(b bool)`
-
- SetHostNil sets the value for Host to be an explicit nil
-
-### UnsetHost
-`func (o *CommonCreateApplication) UnsetHost()`
-
-UnsetHost ensures that no value is present for Host, not even an explicit nil
 ### GetPort
 
-`func (o *CommonCreateApplication) GetPort() OneOfFixedPortIdpPort`
+`func (o *CommonCreateApplication) GetPort() CommonCreateApplicationPort`
 
 GetPort returns the Port field if non-nil, zero value otherwise.
 
 ### GetPortOk
 
-`func (o *CommonCreateApplication) GetPortOk() (*OneOfFixedPortIdpPort, bool)`
+`func (o *CommonCreateApplication) GetPortOk() (*CommonCreateApplicationPort, bool)`
 
 GetPortOk returns a tuple with the Port field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPort
 
-`func (o *CommonCreateApplication) SetPort(v OneOfFixedPortIdpPort)`
+`func (o *CommonCreateApplication) SetPort(v CommonCreateApplicationPort)`
 
 SetPort sets Port field to given value.
 
 
-### SetPortNil
-
-`func (o *CommonCreateApplication) SetPortNil(b bool)`
-
- SetPortNil sets the value for Port to be an explicit nil
-
-### UnsetPort
-`func (o *CommonCreateApplication) UnsetPort()`
-
-UnsetPort ensures that no value is present for Port, not even an explicit nil
 ### GetUsers
 
 `func (o *CommonCreateApplication) GetUsers() []string`

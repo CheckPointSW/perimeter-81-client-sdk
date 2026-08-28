@@ -1,0 +1,1151 @@
+# Corrections applied to api/v3.upstream.yaml to produce api/swagger.yaml.
+#
+# api/v3.upstream.yaml is pristine vendor output — never edit it.
+# api/swagger.yaml is a build product — never edit it either.
+# Every entry below records why it exists and when it can be deleted.
+entries:
+  - id: A1a-restore-bearer-security-scheme
+    reason: >
+      v3 declares no components.securitySchemes at all (the key is absent, not
+      empty) and no top-level security, unlike v2.3 which declared a bearer/JWT
+      scheme. Without this, generated methods have no notion of authentication.
+    remove_when: upstream restores components.securitySchemes.bearer
+    op: set
+    path: [components, securitySchemes]
+    value:
+      bearer:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+
+  - id: A1b-apply-security-globally
+    reason: >
+      Re-declares bearer auth as a global requirement, matching v2.3, so the
+      generated client applies it centrally instead of per-operation.
+    remove_when: upstream restores a top-level security block
+    op: set
+    path: [security]
+    value:
+      - bearer: []
+
+  - id: A1c-strip-per-operation-auth-param
+    reason: >
+      All 114 v3 operations declare Authorization as a required header parameter
+      via $ref components/parameters/authParam. openapi-generator would turn
+      that into a required .Authorization(string) builder argument on every
+      method, forcing the provider to thread a bearer token through all 92 call
+      sites — a token that lives inside the SDK's own Configuration and is not
+      available at that layer. The SDK would still compile; the symptom is 401s
+      everywhere.
+    remove_when: upstream stops declaring authParam on operations
+    op: transform
+    transform: strip_auth_param
+
+  - id: A2-gum-tags-and-operation-ids
+    reason: >
+      None of the six /v3/gum/custom-roles operations declares a tag or an
+      operationId. openapi-generator therefore emits them into DefaultAPIService
+      with method names derived from the URL path, which are unstable across
+      generator versions. This domain also has zero upstream API-test coverage,
+      so unstable names are especially costly.
+    remove_when: upstream adds tags and operationIds to the gum operations
+    op: set
+    path: [paths, /v3/gum/custom-roles, get, operationId]
+    value: listCustomRoles
+
+  - id: A2b
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles, get, tags]
+    value: [Custom Roles]
+
+  - id: A2c
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles, post, operationId]
+    value: createCustomRole
+
+  - id: A2d
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles, post, tags]
+    value: [Custom Roles]
+
+  - id: A2e
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles/categories, get, operationId]
+    value: getCustomRoleCategories
+
+  - id: A2f
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, /v3/gum/custom-roles/categories, get, tags]
+    value: [Custom Roles]
+
+  - id: A2g
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", get, operationId]
+    value: getCustomRole
+
+  - id: A2h
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", get, tags]
+    value: [Custom Roles]
+
+  - id: A2i
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", put, operationId]
+    value: updateCustomRole
+
+  - id: A2j
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", put, tags]
+    value: [Custom Roles]
+
+  - id: A2k
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", delete, operationId]
+    value: deleteCustomRole
+
+  - id: A2l
+    reason: See A2-gum-tags-and-operation-ids.
+    remove_when: See A2-gum-tags-and-operation-ids.
+    op: set
+    path: [paths, "/v3/gum/custom-roles/{roleId}", delete, tags]
+    value: [Custom Roles]
+
+  # --- Carried forward from v2.3 hand-patches, re-audited 2026-08-10 against
+  # v3.upstream.yaml. See api/AUDIT-2026-08-10.md for the full audit record,
+  # including the candidates that turned out ALREADY-FIXED and therefore have
+  # no entry here (A6's other two schemas, A8, A9), and A3 (DEFERRED).
+
+  - id: A4-application-get-discriminator
+    reason: >
+      GET /v3/applications/{applicationId} 200 response is an inline oneOf
+      across the five Application variants (HttpApplication,
+      HttpsApplication, RdpApplication, SshApplication, VncApplication) with
+      no discriminator. openapi-generator emits a try-each-and-count-matches
+      UnmarshalJSON; the five variants inherit identical required properties
+      from CommonApplication and carry no distinguishing validation, so
+      every real response matches all five and decoding fails with "data
+      matches more than one schema in oneOf". v2.3 replaced the generated
+      decoder by hand (P81-126016) to dispatch on the `type` field instead.
+      This schema is inline in the path item rather than a named component,
+      so the discriminator is set directly on that inline schema.
+    remove_when: upstream adds a discriminator (propertyName "type") to this oneOf itself
+    op: set
+    path: [paths, "/v3/applications/{applicationId}", get, responses, "200", content, application/json, schema, discriminator]
+    value:
+      propertyName: type
+      mapping:
+        http: '#/components/schemas/HttpApplication'
+        https: '#/components/schemas/HttpsApplication'
+        rdp: '#/components/schemas/RdpApplication'
+        ssh: '#/components/schemas/SshApplication'
+        vnc: '#/components/schemas/VncApplication'
+
+  - id: A5-application-auth-not-required
+    reason: >
+      ApplicationAuth.authEnabled is declared required, but the server omits
+      it entirely on Read responses (bare `"auth": {}`), so strict decoding
+      of every Application read fails with "no value given for required
+      property authEnabled" even after the oneOf above is dispatched
+      correctly. v2.3 patched this by hand (P81-126016) by emptying the
+      generated required-field check.
+    remove_when: upstream stops requiring authEnabled on ApplicationAuth, or documents that Read responses always include it
+    op: set
+    path: [components, schemas, ApplicationAuth, required]
+    value: []
+
+  - id: A6-ipsec-shared-settings-create-p81asn-not-required
+    reason: >
+      IPSecSharedSettingsCreate.p81ASN is declared required on create, but
+      the ASN is server-assigned once the first dynamic tunnel is created
+      and is never supplied by the caller, so every real create request
+      (which omits it) fails generator-side required-field validation
+      (P81-124405).
+    remove_when: upstream drops p81ASN from IPSecSharedSettingsCreate.required
+    op: set
+    path: [components, schemas, IPSecSharedSettingsCreate, required]
+    value: []
+
+  - id: A6-ipsec-redundant-tunnel-not-required
+    reason: >
+      Fix round 1 correction: the first audit pass checked only
+      IPSecRedundantTunnel's own top-level `required` (empty) and missed
+      that it inherits `passphrase` and `remoteID` as required via
+      allOf -> IPSecRedundantTunnelPayload -> IPSecRedundantTunnelDetails,
+      recording a false ALREADY-FIXED. The wire never echoes passphrase back
+      on Read and may omit remoteID (P81-124405). IPSecRedundantTunnel is
+      the GET-response shape, reached only via
+      IPSecRedundantTunnels.tunnel1/tunnel2 — editing
+      IPSecRedundantTunnelDetails.required directly would also loosen the
+      *create* request body (CreateIPSecRedundantPayload.tunnel1/tunnel2 ->
+      IPSecRedundantTunnelPayload directly, where passphrase genuinely is
+      supplied by the caller), so the transform flattens
+      IPSecRedundantTunnel's own allOf composition into a standalone object
+      with a trimmed required list, decoupled from the shared ancestor
+      schemas the create path still uses.
+    remove_when: upstream stops requiring passphrase/remoteID on the GET redundant-tunnel response
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: IPSecRedundantTunnel
+      required: [p81GWInternalIP, remoteGWInternalIP, remotePublicIP, remoteASN, gatewayID]
+
+  - id: A6-network-tunnel-ipsec-redundant-not-required
+    reason: >
+      Fix round 1 correction: the first audit pass checked only
+      NetworkTunnelIpsecRedundant's own top-level `required` (empty) and
+      missed that its own inline allOf branch declares rightASN,
+      rightPrivateIP, and leftPrivateIP required alongside haTunnelID,
+      recording a false ALREADY-FIXED. The list-network response (the only
+      place this schema is used) omits all three; only haTunnelID is always
+      present there (P81-124405). That branch is a private inline object
+      literal, not a shared named schema, so trimming its required list in
+      place cannot affect any other schema.
+    remove_when: upstream drops rightASN/rightPrivateIP/leftPrivateIP from NetworkTunnelIpsecRedundant's required list
+    op: transform
+    transform: trim_network_tunnel_ipsec_redundant_required
+    params:
+      drop: [rightASN, rightPrivateIP, leftPrivateIP]
+
+  - id: A10-enhanced-health-check-meta-not-required
+    reason: >
+      EnhancedHealthCheckMeta declares networkId, tunnelName, tunnelId, and
+      regionId all required, but the public API omits tunnelId and regionId
+      for tunnels that have not yet completed a health probe, so strict
+      decoding fails with "no value given for required property tunnelId"
+      on any network with a freshly attached tunnel (P81-123406 / BUG-25).
+      Only networkId and tunnelName are actually always present on the wire.
+    remove_when: upstream narrows EnhancedHealthCheckMeta.required to the fields that are always present, or always populates tunnelId/regionId
+    op: set
+    path: [components, schemas, EnhancedHealthCheckMeta, required]
+    value: []
+
+  - id: A8-rename-peak-bandwidth
+    reason: >
+      Fix round 1 correction: the first audit pass checked only each
+      schema's top-level `properties` and missed that peakBandwidth is
+      declared inside allOf branches of EnhancedTunnelBase (feeding
+      EnhancedTunnel, a live response schema) and StaticTunnelCreate (a
+      request body), recording a false ALREADY-FIXED. The live API's field
+      name is peakBandwidthMbps, not peakBandwidth. The transform walks
+      allOf/oneOf/anyOf branches within each named schema, since a
+      top-level-only rename would find nothing.
+    remove_when: upstream renames peakBandwidth to peakBandwidthMbps itself
+    op: transform
+    transform: rename_peak_bandwidth
+
+  - id: A11-objects-services-response-obj-id
+    reason: >
+      ObjectsServicesResponseObj is missing the id field that
+      GET/PUT /v3/objects/services actually return on every service object,
+      so callers have no way to reference the object they just created or
+      fetched without falling back to name-based lookups.
+    remove_when: upstream adds id to ObjectsServicesResponseObj.properties
+    op: merge
+    path: [components, schemas, ObjectsServicesResponseObj, properties]
+    value:
+      id:
+        type: string
+        description: Unique identifier of the service object.
+
+  - id: A12-harmony-sase-regions-list-drop-redundant-additional-properties
+    reason: >
+      HarmonySaseRegionsList.items is `allOf: [$ref HarmonySaseRegion,
+      {description}]` with a sibling `additionalProperties: true` set
+      directly on the items schema itself. That sibling key is semantically
+      redundant — HarmonySaseRegion already sets `additionalProperties: true`,
+      which the allOf composition already inherits — but openapi-generator
+      7.24.0's Go codegen mis-resolves the combination into an invalid array
+      element type, emitting `[]HarmonySaseRegion[string]interface{}` (a Go
+      syntax error; confirmed via go build). Generator 7.21.0 (the SDK's
+      previous pin) rendered the identical upstream schema correctly as
+      `[]HarmonySaseRegion`, so this is a generator regression, not a spec
+      defect being changed here; removing the redundant key produces
+      byte-identical semantics and restores the pre-existing, already-shipped
+      `[]HarmonySaseRegion` shape.
+      This items:allOf + sibling additionalProperties shape occurs twice in
+      the spec, not once — the other occurrence,
+      DynamicTunnelUpdate.properties.updateTunnels.items, does not trigger
+      the bug and is deliberately left alone, because its allOf's non-$ref
+      branch is a substantive inline object (its own properties/required/
+      additionalProperties), which forces the generator to materialize a new
+      composed model (DynamicTunnelUpdateUpdateTunnelsInner) instead of
+      collapsing to the $ref's type directly. HarmonySaseRegionsList's
+      non-$ref branch is trivial (`{description: ...}` only, no properties of
+      its own), so nothing forces materialization and the allOf effectively
+      collapses to its single $ref for type-resolution purposes — that
+      collapse is what interacts badly with the sibling additionalProperties.
+      The genuinely unique condition this entry targets is: an allOf with
+      exactly one substantive branch (a $ref, with any other branch being
+      property-less/trivial) plus a sibling additionalProperties on the
+      items schema — confirmed to match only HarmonySaseRegionsList.
+    remove_when: >
+      openapi-generator fixes Go array-item-type resolution for a
+      single-$ref allOf items schema with a sibling additionalProperties, or
+      upstream drops the redundant key itself.
+    op: remove
+    path: [components, schemas, HarmonySaseRegionsList, items, additionalProperties]
+
+  # --- Fix round 2 (2026-08-11): rebuilt from `.swagger-codegen-ignore` and
+  # the v2.3 hand-patched files themselves (git history on `main`), not from
+  # LEFTOVERS.md/DEVELOPER-GUIDE.md prose. See api/AUDIT-2026-08-10.md's
+  # second section for the full audit and what it corrects in round 1.
+
+  - id: A9-asn-remove-redundant-oneof
+    reason: >
+      v2.3's model_asn.go (BUG-24) records that codegen produced
+      `type ASN struct {}` (empty struct) because the v2.3 swagger schema had
+      no properties at all. Round 1 of this audit checked `schema.get("type")
+      != "integer"` and reported ALREADY-FIXED because v3's ASN schema does
+      declare `type: integer` at its own top level. That check was a proxy,
+      not the defect itself: v3's ASN schema declares `type: integer` *and* a
+      sibling `oneOf` of three non-overlapping integer ranges (public ASN
+      space, private 16-bit, private 32-bit — pure bounds validation).
+      openapi-generator 7.24.0's Go codegen follows the `oneOf` into a
+      wrapper-model shape instead of respecting the sibling `type: integer`,
+      regenerating the exact `type ASN struct {}` empty struct BUG-24 worked
+      around (confirmed: current `model_asn.go` in this SDK, generated from
+      v3.upstream.yaml with no overlay entry, is `type ASN struct {}`). The
+      Terraform provider does `perimeter81Sdk.ASN(int32(...))`, a conversion
+      that cannot compile against a struct type. The oneOf's range bounds are
+      enforced by the server regardless of whether the spec also expresses
+      them client-side, and Go has no type that could express "one of these
+      three disjoint integer ranges" as a distinct type from plain int32
+      anyway, so dropping the oneOf changes no accepted values — only how
+      codegen resolves the Go type.
+    remove_when: >
+      openapi-generator stops materializing a wrapper type for a `type: integer`
+      schema that also carries a `oneOf` of narrower integer ranges, or
+      upstream drops the oneOf itself.
+    op: remove
+    path: [components, schemas, ASN, oneOf]
+
+  - id: A9-remote-asn-remove-redundant-oneof
+    reason: >
+      See A9-asn-remove-redundant-oneof. RemoteASN is BUG-24's twin fix
+      (model_remote_asn.go) and has the identical shape in v3 — `type: integer`
+      plus a sibling `oneOf` of four non-overlapping integer ranges — and the
+      identical empty-struct symptom for the identical reason.
+    remove_when: See A9-asn-remove-redundant-oneof.
+    op: remove
+    path: [components, schemas, RemoteASN, oneOf]
+
+  - id: A7-objects-services-protocol-request-obj-flatten
+    reason: >
+      v2.3's model_objects_services_protocol_request_obj.go (BUG-17,
+      P81-123406) records that the generated
+      `anyOf(ObjectServiceProtocolTCPUDP, ObjectServiceProtocolICMPRequest)`
+      wrapper "could never round-trip the wire payload" because the real
+      public API emits and accepts one flat object per protocol entry:
+      `{protocol, valueType, value}` for tcp/udp, `{protocol, protocolOptions}`
+      for icmp. Round 1 of this audit never checked this candidate at all —
+      it was candidate A7 in the design spec's carried-forward list but the
+      first version of audit_carried_patches.py has no A7 check. v3 still
+      declares the identical two-member anyOf (confirmed in
+      api/v3.upstream.yaml), and openapi-generator 7.24.0 still emits the
+      identical pointer-pair anyOf wrapper with a try-each-and-count-matches
+      UnmarshalJSON (confirmed: current `model_objects_services_protocol_request_obj.go`
+      in this SDK, generated with no overlay entry, is exactly that wrapper),
+      which fails the same way against the flat wire payload. This entry
+      replaces the anyOf with a single flat object schema — the union of
+      protocol/valueType/value (tcp/udp) and protocol/protocolOptions (icmp)
+      — matching the flat Go struct the v2.3 file was hand-rewritten to.
+      Only `protocol` is genuinely present on every entry, so it alone is
+      required. `protocolOptions` keeps a $ref to
+      ObjectServiceProtocolOptionsICMPrequest (v3's named int32 enum of that
+      name) instead of falling back to a bare int32, so the generated field
+      keeps real enum validation.
+    remove_when: upstream flattens ObjectsServicesProtocolRequestObj itself, dropping the anyOf.
+    op: set
+    path: [components, schemas, ObjectsServicesProtocolRequestObj]
+    value:
+      type: object
+      description: >
+        One protocol entry in the request body for POST/PUT /v3/objects/services.
+        tcp/udp entries carry valueType + value; icmp entries carry
+        protocolOptions instead.
+      required: [protocol]
+      properties:
+        protocol:
+          type: string
+          description: Protocol name — tcp, udp, or icmp.
+        valueType:
+          type: string
+          description: >
+            Port-value shape for tcp/udp entries (single, range, or list).
+            Absent for icmp.
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortNumber'
+          description: Port number(s) for tcp/udp entries. Absent for icmp.
+        protocolOptions:
+          $ref: '#/components/schemas/ObjectServiceProtocolOptionsICMPrequest'
+      additionalProperties: true
+
+  - id: A7-objects-services-protocol-response-obj-flatten
+    reason: >
+      See A7-objects-services-protocol-request-obj-flatten.
+      ObjectsServicesProtocolResponseObj is the response-side twin —
+      identical `anyOf(ObjectServiceProtocolTCPUDP, ObjectServiceProtocolICMPResponse)`
+      shape, identical BUG-17 rationale
+      (model_objects_services_protocol_response_obj.go) — differing only in
+      protocolOptions' referenced type: ObjectServiceProtocolOptionsICMPresponse
+      (an object with code/description) instead of the request side's plain
+      int32 enum.
+    remove_when: See A7-objects-services-protocol-request-obj-flatten.
+    op: set
+    path: [components, schemas, ObjectsServicesProtocolResponseObj]
+    value:
+      type: object
+      description: >
+        One protocol entry in the response returned by GET /v3/objects/services.
+        tcp/udp entries carry valueType + value; icmp entries carry
+        protocolOptions instead.
+      required: [protocol]
+      properties:
+        protocol:
+          type: string
+          description: Protocol name — tcp, udp, or icmp.
+        valueType:
+          type: string
+          description: >
+            Port-value shape for tcp/udp entries (single, range, or list).
+            Absent for icmp.
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortNumber'
+          description: Port number(s) for tcp/udp entries. Absent for icmp.
+        protocolOptions:
+          $ref: '#/components/schemas/ObjectServiceProtocolOptionsICMPresponse'
+      additionalProperties: true
+
+  # A13/A14 (deleted): originally used x-enum-varnames to break the
+  # RoutingType/RoutingTypeUpdate ('route'/'policy') and
+  # StandardHealthCheckType/EnhancedHealthCheckType ('tunnel') constant-name
+  # collisions per-schema. That approach renamed the exported constants on
+  # the *narrower* schema in each pair (e.g. RoutingTypeUpdate ->
+  # ROUTE_UPDATE/POLICY_UPDATE), which left the *base* schema's constants
+  # unprefixed (plain ROUTE/POLICY) — but the v2.3 SDK always shipped these
+  # class-prefixed (ROUTINGTYPE_ROUTE), and the terraform provider depends on
+  # that prefixed name. A13 broke it: after A13, ROUTINGTYPE_ROUTE no longer
+  # existed anywhere in the generated code.
+  # Replaced by generate.sh's enumClassPrefix=true, which prefixes every enum
+  # constant in the SDK with its schema name unconditionally. That restores
+  # the exact ROUTINGTYPE_ROUTE the provider already depends on, resolves
+  # both collisions (RoutingType vs. RoutingTypeUpdate, StandardHealthCheckType
+  # vs. EnhancedHealthCheckType) as a side effect, and is collision-proof
+  # against any future enum value shared across schemas — no new overlay
+  # entry needed per collision. See generate.sh for the flag and its comment.
+
+  # --- Amendment (2026-08-11): NetworkTunnel's anyOf is missing a fallback
+  # member for tunnel types the spec does not enumerate.
+
+  - id: A15-network-tunnel-anyof-add-base-fallback
+    reason: >
+      GET /v3/networks/standard/{id} returns tunnel objects, and the live API
+      returns tunnel types this anyOf does not enumerate — `connector` is the
+      documented example. v3 declares only NetworkTunnelOpenvpn,
+      NetworkTunnelWireguard, NetworkTunnelIpsecSingle, and
+      NetworkTunnelIpsecRedundant as NetworkTunnel's anyOf members, so any
+      tunnel of an unlisted type fails every branch of the generated
+      try-each-and-return-first-match decoder with "data failed to match
+      schemas in anyOf(NetworkTunnel)", failing the entire network read. This
+      is confirmed to persist in v3: the project has established that v3
+      contains v2.3 (an endpoint present in both versions is served by the
+      same microservice), so the undocumented extra tunnel types v2.3
+      observed on the wire are still returned by v3 — this is not a spec
+      defect v3 happens to have fixed. v2.3 solved this by hand-editing the
+      generated Go (model_network_tunnel.go) to add a fifth
+      NetworkTunnelBase member plus a hand-written UnmarshalJSON tail that
+      unmarshalled into a local anonymous 8-field struct and populated the
+      base member when `id` was non-empty — one of the 20 hand-patched files
+      this project exists to eliminate. NetworkTunnelBase already exists as
+      a named v3 schema (via allOf) composing all 10 fields shared by every
+      tunnel variant (createdAt, updatedAt, id, network, region, instance,
+      interfaceName, type, isHA, tenantId), so adding it as NetworkTunnel's
+      fifth anyOf member gives unrecognised tunnel types somewhere to land
+      without a hand-edit. This is set via op: set on the whole array
+      (rather than an in-place append) to guarantee ordering, and
+      NetworkTunnelBase must be LAST: the generated anyOf decoder tries
+      members in list order and returns on the first match, and
+      NetworkTunnelBase's fields are a subset of every concrete variant's, so
+      if it came first it would swallow payloads that belong to the four
+      concrete variants before they ever got a chance to match.
+    remove_when: >
+      upstream adds the missing tunnel types (e.g. connector) to
+      NetworkTunnel's anyOf itself, or documents that no such types exist.
+    op: set
+    path: [components, schemas, NetworkTunnel, anyOf]
+    value:
+      - $ref: '#/components/schemas/NetworkTunnelOpenvpn'
+      - $ref: '#/components/schemas/NetworkTunnelWireguard'
+      - $ref: '#/components/schemas/NetworkTunnelIpsecSingle'
+      - $ref: '#/components/schemas/NetworkTunnelIpsecRedundant'
+      - $ref: '#/components/schemas/NetworkTunnelBase'
+
+  # --- Fix round 1 of 5 (2026-08-11): A15 added NetworkTunnelBase as a
+  # fallback anyOf member, but composition-resolved it still requires 9
+  # fields (its own 8-field inline branch plus createdAt via allOf ->
+  # BaseDates), so it rejected the realistic connector payload (createdAt
+  # absent) it was meant to catch — confirmed by
+  # TestNetworkTunnel_UnrecognizedTypeWithoutCreatedAt_StillErrors. A16-A17d
+  # fix that without loosening BaseDates (shared by other schemas) or
+  # silently loosening the four concrete tunnel variants that also compose
+  # NetworkTunnelBase (NetworkTunnelOpenvpn, NetworkTunnelWireguard,
+  # NetworkTunnelIpsecSingle, NetworkTunnelIpsecRedundant) — see
+  # api/AUDIT-2026-08-10.md for none of these (this family postdates that
+  # audit); the reasoning parallels A6-ipsec-redundant-tunnel-not-required's
+  # shared-ancestor hazard instead.
+
+  - id: A16-network-tunnel-base-trim-required-to-id
+    reason: >
+      NetworkTunnelBase plays two roles: (1) the allOf ancestor every
+      concrete tunnel variant composes, where all 9 of its fields (id,
+      network, region, instance, interfaceName, type, isHA, tenantId,
+      createdAt) are genuinely always present; and (2), since A15, the
+      literal fifth anyOf member NetworkTunnel falls back to for tunnel
+      types the spec doesn't enumerate. Those two roles need different
+      required-ness. Composition-resolved, NetworkTunnelBase currently
+      requires all 9 fields (8 from its own inline allOf branch, plus
+      createdAt inherited via its other allOf branch, $ref BaseDates, whose
+      own required is [createdAt] — confirmed via
+      model_network_tunnel_base.go's generated requiredProperties list,
+      which lists all 9). A fallback that requires 9 fields can never do its
+      job for the case that actually needs it: the live API's undocumented
+      tunnel types (e.g. `connector`) are observed to omit createdAt on the
+      wire — the same realistic shape the v2.3 hand-patch's guard was
+      written against, `if err = json.Unmarshal(data, &raw); err == nil &&
+      raw.Id != ""` — non-empty id and nothing else. This flattens
+      NetworkTunnelBase's own allOf composition into a standalone object
+      with required trimmed to [id] alone, reproducing that exact v2.3
+      guard declaratively: permissive enough to catch any unrecognised
+      tunnel type, strict enough that an empty or garbage payload still
+      fails to match. BaseDates itself is deliberately left untouched here —
+      it is shared by schemas beyond NetworkTunnelBase, and trimming its
+      required there would silently relax validation for all of them, not
+      just this one (the same shared-ancestor hazard
+      A6-ipsec-redundant-tunnel-not-required already hit and solved by
+      flattening the specific downstream schema instead of the shared
+      ancestor). NetworkTunnelBase is itself a shared ancestor for four
+      other schemas (see A17a-A17d), which is why those four entries exist:
+      openapi-generator unions required fields across all of a schema's
+      allOf branches at generation time, so trimming NetworkTunnelBase's own
+      required here would otherwise silently cascade into
+      NetworkTunnelOpenvpn/Wireguard/IpsecSingle/IpsecRedundant's composed
+      required sets too, even though none of those four needed loosening.
+    remove_when: >
+      upstream's NetworkTunnelBase schema itself declares only `id` as
+      required, or upstream provides a distinct, purpose-built schema for
+      anyOf(NetworkTunnel)'s "unrecognised tunnel type" fallback role so
+      this schema no longer needs to serve both roles at once.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelBase
+      required: [id]
+
+  - id: A17a-network-tunnel-openvpn-restore-required
+    reason: >
+      See A16. NetworkTunnelOpenvpn's allOf composes NetworkTunnelBase (for
+      the 9 shared tunnel fields) plus its own inline branch (requiring only
+      passphrase and username) — before A16, its composition-resolved
+      required set was [id, network, region, instance, interfaceName, type,
+      isHA, tenantId, createdAt, passphrase, username] (confirmed from
+      model_network_tunnel_openvpn.go's generated requiredProperties prior
+      to this fix round). A16 trims NetworkTunnelBase's own required to
+      [id], which would silently drop network/region/instance/
+      interfaceName/type/isHA/tenantId/createdAt from this list too, since
+      openapi-generator unions required fields across allOf branches — this
+      flattens NetworkTunnelOpenvpn into a standalone object with that exact
+      pre-A16 required list restored explicitly, decoupling it from
+      NetworkTunnelBase's required propagation entirely so A16 cannot affect
+      it.
+    remove_when: See A16.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelOpenvpn
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, passphrase, username]
+
+  - id: A17b-network-tunnel-wireguard-restore-required
+    reason: >
+      See A16 and A17a — same mechanism, applied to NetworkTunnelWireguard.
+      Its pre-A16 composition-resolved required set was [id, network,
+      region, instance, interfaceName, type, isHA, tenantId, createdAt,
+      leftAllowedIP, leftEndpoint, vault, requestConfigToken] (confirmed
+      from model_network_tunnel_wireguard.go's generated requiredProperties
+      prior to this fix round). This is also the schema whose regression
+      this fix round is most protective of:
+      TestNetworkTunnel_ConcreteVariantDoesNotFallBackToBase decodes a
+      wireguard payload and asserts it lands in NetworkTunnelWireguard, not
+      NetworkTunnelBase — a guarantee that matters even more now that
+      NetworkTunnelBase (post-A16) accepts almost any payload with a
+      non-empty id.
+    remove_when: See A16.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelWireguard
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, leftAllowedIP, leftEndpoint, vault, requestConfigToken]
+
+  - id: A17c-network-tunnel-ipsec-single-restore-required
+    reason: >
+      See A16 and A17a — same mechanism, applied to NetworkTunnelIpsecSingle.
+      Its pre-A16 composition-resolved required set was [id, network,
+      region, instance, interfaceName, type, isHA, tenantId, createdAt,
+      keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1,
+      phase2, right, rightID, passphrase, dpdAction, leftSubnets,
+      rightSubnets] (confirmed from
+      model_network_tunnel_ipsec_single.go's generated requiredProperties
+      prior to this fix round). NetworkTunnelIpsecSingle's allOf also
+      composes NetworkIpsecBase alongside NetworkTunnelBase; flattening
+      pulls that schema's properties in too (via the same _flatten_schema
+      helper A6-ipsec-redundant-tunnel-not-required already uses), so no
+      properties are lost — only the required list is replaced, explicitly,
+      with the value it already had.
+    remove_when: See A16.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelIpsecSingle
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction, leftSubnets, rightSubnets]
+
+  - id: A17d-network-tunnel-ipsec-redundant-restore-required
+    reason: >
+      See A16 and A17a — same mechanism, applied to
+      NetworkTunnelIpsecRedundant. Its pre-A16 composition-resolved required
+      set was [id, network, region, instance, interfaceName, type, isHA,
+      tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay,
+      dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction,
+      leftSubnets, rightSubnets, haTunnelID] (confirmed from
+      model_network_tunnel_ipsec_redundant.go's generated requiredProperties
+      prior to this fix round — this already reflects
+      A6-network-tunnel-ipsec-redundant-not-required's earlier trim of
+      rightASN/rightPrivateIP/leftPrivateIP from this schema's own inline
+      branch, which ran before this entry and is preserved by using this
+      exact, already-trimmed list rather than the wider pre-A6 set).
+      NetworkTunnelIpsecRedundant's allOf composes NetworkTunnelBase and
+      NetworkIpsecBase plus its own inline branch (haTunnelID, post-A6); this
+      flattening supersedes A6's in-place trim of that inline branch with an
+      equivalent, fully-flattened result — A6's transform still runs first
+      (entries apply in file order) but becomes a harmless no-op against an
+      already-empty allOf once this entry has run for a later regeneration,
+      since flattening replaces the allOf list entirely. Both entries are
+      kept: A6's reasoning about rightASN/rightPrivateIP/leftPrivateIP is
+      independently true and worth keeping documented even though this
+      entry's explicit required list is what actually takes effect on the
+      built spec.
+    remove_when: See A16.
+    op: transform
+    transform: flatten_and_trim_required
+    params:
+      schema: NetworkTunnelIpsecRedundant
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction, leftSubnets, rightSubnets, haTunnelID]
+
+  # --- Task 27 (2026-08-12): validate-spec suppression audit. generate.sh has
+  # run with --skip-validate-spec since inception without a record of what it
+  # suppresses. Reran generation without the flag (and via
+  # `openapi-generator validate -i api/swagger.yaml --recommend`, which prints
+  # the same diagnostics without needing a full generate) to get the verbatim
+  # list: four "Undefined array inner type for `null`. Default to String."
+  # log lines plus one SpecValidationException error, "attribute
+  # components.schemas.CommonCreateApplication.items is missing" — exactly
+  # the five the design brief named, confirmed by re-running validate against
+  # a scratch copy with the fix below applied: all five diagnostics disappear
+  # together, and no others were hiding behind them.
+  #
+  # PROVIDER EXPOSURE: none. Confirmed by grepping both this SDK's *.go and
+  # the provider's checkpointsase/*.go for CommonCreateApplication,
+  # CommonCreateApplicationOneOf, and CommonCreateApplicationOneOf1 (the three
+  # model files openapi-generator materializes for this schema's oneOf): none
+  # of the three is referenced anywhere outside its own defining file — dead
+  # code, generated but unused. The provider (checkpointsase/resource_application.go)
+  # builds WebCreateApplication/HttpCreateApplication/HttpsCreateApplication/
+  # RdpCreateApplication directly; those get their Users/Groups fields from
+  # CommonCreateApplication's own top-level properties.users/properties.groups
+  # via allOf flattening — which already declare
+  # `items: $ref AlphanumericWithSpace` correctly — not from the broken oneOf
+  # branches below, so the live, provider-used types were never affected by
+  # this defect either way. Additionally, even for the dead types, the
+  # generator's "Default to String" fallback happens to produce the exact
+  # same Go type ([]string) a correct items ref would, since
+  # AlphanumericWithSpace is itself a bare string schema — so this defect was
+  # never capable of producing a wrong Go type, live or dead. Fixed anyway
+  # because the fix is free and leaves no suppressed diagnostic undocumented:
+  # regenerating with this entry applied changes only the three dead
+  # model_common_create_application*.go files; model_web_create_application.go,
+  # model_http_create_application.go, model_https_create_application.go, and
+  # model_rdp_create_application.go come out byte-identical.
+
+  - id: A18-common-create-application-oneof-items
+    reason: >
+      CommonCreateApplication's own `oneOf` redeclares
+      properties.users/properties.groups as bare `type: array` with no
+      `items`, unlike this schema's own top-level users/groups (which
+      correctly declare `items: $ref AlphanumericWithSpace`). This is what
+      generate.sh's --skip-validate-spec has been suppressing: each broken
+      property logs 2 of the 4 "Undefined array inner type for `null`.
+      Default to String." lines (confirmed empirically — fixing one branch
+      drops the log count from 4 to 2), and the schema-level, message-
+      deduplicated "attribute components.schemas.CommonCreateApplication.items
+      is missing" validation error fires once as long as either branch is
+      still broken.
+    remove_when: >
+      upstream adds items to both oneOf branches itself, or drops the
+      redundant oneOf outright — CommonCreateApplication already declares
+      users/groups correctly at its own top level, so the oneOf adds nothing
+      that reaches the generated Go models (see the "Schemas defining
+      properties and oneOf are not clearly defined" recommendation from
+      `openapi-generator validate --recommend`, and Task 27's report for the
+      full provider-exposure analysis: this schema's oneOf branches are
+      generated-but-unused dead code, not a path any provider request can
+      reach).
+    op: set
+    path: [components, schemas, CommonCreateApplication, oneOf]
+    value:
+      - properties:
+          users:
+            type: array
+            items:
+              $ref: '#/components/schemas/AlphanumericWithSpace'
+        required:
+          - users
+        additionalProperties: true
+      - properties:
+          groups:
+            type: array
+            items:
+              $ref: '#/components/schemas/AlphanumericWithSpace'
+        required:
+          - groups
+        additionalProperties: true
+
+  # --- Task 34 (2026-08-16): the enhanced-tunnel READ shape. Unlike every
+  # entry above, this one is grounded in a captured live response, not in
+  # generator behaviour or v2.3 hand-patch archaeology. See A19's reason.
+
+  - id: A19-enhanced-tunnel-base-real-read-shape
+    reason: >
+      EnhancedTunnelBase describes the wrong shape for the four operations
+      that return it (GET /v3/networks/enhanced/{networkId}/tunnels, GET
+      .../regions/{regionId}/tunnels, GET .../tunnels/ipsec/static/{tunnelId},
+      GET .../tunnels/ipsec/dynamic/{dynamicTunnelId}). Verified against a
+      live response captured 2026-08-16 from GET
+      /v3/networks/enhanced/{networkId}/tunnels on a real static tunnel: the
+      server returns ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1,
+      phase2, remotePublicIP, remoteID, description and isHA as TOP-LEVEL
+      keys, and returns no `advancedSettings` object at all. Upstream declares
+      the exact opposite — one `advancedSettings: $ref
+      IPSecAdvancedSettingsV2_3` property, and none of those ten fields.
+      The concrete damage: the generated EnhancedTunnel model's
+      AdvancedSettings pointer is nil on every real response, its nil-safe
+      getters all return "", and the Terraform provider's Read functions —
+      which sourced ike_life_time/lifetime/dpd_delay/dpd_timeout/phase1/phase2
+      from it — blanked the user's configured values on every refresh
+      (TestAccEnhancedStaticTunnel_basic / TestAccEnhancedDynamicTunnel_basic:
+      `got ike_life_time ""; want "9h"`). remotePublicIP and remoteID had no
+      field at all, which is the separately-recorded
+      "enhanced_static_tunnel.remote_id can never populate" defect — the same
+      root cause, not a second bug.
+      This replaces the whole schema rather than surgically editing it because
+      the properties to add and the property to drop both live inside
+      EnhancedTunnelBase's second allOf branch, and scripts/build_spec.py's
+      path walker addresses mapping keys only — a path through a list index
+      (`allOf, 1, properties`) would silently clobber that branch rather than
+      descend into it. A whole-schema `op: set` needs no new build_spec
+      machinery and lets a future reader diff this value directly against
+      upstream's EnhancedTunnelBase to see exactly what changed.
+      WRITE PATH IS UNAFFECTED, and that is checkable, not assumed:
+      EnhancedTunnelBase has exactly one reference in the whole spec —
+      EnhancedTunnel's allOf (`grep -c EnhancedTunnelBase api/swagger.yaml`
+      = 2: this definition plus that one $ref). The four write models
+      (StaticTunnelCreate, StaticTunnelUpdate, DynamicTunnelCreate,
+      DynamicTunnelUpdate) compose TunnelAuthConfig and
+      IPSecAdvancedSettingsV2_3 directly and never touch EnhancedTunnelBase,
+      so nothing here can reach a request body. Confirmed empirically:
+      regenerating with this entry applied leaves model_static_tunnel_create.go,
+      model_static_tunnel_update.go, model_dynamic_tunnel_create.go,
+      model_dynamic_tunnel_update.go, model_dynamic_tunnel_details.go and
+      model_dynamic_tunnel_details_update.go byte-identical, and the
+      provider's golden-body tests in checkpointsase/payload_marshal_test.go
+      still pass unchanged.
+      Three deliberate decisions inside this value:
+      (1) `required` is trimmed to the six fields the generator already
+      enforced before this entry (regionID, tunnelName, p81GatewaySubnets,
+      remoteGatewaySubnets, keyExchange, authType). Upstream's required list
+      also names phase1, phase2, remotePublicIP, remoteID, features,
+      ikeLifeTime, lifetime, dpdDelay and dpdTimeout, but the generator
+      silently drops any required name that is not also a declared property,
+      so those nine never reached the generated required-property check
+      (confirmed: model_enhanced_tunnel.go's requiredProperties listed nine
+      names, none of them these). Declaring the properties without also
+      trimming `required` would therefore have quietly promoted nine fields
+      to strictly-required on a read model — the exact over-strict-read-model
+      failure mode A6, A10 and A16 exist to undo. Keeping the effective
+      required set identical to the pre-A19 one means this entry cannot
+      introduce a new decode failure; the added fields all generate as
+      nil-safe optional pointers.
+      (2) `features` is deliberately NOT declared, even though the live
+      response contains it. The capture abridged its contents to `{...}`, so
+      its real nested shape is unverified, and the obvious $ref
+      (NetworkFeatures) has nested objects that require `enabled` /
+      `redirectToResolver` — declaring it would add a strict-decode surface
+      over an unverified payload for a field no caller reads. Because this
+      schema sets `additionalProperties: true`, an undeclared `features`
+      lands harmlessly in the generated AdditionalProperties map instead.
+      Declare it once a full capture of the object exists.
+      (3) `peakBandwidth` is written here already renamed to
+      `peakBandwidthMbps`. A8-rename-peak-bandwidth runs earlier (entries
+      apply in file order) and does that rename in place, but this entry then
+      replaces the whole schema, so writing the pre-rename name would
+      reintroduce the wrong one. A8 still applies to StaticTunnelCreate, the
+      other schema it covers, so it stays; only its effect on
+      EnhancedTunnelBase is superseded here — the same
+      earlier-entry-superseded-by-a-later-flatten relationship A17d already
+      documents with respect to A6.
+    remove_when: >
+      upstream's EnhancedTunnelBase declares the fields the read endpoints
+      actually return at top level (ikeLifeTime, lifetime, dpdDelay,
+      dpdTimeout, phase1, phase2, remotePublicIP, remoteID, description,
+      isHA) and drops `advancedSettings`, or upstream introduces a separate,
+      purpose-built response schema for the four enhanced-tunnel GETs so this
+      one no longer has to describe both a real read shape and a
+      v2.3-era advancedSettings wrapper.
+    op: set
+    path: [components, schemas, EnhancedTunnelBase]
+    value:
+      allOf:
+      - $ref: '#/components/schemas/TunnelAuthConfig'
+      - type: object
+        properties:
+          regionID:
+            type: string
+            description: Target region ID
+          tunnelName:
+            type: string
+            description: Name of the static tunnel
+          p81GatewaySubnets:
+            type: array
+            items:
+              type: string
+            minItems: 1
+            description: Harmony Sase gateway subnets
+          remoteGatewaySubnets:
+            type: array
+            items:
+              type: string
+            minItems: 1
+            description: Remote gateway subnets
+          peakBandwidthMbps:
+            $ref: '#/components/schemas/PeakBandwidth'
+          keyExchange:
+            type: string
+            description: IKE version for key exchange
+            enum:
+            - ikev1
+            - ikev2
+            default: ikev2
+          routingType:
+            $ref: '#/components/schemas/RoutingType'
+          ikeLifeTime:
+            $ref: '#/components/schemas/Lifetime'
+          lifetime:
+            $ref: '#/components/schemas/Lifetime'
+          dpdDelay:
+            $ref: '#/components/schemas/DPDTime'
+          dpdTimeout:
+            $ref: '#/components/schemas/DPDTime'
+          phase1:
+            $ref: '#/components/schemas/IPSecPhaseConfigV2_3'
+          phase2:
+            $ref: '#/components/schemas/IPSecPhaseConfigV2_3'
+          remotePublicIP:
+            type: string
+            format: ipv4
+            description: Remote gateway public IP address
+          remoteID:
+            type: string
+            description: Remote gateway ID
+          description:
+            type: string
+            description: Optional tunnel description
+          isHA:
+            type: boolean
+            description: Whether this tunnel is part of a high-availability pair
+        additionalProperties: true
+      required:
+      - regionID
+      - tunnelName
+      - p81GatewaySubnets
+      - remoteGatewaySubnets
+      - keyExchange
+      - authType
+      additionalProperties: true
+
+  - id: A20-web-category-codes-not-required
+    reason: >
+      WebCategory declares id, name AND codes required, but the server does not
+      send codes at all. Measured live 2026-08-19 against GET
+      /v3/objects/web-category (the run of
+      TestAccDataSourceObjectsCatalog_basic that this entry exists to unblock):
+      the endpoint answered 200 with a full, valid catalog in which every entry
+      carries exactly id and name, and the string "codes" appears nowhere in
+      the payload. Two entries verbatim from that response:
+
+        {"id":"100000001","name":"Computers / Internet"}
+        {"id":"100000034","name":"Real Estate"}
+
+      The concrete damage: because `codes` is in the generated
+      model_web_category.go requiredProperties list, WebCategory.UnmarshalJSON
+      checks the raw JSON object for the key before it unmarshals anything and
+      returns "no value given for required property codes". That is a
+      whole-payload rejection, not a per-entry one — the entire catalog read
+      fails and checkpointsase_web_categories reports "Unable to get Web
+      categories" on a 200 response that is entirely well-formed. There is no
+      partial-success path and no way for a caller to recover, which is why
+      this cannot be worked around above the SDK.
+      Only `codes` is dropped from `required`; id and name stay. This is
+      deliberately narrower than A6 and A10, which emptied their schemas'
+      required lists outright, for two reasons. First, the measurement
+      positively supports keeping them: id and name were present on every entry
+      of the live response, so trimming them would discard strictness that real
+      data justifies. Second, emptying the list would change the generated
+      Id/Name from plain `string` to `*string` and push a pointer-dereference
+      change into the provider's flattenWebCategories for no measured benefit —
+      A19's own reason warns against exactly this kind of incidental
+      strictness change on a read model, in the opposite direction.
+      WRITE PATH CANNOT BE AFFECTED, and that is checkable rather than assumed.
+      WebCategory has exactly one reference in the whole spec
+      (`grep -c "schemas/WebCategory'" api/swagger.yaml` = 1):
+      WebCategoryResponse.data.items. WebCategoryResponse in turn has exactly
+      one reference: the 200 response of GET /v3/objects/web-category. That
+      operation declares no request body, so no request schema in the document
+      can reach this one and no golden-body test can move.
+      Consequence for the provider: flattenWebCategories coerces a nil Codes to
+      an empty []string, and after this entry Codes is nil on every real
+      response. CORRECTION 2026-08-20: an earlier version of this paragraph
+      called that coercion load-bearing. It is not. A direct probe showed
+      schema.ResourceData.Set normalises a nil slice to an empty list by itself,
+      including for a list nested inside a list element, so state holds [] with
+      or without it. What this entry is load-bearing FOR is the decode: without
+      it the whole catalog response fails to unmarshal and the data source
+      reports an error on a valid 200. Do not conflate the two claims.
+    remove_when: >
+      upstream drops `codes` from WebCategory.required, or GET
+      /v3/objects/web-category starts sending a `codes` array on every catalog
+      entry — whichever happens first. Re-measure before deleting this entry:
+      the field is still declared as a property, so a server that begins
+      populating it will decode into Codes with no further change here, and
+      only the `required` trim needs reverting.
+    op: set
+    path: [components, schemas, WebCategory, required]
+    value:
+    - id
+    - name
+
+  - id: A21a-user-declares-id
+    reason: >
+      GET /v3/users returns User objects and DELETE /v3/users/{id} needs their
+      id, but the User schema declares no `id` property at all, so
+      model_user.go has no Id field and CreateUserExecute's *User cannot tell a
+      caller which user it just created. A generated client therefore cannot
+      delete, read back, or import a user without reaching into the untyped
+      AdditionalProperties map.
+      THE FIELD IS ON THE WIRE; THE EXPORT DROPS IT. In the backend,
+      src/api/entities/users/user.model.ts declares `class User extends
+      BaseModel`, and src/api/entities/common/base.model.ts declares id,
+      tenantId, createdAt and updatedAt -- annotated @ApiExcludeClass(), which
+      makes the OpenAPI exporter omit every inherited property. Only members
+      marked @Exclude() (originalTenantId, className, objectId) are actually
+      stripped from responses; id is not one of them.
+      Corroboration from the document itself: BasicApplication.users[] and
+      BasicApplication.groups[] describe the same objects through a different
+      response and both declare `id`.
+      Declared OPTIONAL, not required, on purpose. Making it required would put
+      it in the generated requiredProperties list and turn any response that
+      omits it into a hard decode failure for the whole page -- exactly the
+      failure mode A20 was written to undo. Optional gives Id *string, and the
+      provider surfaces a nil as its own diagnostic.
+    remove_when: >
+      upstream declares `id` on User -- most likely by removing
+      @ApiExcludeClass() from BaseModel or by re-declaring the field on the
+      subclass. Check with:
+      python3 -c "import yaml;d=yaml.safe_load(open('api/v3.upstream.yaml'));print('id' in d['components']['schemas']['User']['properties'])"
+    op: set
+    path: [components, schemas, User, properties, id]
+    value:
+      type: string
+      description: Unique identifier of the user.
+
+  - id: A21b-user-required-drop
+    reason: >
+      User.required lists eight fields: email, emailVerified, initials,
+      roleName, lastName, firstName, username, terminated. openapi-generator
+      emits a strict UnmarshalJSON for required properties -- an absent key
+      returns "no value given for required property X" -- and because /v3/users
+      is a LIST endpoint, one record missing one key fails the entire page, not
+      just that element. That is the exact shape of the WebCategory.codes defect
+      A20 records, where a required-but-absent field made a valid 200 read as
+      "Unable to get Web categories".
+      Directory-sourced accounts (idpType saml/gsuite/okta/azureAD/adLdap) are
+      the gap: initials and roleName are Harmony-SASE-derived presentation
+      fields, not attributes an IdP is obliged to supply.
+      THE WHOLE LIST GOES, `email` INCLUDED. An earlier draft of this entry kept
+      `email` on the grounds that CreateUserDto marks it required, so no user
+      could exist without one. That argument does not survive contact with the
+      same directory-sync case the paragraph above rests on: IdP-provisioned
+      accounts are created by sync and never pass through CreateUserDto, and
+      Active Directory's own `mail` attribute is optional, so a mail-less
+      AD-sourced account is a real shape. Keeping one field required would have
+      left the A20 failure fully live, just moved one field over -- a single
+      mail-less account failing the entire GET /v3/users page. A partial trim
+      buys nothing here: the cost of being wrong is the same whole-page decode
+      error whichever field is the one that turns up absent.
+      `op: remove` rather than `op: set` with an empty list, for two independent
+      reasons. OpenAPI 3.0 inherits JSON-Schema draft-4's "required MUST have at
+      least one element", so `required: []` would be an invalid document. And
+      removing the key gives this entry a disposal trigger that fires by itself:
+      build_spec.py's op_remove raises when its target is already absent, so the
+      day upstream drops this list the build breaks loudly instead of carrying a
+      dead entry forever.
+      THE PROVIDER-SIDE COST IS ZERO THIS ONCE, which is why the removal is
+      defensible here and A20 argues against it in its own case. User is a
+      RESPONSE-ONLY model -- request bodies use CreateUserDto, so no request
+      shape and no golden body can move -- and it has no provider consumer yet,
+      so nothing has to be rewritten for the value-to-pointer change. Task 3
+      reads every one of these, Email included, through its nil-safe Get*
+      accessor from the start.
+    remove_when: >
+      upstream stops declaring a `required` list on User at all. That condition
+      is self-firing rather than something to remember: op_remove raises
+      "remove target 'components/schemas/User/required' is already absent" and
+      the next `make verify` fails until this entry is deleted. To check by hand
+      before then:
+      python3 -c "import yaml;d=yaml.safe_load(open('api/v3.upstream.yaml'));print(d['components']['schemas']['User'].get('required'))"
+      Deliberately NOT "the wire is measured to always carry these fields": that
+      is a universal claim over every record on every tenant, so it can only
+      fail to be falsified, never established, and an entry gated on it would
+      live forever. If upstream instead keeps `required` but narrows it to
+      fields the wire genuinely guarantees, that is not a trigger for deletion
+      -- op_remove still fires and is still correct -- but this entry should
+      then be replaced by an `op: set` carrying upstream's own narrowed list.
+    op: remove
+    path: [components, schemas, User, required]
+
+  - id: A22a-group-declares-id
+    reason: >
+      The same defect as A21a, in the same place, for the same upstream reason:
+      src/api/entities/groups/group.model.ts declares `class Group extends
+      BaseModel`, BaseModel is @ApiExcludeClass(), and so Group loses `id` in
+      the export while sending it on the wire.
+      Worse here than for User, because CreateGroupExecute returns *Group and
+      that is the ONLY thing POST /v3/groups gives back. Without this entry the
+      group resource cannot learn its own id at create time, so d.SetId() has
+      nothing to set and DELETE /v3/groups/{id} has nothing to send.
+      Optional rather than required, for the reason A21a gives.
+    remove_when: >
+      upstream declares `id` on Group. Same check as A21a with 'Group'.
+    op: set
+    path: [components, schemas, Group, properties, id]
+    value:
+      type: string
+      description: Unique identifier of the group.
+
+  - id: A22b-group-required-drop
+    reason: >
+      Group.required lists name, isDefault, applications, networks,
+      vpnLocations and users. Same strict-decode hazard as A21b on a list
+      endpoint: one group missing `applications` fails the whole GET /v3/groups
+      page. The four array fields are membership projections rather than stored
+      attributes, which is precisely the kind of field a server omits when it is
+      empty -- and the default "All Users" group, present on every tenant, is
+      the likeliest first casualty.
+      `name` GOES TOO, and that is the weaker half of this entry, so it is worth
+      being straight about. A nameless group is much less plausible than a
+      mail-less user: CreateGroupDto marks name required and group.name is
+      @IsNotEmpty() in the backend. It comes out anyway for consistency with
+      A21b and because there is no upside to keeping it -- one required field is
+      not meaningfully safer than none, it is just one remaining way for the
+      whole page to fail, and the alternative (`required: []`) is not a valid
+      OpenAPI 3.0 document. `op: remove` also buys the self-firing disposal
+      trigger A21b describes: op_remove raises once the target is absent.
+      THE BLAST RADIUS IS WIDER THAN GET /v3/groups, which is the real argument
+      here. Group is response-only, but it is the return type of THREE
+      operations beyond the list: CreateGroup, AddGroupMember and
+      RemoveGroupMember all return *Group. A minimal Group in any of those
+      responses -- exactly what a just-created empty group looks like -- would
+      previously have failed to decode, which would have broken Tasks 4 and 5
+      outright rather than only degrading a data source.
+      No provider consumer exists yet, so the pointer churn is free; Task 4
+      reads all six through nil-safe accessors from the start.
+    remove_when: >
+      upstream stops declaring a `required` list on Group at all. Self-firing,
+      exactly as A21b: op_remove raises
+      "remove target 'components/schemas/Group/required' is already absent"
+      and `make verify` fails until this entry is deleted. Hand check:
+      python3 -c "import yaml;d=yaml.safe_load(open('api/v3.upstream.yaml'));print(d['components']['schemas']['Group'].get('required'))"
+      Not gated on measuring the wire, for the reason A21b's remove_when spells
+      out at length: "every group on every tenant carries all six keys" is
+      unfalsifiable in practice and would keep this entry alive forever.
+    op: remove
+    path: [components, schemas, Group, required]
+
+  - id: A24-user-profile-name-pattern-allows-uppercase
+    reason: >
+      UserProfileDto.firstName and .lastName carry `pattern: ^[a-z '-]+$` in
+      the document, which reads as "lowercase letters only" and lands in the
+      generated model as validate:"regexp=^[a-z '-]+$". It is wrong.
+      src/api/entities/users/userProfile.dto.ts declares
+      `const nameRegex = /^[a-z '-]+$/i` -- WITH THE i FLAG -- and the OpenAPI
+      export dropped the flag while keeping the body. The server accepts "John".
+      Left uncorrected this is a trap rather than a bug: nothing in the SDK
+      enforces a validate tag, so no request would fail. The damage would come
+      from a provider author porting the pattern into a ValidateFunc, which
+      would reject "John" at plan time for a value the server takes. Task 3 is
+      told not to, and this entry removes the temptation at the source -- and
+      also from any other client generated from our swagger.yaml.
+      Character class otherwise unchanged: letters, space, apostrophe, hyphen.
+    remove_when: >
+      upstream re-exports the pattern with the case-insensitivity preserved
+      (either ^[a-zA-Z '-]+$ or an (?i) prefix), or drops the pattern.
+    op: set
+    path: [components, schemas, UserProfileDto, properties, firstName]
+    value:
+      type: string
+      maxLength: 30
+      pattern: ^[a-zA-Z '-]+$
+
+  - id: A24b-user-profile-last-name-pattern-allows-uppercase
+    reason: >
+      The twin of A24 for lastName; identical cause and identical fix. Kept as
+      a separate entry rather than folded in, because op_set replaces a whole
+      property node and one entry can only address one path.
+    remove_when: >
+      as A24.
+    op: set
+    path: [components, schemas, UserProfileDto, properties, lastName]
+    value:
+      type: string
+      maxLength: 30
+      pattern: ^[a-zA-Z '-]+$

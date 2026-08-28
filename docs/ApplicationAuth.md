@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AuthEnabled** | **bool** |  | 
+**AuthEnabled** | Pointer to **bool** |  | [optional] 
 **AuthUsername** | Pointer to **string** |  | [optional] 
 **AuthPassword** | Pointer to **string** |  | [optional] 
 **AuthDomain** | Pointer to **string** |  | [optional] 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 
 ### NewApplicationAuth
 
-`func NewApplicationAuth(authEnabled bool, ) *ApplicationAuth`
+`func NewApplicationAuth() *ApplicationAuth`
 
 NewApplicationAuth instantiates a new ApplicationAuth object
 This constructor will assign default values to properties that have it defined,
@@ -47,6 +47,11 @@ and a boolean to check if the value has been set.
 
 SetAuthEnabled sets AuthEnabled field to given value.
 
+### HasAuthEnabled
+
+`func (o *ApplicationAuth) HasAuthEnabled() bool`
+
+HasAuthEnabled returns a boolean if a field has been set.
 
 ### GetAuthUsername
 

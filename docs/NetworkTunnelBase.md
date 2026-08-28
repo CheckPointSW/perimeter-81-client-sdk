@@ -4,22 +4,22 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**CreatedAt** | **time.Time** | The date when this record was created. | 
-**UpdatedAt** | Pointer to **time.Time** | The date of last update of the record. | [optional] 
 **Id** | **string** | Unique ID. | 
-**Network** | **string** | ID of the network. | 
-**Region** | **string** | ID of the network region. | 
-**Instance** | **string** | ID of the network instance. | 
-**InterfaceName** | **string** |  | 
-**Type** | **string** |  | 
-**IsHA** | **bool** | Indicates if it&#39;s a redundant tunnel. | 
-**TenantId** | **string** | ID of the tenant. | 
+**Network** | Pointer to **string** | ID of the network. | [optional] 
+**Region** | Pointer to **string** | ID of the network region. | [optional] 
+**Instance** | Pointer to **string** | ID of the network instance. | [optional] 
+**InterfaceName** | Pointer to **string** |  | [optional] 
+**Type** | Pointer to **string** |  | [optional] 
+**IsHA** | Pointer to **bool** | Indicates if it&#39;s a redundant tunnel. | [optional] 
+**TenantId** | Pointer to **string** | ID of the tenant. | [optional] 
+**CreatedAt** | Pointer to **time.Time** | The date when this record was created. | [optional] 
+**UpdatedAt** | Pointer to **time.Time** | The date of last update of the record. | [optional] 
 
 ## Methods
 
 ### NewNetworkTunnelBase
 
-`func NewNetworkTunnelBase(createdAt time.Time, id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, ) *NetworkTunnelBase`
+`func NewNetworkTunnelBase(id string, ) *NetworkTunnelBase`
 
 NewNetworkTunnelBase instantiates a new NetworkTunnelBase object
 This constructor will assign default values to properties that have it defined,
@@ -33,51 +33,6 @@ will change when the set of required properties is changed
 NewNetworkTunnelBaseWithDefaults instantiates a new NetworkTunnelBase object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
-
-### GetCreatedAt
-
-`func (o *NetworkTunnelBase) GetCreatedAt() time.Time`
-
-GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
-
-### GetCreatedAtOk
-
-`func (o *NetworkTunnelBase) GetCreatedAtOk() (*time.Time, bool)`
-
-GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetCreatedAt
-
-`func (o *NetworkTunnelBase) SetCreatedAt(v time.Time)`
-
-SetCreatedAt sets CreatedAt field to given value.
-
-
-### GetUpdatedAt
-
-`func (o *NetworkTunnelBase) GetUpdatedAt() time.Time`
-
-GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
-
-### GetUpdatedAtOk
-
-`func (o *NetworkTunnelBase) GetUpdatedAtOk() (*time.Time, bool)`
-
-GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetUpdatedAt
-
-`func (o *NetworkTunnelBase) SetUpdatedAt(v time.Time)`
-
-SetUpdatedAt sets UpdatedAt field to given value.
-
-### HasUpdatedAt
-
-`func (o *NetworkTunnelBase) HasUpdatedAt() bool`
-
-HasUpdatedAt returns a boolean if a field has been set.
 
 ### GetId
 
@@ -118,6 +73,11 @@ and a boolean to check if the value has been set.
 
 SetNetwork sets Network field to given value.
 
+### HasNetwork
+
+`func (o *NetworkTunnelBase) HasNetwork() bool`
+
+HasNetwork returns a boolean if a field has been set.
 
 ### GetRegion
 
@@ -138,6 +98,11 @@ and a boolean to check if the value has been set.
 
 SetRegion sets Region field to given value.
 
+### HasRegion
+
+`func (o *NetworkTunnelBase) HasRegion() bool`
+
+HasRegion returns a boolean if a field has been set.
 
 ### GetInstance
 
@@ -158,6 +123,11 @@ and a boolean to check if the value has been set.
 
 SetInstance sets Instance field to given value.
 
+### HasInstance
+
+`func (o *NetworkTunnelBase) HasInstance() bool`
+
+HasInstance returns a boolean if a field has been set.
 
 ### GetInterfaceName
 
@@ -178,6 +148,11 @@ and a boolean to check if the value has been set.
 
 SetInterfaceName sets InterfaceName field to given value.
 
+### HasInterfaceName
+
+`func (o *NetworkTunnelBase) HasInterfaceName() bool`
+
+HasInterfaceName returns a boolean if a field has been set.
 
 ### GetType
 
@@ -198,6 +173,11 @@ and a boolean to check if the value has been set.
 
 SetType sets Type field to given value.
 
+### HasType
+
+`func (o *NetworkTunnelBase) HasType() bool`
+
+HasType returns a boolean if a field has been set.
 
 ### GetIsHA
 
@@ -218,6 +198,11 @@ and a boolean to check if the value has been set.
 
 SetIsHA sets IsHA field to given value.
 
+### HasIsHA
+
+`func (o *NetworkTunnelBase) HasIsHA() bool`
+
+HasIsHA returns a boolean if a field has been set.
 
 ### GetTenantId
 
@@ -238,6 +223,61 @@ and a boolean to check if the value has been set.
 
 SetTenantId sets TenantId field to given value.
 
+### HasTenantId
+
+`func (o *NetworkTunnelBase) HasTenantId() bool`
+
+HasTenantId returns a boolean if a field has been set.
+
+### GetCreatedAt
+
+`func (o *NetworkTunnelBase) GetCreatedAt() time.Time`
+
+GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
+
+### GetCreatedAtOk
+
+`func (o *NetworkTunnelBase) GetCreatedAtOk() (*time.Time, bool)`
+
+GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCreatedAt
+
+`func (o *NetworkTunnelBase) SetCreatedAt(v time.Time)`
+
+SetCreatedAt sets CreatedAt field to given value.
+
+### HasCreatedAt
+
+`func (o *NetworkTunnelBase) HasCreatedAt() bool`
+
+HasCreatedAt returns a boolean if a field has been set.
+
+### GetUpdatedAt
+
+`func (o *NetworkTunnelBase) GetUpdatedAt() time.Time`
+
+GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
+
+### GetUpdatedAtOk
+
+`func (o *NetworkTunnelBase) GetUpdatedAtOk() (*time.Time, bool)`
+
+GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUpdatedAt
+
+`func (o *NetworkTunnelBase) SetUpdatedAt(v time.Time)`
+
+SetUpdatedAt sets UpdatedAt field to given value.
+
+### HasUpdatedAt
+
+`func (o *NetworkTunnelBase) HasUpdatedAt() bool`
+
+HasUpdatedAt returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

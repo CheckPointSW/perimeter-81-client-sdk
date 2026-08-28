@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **Name** | **string** | The name of the Objects | 
 **Description** | Pointer to **string** |  | [optional] 
 **Protocols** | [**[]ObjectsServicesProtocolResponseObj**](ObjectsServicesProtocolResponseObj.md) |  | 
+**Id** | Pointer to **string** | Unique identifier of the service object. | [optional] 
 
 ## Methods
 
@@ -91,6 +92,31 @@ and a boolean to check if the value has been set.
 
 SetProtocols sets Protocols field to given value.
 
+
+### GetId
+
+`func (o *ObjectsServicesResponseObj) GetId() string`
+
+GetId returns the Id field if non-nil, zero value otherwise.
+
+### GetIdOk
+
+`func (o *ObjectsServicesResponseObj) GetIdOk() (*string, bool)`
+
+GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetId
+
+`func (o *ObjectsServicesResponseObj) SetId(v string)`
+
+SetId sets Id field to given value.
+
+### HasId
+
+`func (o *ObjectsServicesResponseObj) HasId() bool`
+
+HasId returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -4,12 +4,12 @@ All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-a
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateDynamicRoute**](EnhancedRouteTablesAPI.md#CreateDynamicRoute) | **Post** /v2.3/networks/enhanced/{networkId}/route-table/dynamic | Create dynamic route
-[**CreateStaticRoute**](EnhancedRouteTablesAPI.md#CreateStaticRoute) | **Post** /v2.3/networks/enhanced/{networkId}/route-table/static | Create static route
-[**DeleteRouteEntry**](EnhancedRouteTablesAPI.md#DeleteRouteEntry) | **Delete** /v2.3/networks/enhanced/{networkId}/route-table/{routeId} | Delete route entry
-[**GetEnhancedRouteTable**](EnhancedRouteTablesAPI.md#GetEnhancedRouteTable) | **Get** /v2.3/networks/enhanced/{networkId}/route-table | Get route table
-[**GetRouteEntry**](EnhancedRouteTablesAPI.md#GetRouteEntry) | **Get** /v2.3/networks/enhanced/{networkId}/route-table/{routeId} | Get route entry
-[**UpdateRouteEntry**](EnhancedRouteTablesAPI.md#UpdateRouteEntry) | **Put** /v2.3/networks/enhanced/{networkId}/route-table/{routeId} | Update route entry
+[**CreateDynamicRoute**](EnhancedRouteTablesAPI.md#CreateDynamicRoute) | **Post** /v3/networks/enhanced/{networkId}/route-table/dynamic | Create dynamic route
+[**CreateStaticRoute**](EnhancedRouteTablesAPI.md#CreateStaticRoute) | **Post** /v3/networks/enhanced/{networkId}/route-table/static | Create static route
+[**DeleteRouteEntry**](EnhancedRouteTablesAPI.md#DeleteRouteEntry) | **Delete** /v3/networks/enhanced/{networkId}/route-table/{routeId} | Delete route entry
+[**GetEnhancedRouteTable**](EnhancedRouteTablesAPI.md#GetEnhancedRouteTable) | **Get** /v3/networks/enhanced/{networkId}/route-table | Get route table
+[**GetRouteEntry**](EnhancedRouteTablesAPI.md#GetRouteEntry) | **Get** /v3/networks/enhanced/{networkId}/route-table/{routeId} | Get route entry
+[**UpdateRouteEntry**](EnhancedRouteTablesAPI.md#UpdateRouteEntry) | **Put** /v3/networks/enhanced/{networkId}/route-table/{routeId} | Update route entry
 
 
 
@@ -30,7 +30,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -102,7 +102,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -174,7 +174,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -247,7 +247,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -321,7 +321,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -394,7 +394,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {

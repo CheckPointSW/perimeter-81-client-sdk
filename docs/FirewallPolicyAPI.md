@@ -4,16 +4,16 @@ All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-a
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetFirewallPolicy**](FirewallPolicyAPI.md#GetFirewallPolicy) | **Get** /v2.3/networks/{networkId}/policy | Get firewall policy by network Id
-[**UpdateFirewallPolicy**](FirewallPolicyAPI.md#UpdateFirewallPolicy) | **Put** /v2.3/networks/{networkId}/policy | Update firewall policy by network ID
+[**GetGranularFirewallPolicy**](FirewallPolicyAPI.md#GetGranularFirewallPolicy) | **Get** /v3/networks/{networkId}/firewall-policy | Get firewall policy by network ID
+[**UpdateGranularFirewallPolicy**](FirewallPolicyAPI.md#UpdateGranularFirewallPolicy) | **Put** /v3/networks/{networkId}/firewall-policy | Update firewall policy by network ID
 
 
 
-## GetFirewallPolicy
+## GetGranularFirewallPolicy
 
-> FirewallPolicy GetFirewallPolicy(ctx, networkId).Execute()
+> GranularFirewallPolicy GetGranularFirewallPolicy(ctx, networkId).Execute()
 
-Get firewall policy by network Id
+Get firewall policy by network ID
 
 
 
@@ -26,7 +26,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -34,13 +34,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.FirewallPolicyAPI.GetFirewallPolicy(context.Background(), networkId).Execute()
+	resp, r, err := apiClient.FirewallPolicyAPI.GetGranularFirewallPolicy(context.Background(), networkId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FirewallPolicyAPI.GetFirewallPolicy``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `FirewallPolicyAPI.GetGranularFirewallPolicy``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetFirewallPolicy`: FirewallPolicy
-	fmt.Fprintf(os.Stdout, "Response from `FirewallPolicyAPI.GetFirewallPolicy`: %v\n", resp)
+	// response from `GetGranularFirewallPolicy`: GranularFirewallPolicy
+	fmt.Fprintf(os.Stdout, "Response from `FirewallPolicyAPI.GetGranularFirewallPolicy`: %v\n", resp)
 }
 ```
 
@@ -54,7 +54,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetFirewallPolicyRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetGranularFirewallPolicyRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -63,7 +63,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**FirewallPolicy**](FirewallPolicy.md)
+[**GranularFirewallPolicy**](GranularFirewallPolicy.md)
 
 ### Authorization
 
@@ -79,9 +79,9 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## UpdateFirewallPolicy
+## UpdateGranularFirewallPolicy
 
-> AsyncOperationResponse UpdateFirewallPolicy(ctx, networkId).FirewallPolicy(firewallPolicy).Execute()
+> AsyncOperationResponse UpdateGranularFirewallPolicy(ctx, networkId).GranularFirewallPolicy(granularFirewallPolicy).Execute()
 
 Update firewall policy by network ID
 
@@ -96,22 +96,22 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
 	networkId := "networkId_example" // string | 
-	firewallPolicy := *openapiclient.NewFirewallPolicy(false, false, "Id_example", []openapiclient.FirewallPolicyRule{*openapiclient.NewFirewallPolicyRule("Name_example", false, false, openapiclient.SourcesAndDestinations{Addresses: openapiclient.NewAddresses([]string{"Addresses_example"})}, openapiclient.SourcesAndDestinations{Addresses: openapiclient.NewAddresses([]string{"Addresses_example"})})}) // FirewallPolicy | 
+	granularFirewallPolicy := *openapiclient.NewGranularFirewallPolicy(false, false, "ZwAeo5wqiF", false, []openapiclient.GranularFirewallPolicyRule{*openapiclient.NewGranularFirewallPolicyRule("Name_example", false, false, openapiclient.SourcesAndDestinations{Addresses: openapiclient.NewAddresses([]string{"Addresses_example"})}, openapiclient.SourcesAndDestinations{Addresses: openapiclient.NewAddresses([]string{"Addresses_example"})}, false)}) // GranularFirewallPolicy | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.FirewallPolicyAPI.UpdateFirewallPolicy(context.Background(), networkId).FirewallPolicy(firewallPolicy).Execute()
+	resp, r, err := apiClient.FirewallPolicyAPI.UpdateGranularFirewallPolicy(context.Background(), networkId).GranularFirewallPolicy(granularFirewallPolicy).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `FirewallPolicyAPI.UpdateFirewallPolicy``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `FirewallPolicyAPI.UpdateGranularFirewallPolicy``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `UpdateFirewallPolicy`: AsyncOperationResponse
-	fmt.Fprintf(os.Stdout, "Response from `FirewallPolicyAPI.UpdateFirewallPolicy`: %v\n", resp)
+	// response from `UpdateGranularFirewallPolicy`: AsyncOperationResponse
+	fmt.Fprintf(os.Stdout, "Response from `FirewallPolicyAPI.UpdateGranularFirewallPolicy`: %v\n", resp)
 }
 ```
 
@@ -125,13 +125,13 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiUpdateFirewallPolicyRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiUpdateGranularFirewallPolicyRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **firewallPolicy** | [**FirewallPolicy**](FirewallPolicy.md) |  | 
+ **granularFirewallPolicy** | [**GranularFirewallPolicy**](GranularFirewallPolicy.md) |  | 
 
 ### Return type
 

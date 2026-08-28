@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Passphrase** | **string** |  | 
+**Passphrase** | Pointer to **string** |  | [optional] 
 **P81GWInternalIP** | **string** |  | 
 **RemoteGWInternalIP** | **string** |  | 
 **RemotePublicIP** | **string** |  | 
-**RemoteASN** | [**RemoteASN**](RemoteASN.md) |  | 
-**RemoteID** | [**RemoteID**](RemoteID.md) |  | 
+**RemoteASN** | **int32** |  | 
+**RemoteID** | Pointer to [**RemoteID**](RemoteID.md) |  | [optional] 
 **GatewayID** | **string** |  | 
 **TunnelID** | Pointer to **string** |  | [optional] 
 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewIPSecRedundantTunnel
 
-`func NewIPSecRedundantTunnel(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN RemoteASN, remoteID RemoteID, gatewayID string, ) *IPSecRedundantTunnel`
+`func NewIPSecRedundantTunnel(p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, gatewayID string, ) *IPSecRedundantTunnel`
 
 NewIPSecRedundantTunnel instantiates a new IPSecRedundantTunnel object
 This constructor will assign default values to properties that have it defined,
@@ -51,6 +51,11 @@ and a boolean to check if the value has been set.
 
 SetPassphrase sets Passphrase field to given value.
 
+### HasPassphrase
+
+`func (o *IPSecRedundantTunnel) HasPassphrase() bool`
+
+HasPassphrase returns a boolean if a field has been set.
 
 ### GetP81GWInternalIP
 
@@ -114,20 +119,20 @@ SetRemotePublicIP sets RemotePublicIP field to given value.
 
 ### GetRemoteASN
 
-`func (o *IPSecRedundantTunnel) GetRemoteASN() RemoteASN`
+`func (o *IPSecRedundantTunnel) GetRemoteASN() int32`
 
 GetRemoteASN returns the RemoteASN field if non-nil, zero value otherwise.
 
 ### GetRemoteASNOk
 
-`func (o *IPSecRedundantTunnel) GetRemoteASNOk() (*RemoteASN, bool)`
+`func (o *IPSecRedundantTunnel) GetRemoteASNOk() (*int32, bool)`
 
 GetRemoteASNOk returns a tuple with the RemoteASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteASN
 
-`func (o *IPSecRedundantTunnel) SetRemoteASN(v RemoteASN)`
+`func (o *IPSecRedundantTunnel) SetRemoteASN(v int32)`
 
 SetRemoteASN sets RemoteASN field to given value.
 
@@ -151,6 +156,11 @@ and a boolean to check if the value has been set.
 
 SetRemoteID sets RemoteID field to given value.
 
+### HasRemoteID
+
+`func (o *IPSecRedundantTunnel) HasRemoteID() bool`
+
+HasRemoteID returns a boolean if a field has been set.
 
 ### GetGatewayID
 

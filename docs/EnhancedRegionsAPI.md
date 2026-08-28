@@ -4,13 +4,13 @@ All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-a
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateEnhancedRegion**](EnhancedRegionsAPI.md#CreateEnhancedRegion) | **Post** /v2.3/networks/enhanced/{networkId}/regions | Create enhanced region
-[**DeleteEnhancedRegion**](EnhancedRegionsAPI.md#DeleteEnhancedRegion) | **Delete** /v2.3/networks/enhanced/{networkId}/regions/{regionId} | Delete enhanced region
-[**EnhancedNetworksControllerV2GetRegions**](EnhancedRegionsAPI.md#EnhancedNetworksControllerV2GetRegions) | **Get** /v2.3/networks/enhanced/harmony-sase-regions | List of available Harmony SASE regions that supports enhanced networks
-[**GetEnhancedRegion**](EnhancedRegionsAPI.md#GetEnhancedRegion) | **Get** /v2.3/networks/enhanced/{networkId}/regions/{regionId} | Get region
-[**IncreaseScaleUnit**](EnhancedRegionsAPI.md#IncreaseScaleUnit) | **Put** /v2.3/networks/enhanced/{networkId}/regions/{regionId}/scale-unit/increase | Increase scale units
-[**ListEnhancedRegions**](EnhancedRegionsAPI.md#ListEnhancedRegions) | **Get** /v2.3/networks/enhanced/{networkId}/regions | List regions
-[**ReduceScaleUnit**](EnhancedRegionsAPI.md#ReduceScaleUnit) | **Put** /v2.3/networks/enhanced/{networkId}/regions/{regionId}/scale-unit/reduce | Reduce scale units
+[**CreateEnhancedRegion**](EnhancedRegionsAPI.md#CreateEnhancedRegion) | **Post** /v3/networks/enhanced/{networkId}/regions | Create enhanced region
+[**DeleteEnhancedRegion**](EnhancedRegionsAPI.md#DeleteEnhancedRegion) | **Delete** /v3/networks/enhanced/{networkId}/regions/{regionId} | Delete enhanced region
+[**EnhancedNetworksControllerV2GetRegions**](EnhancedRegionsAPI.md#EnhancedNetworksControllerV2GetRegions) | **Get** /v3/networks/enhanced/harmony-sase-regions | List of available Harmony SASE regions that supports enhanced networks
+[**GetEnhancedRegion**](EnhancedRegionsAPI.md#GetEnhancedRegion) | **Get** /v3/networks/enhanced/{networkId}/regions/{regionId} | Get region
+[**IncreaseScaleUnit**](EnhancedRegionsAPI.md#IncreaseScaleUnit) | **Put** /v3/networks/enhanced/{networkId}/regions/{regionId}/scale-unit/increase | Increase scale units
+[**ListEnhancedRegions**](EnhancedRegionsAPI.md#ListEnhancedRegions) | **Get** /v3/networks/enhanced/{networkId}/regions | List regions
+[**ReduceScaleUnit**](EnhancedRegionsAPI.md#ReduceScaleUnit) | **Put** /v3/networks/enhanced/{networkId}/regions/{regionId}/scale-unit/reduce | Reduce scale units
 
 
 
@@ -31,7 +31,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -103,7 +103,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -176,7 +176,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -237,7 +237,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -310,7 +310,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -385,7 +385,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {
@@ -455,7 +455,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
 )
 
 func main() {

@@ -9,8 +9,7 @@ Name | Type | Description | Notes
 **TunnelName** | **string** | The name of the tunnel | 
 **P81GatewaySubnets** | **[]string** |  | 
 **RemoteGatewaySubnets** | **[]string** |  | 
-**PeakBandwidth** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
-**P81ASN** | Pointer to [**RemoteASN**](RemoteASN.md) |  | [optional] 
+**P81ASN** | Pointer to **int32** |  | [optional] 
 **Features** | Pointer to [**IPSecSharedSettingsFeatures**](IPSecSharedSettingsFeatures.md) |  | [optional] 
 **KeyExchange** | **string** |  | 
 **IkeLifeTime** | **string** |  | 
@@ -146,47 +145,22 @@ and a boolean to check if the value has been set.
 SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
 
-### GetPeakBandwidth
-
-`func (o *IPSecSingleTunnel) GetPeakBandwidth() int32`
-
-GetPeakBandwidth returns the PeakBandwidth field if non-nil, zero value otherwise.
-
-### GetPeakBandwidthOk
-
-`func (o *IPSecSingleTunnel) GetPeakBandwidthOk() (*int32, bool)`
-
-GetPeakBandwidthOk returns a tuple with the PeakBandwidth field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPeakBandwidth
-
-`func (o *IPSecSingleTunnel) SetPeakBandwidth(v int32)`
-
-SetPeakBandwidth sets PeakBandwidth field to given value.
-
-### HasPeakBandwidth
-
-`func (o *IPSecSingleTunnel) HasPeakBandwidth() bool`
-
-HasPeakBandwidth returns a boolean if a field has been set.
-
 ### GetP81ASN
 
-`func (o *IPSecSingleTunnel) GetP81ASN() RemoteASN`
+`func (o *IPSecSingleTunnel) GetP81ASN() int32`
 
 GetP81ASN returns the P81ASN field if non-nil, zero value otherwise.
 
 ### GetP81ASNOk
 
-`func (o *IPSecSingleTunnel) GetP81ASNOk() (*RemoteASN, bool)`
+`func (o *IPSecSingleTunnel) GetP81ASNOk() (*int32, bool)`
 
 GetP81ASNOk returns a tuple with the P81ASN field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetP81ASN
 
-`func (o *IPSecSingleTunnel) SetP81ASN(v RemoteASN)`
+`func (o *IPSecSingleTunnel) SetP81ASN(v int32)`
 
 SetP81ASN sets P81ASN field to given value.
 
