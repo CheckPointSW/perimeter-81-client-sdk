@@ -157,23 +157,30 @@ func (o *AccessPolicySource) UnmarshalJSON(data []byte) (err error) {
 	// GetValue() has always promised -- generically, before the strict
 	// struct decode below ever sees the field -- rather than widen Value's
 	// type and ripple that into every caller that only ever wanted the id.
-	rawValues, ok := allProperties["value"].([]interface{})
-	if !ok {
-		return fmt.Errorf("access policy source value: expected an array, got %T", allProperties["value"])
-	}
-	ids := make([]string, len(rawValues))
-	for i, raw := range rawValues {
-		switch v := raw.(type) {
-		case string:
-			ids[i] = v
-		case map[string]interface{}:
-			id, ok := v["sharedObjectId"].(string)
-			if !ok {
-				return fmt.Errorf("access policy source value[%d]: object has no string sharedObjectId", i)
+	// A `value: null` payload passed the required-property check above (the
+	// key exists) but is nil, not a []interface{} -- and stock generated
+	// unmarshal into []string accepted null as a nil slice with no error.
+	// Preserve that: only enforce the array shape once value is non-nil.
+	var ids []string
+	if allProperties["value"] != nil {
+		rawValues, ok := allProperties["value"].([]interface{})
+		if !ok {
+			return fmt.Errorf("access policy source value: expected an array, got %T", allProperties["value"])
+		}
+		ids = make([]string, len(rawValues))
+		for i, raw := range rawValues {
+			switch v := raw.(type) {
+			case string:
+				ids[i] = v
+			case map[string]interface{}:
+				id, ok := v["sharedObjectId"].(string)
+				if !ok {
+					return fmt.Errorf("access policy source value[%d]: object has no string sharedObjectId", i)
+				}
+				ids[i] = id
+			default:
+				return fmt.Errorf("access policy source value[%d]: unexpected type %T", i, raw)
 			}
-			ids[i] = id
-		default:
-			return fmt.Errorf("access policy source value[%d]: unexpected type %T", i, raw)
 		}
 	}
 	// varAccessPolicySource is decoded from allProperties with "value" removed
