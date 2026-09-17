@@ -15,12 +15,11 @@ import (
 
 // Region base URLs
 const (
-	BaseURLUS = "https://api.perimeter81.com/api/rest"
-	BaseURLEU = "https://api.eu.sase.checkpoint.com/api/rest"
-	BaseURLAU = "https://api.au.sase.checkpoint.com/api/rest"
-	BaseURLIN = "https://api.in.sase.checkpoint.com/api/rest"
-	// BaseURLCA is the Canada region endpoint, introduced in API v3.
-	BaseURLCA = "https://api.ca.sase.checkpoint.com/api/rest"
+	BaseURLUS = "https://public-apigw.us.sase.checkpoint.com"
+	BaseURLEU = "https://public-apigw.eu.sase.checkpoint.com"
+	BaseURLAU = "https://public-apigw.au.sase.checkpoint.com"
+	BaseURLIN = "https://public-apigw.in.sase.checkpoint.com"
+	BaseURLCA = "https://public-apigw.ca.sase.checkpoint.com"
 )
 
 // APIKey provides API key based authentication to a request passed via context using ContextAPIKey

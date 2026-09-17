@@ -8,15 +8,15 @@ servers:
 - description: SwaggerHub API Auto Mocking
   url: https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0
 - description: SASE Public API US
-  url: https://api.perimeter81.com/api/rest
+  url: https://public-apigw.us.sase.checkpoint.com
 - description: SASE Public API EU
-  url: https://api.eu.sase.checkpoint.com/api/rest
+  url: https://public-apigw.eu.sase.checkpoint.com
 - description: SASE Public API Australia
-  url: https://api.au.sase.checkpoint.com/api/rest
+  url: https://public-apigw.au.sase.checkpoint.com
 - description: SASE Public API India
-  url: https://api.in.sase.checkpoint.com/api/rest
+  url: https://public-apigw.in.sase.checkpoint.com
 - description: SASE Public API Canada
-  url: https://api.ca.sase.checkpoint.com/api/rest
+  url: https://public-apigw.ca.sase.checkpoint.com
 security:
 - bearer: []
 paths:
