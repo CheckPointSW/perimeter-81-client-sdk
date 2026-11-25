@@ -20,7 +20,7 @@ var _ MappedNullable = &UpdateAccessPolicyRulesResponse{}
 // UpdateAccessPolicyRulesResponse struct for UpdateAccessPolicyRulesResponse
 type UpdateAccessPolicyRulesResponse struct {
 	Status *int32 `json:"status,omitempty"`
-	Data *AccessPolicyRulesGetResponseData `json:"data,omitempty"`
+	Data *UpdateAccessPolicyRulesResponseData `json:"data,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -76,9 +76,9 @@ func (o *UpdateAccessPolicyRulesResponse) SetStatus(v int32) {
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
-func (o *UpdateAccessPolicyRulesResponse) GetData() AccessPolicyRulesGetResponseData {
+func (o *UpdateAccessPolicyRulesResponse) GetData() UpdateAccessPolicyRulesResponseData {
 	if o == nil || IsNil(o.Data) {
-		var ret AccessPolicyRulesGetResponseData
+		var ret UpdateAccessPolicyRulesResponseData
 		return ret
 	}
 	return *o.Data
@@ -86,7 +86,7 @@ func (o *UpdateAccessPolicyRulesResponse) GetData() AccessPolicyRulesGetResponse
 
 // GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *UpdateAccessPolicyRulesResponse) GetDataOk() (*AccessPolicyRulesGetResponseData, bool) {
+func (o *UpdateAccessPolicyRulesResponse) GetDataOk() (*UpdateAccessPolicyRulesResponseData, bool) {
 	if o == nil || IsNil(o.Data) {
 		return nil, false
 	}
@@ -102,8 +102,8 @@ func (o *UpdateAccessPolicyRulesResponse) HasData() bool {
 	return false
 }
 
-// SetData gets a reference to the given AccessPolicyRulesGetResponseData and assigns it to the Data field.
-func (o *UpdateAccessPolicyRulesResponse) SetData(v AccessPolicyRulesGetResponseData) {
+// SetData gets a reference to the given UpdateAccessPolicyRulesResponseData and assigns it to the Data field.
+func (o *UpdateAccessPolicyRulesResponse) SetData(v UpdateAccessPolicyRulesResponseData) {
 	o.Data = &v
 }
 

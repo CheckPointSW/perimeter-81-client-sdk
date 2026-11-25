@@ -20,8 +20,6 @@ var _ MappedNullable = &HttpsInspectionPolicyResponseData{}
 // HttpsInspectionPolicyResponseData struct for HttpsInspectionPolicyResponseData
 type HttpsInspectionPolicyResponseData struct {
 	BypassRules []HttpsInspectionRule `json:"bypassRules,omitempty"`
-	// Indicates whether the policy is controlled by Quantum or Hsase
-	ControlledBy *string `json:"controlledBy,omitempty"`
 	// Echoes the persisted cleanup default action after the upsert so callers don't need a follow-up GET. Included in the response only when the tenant has the Inspection Policy feature enabled; when the feature is off the field is omitted entirely. Defaults to \"inspect\" when the tenant has the feature enabled but hasn't configured a specific value. 
 	CleanupBypassRuleDefaultAction *string `json:"cleanupBypassRuleDefaultAction,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -78,38 +76,6 @@ func (o *HttpsInspectionPolicyResponseData) SetBypassRules(v []HttpsInspectionRu
 	o.BypassRules = v
 }
 
-// GetControlledBy returns the ControlledBy field value if set, zero value otherwise.
-func (o *HttpsInspectionPolicyResponseData) GetControlledBy() string {
-	if o == nil || IsNil(o.ControlledBy) {
-		var ret string
-		return ret
-	}
-	return *o.ControlledBy
-}
-
-// GetControlledByOk returns a tuple with the ControlledBy field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *HttpsInspectionPolicyResponseData) GetControlledByOk() (*string, bool) {
-	if o == nil || IsNil(o.ControlledBy) {
-		return nil, false
-	}
-	return o.ControlledBy, true
-}
-
-// HasControlledBy returns a boolean if a field has been set.
-func (o *HttpsInspectionPolicyResponseData) HasControlledBy() bool {
-	if o != nil && !IsNil(o.ControlledBy) {
-		return true
-	}
-
-	return false
-}
-
-// SetControlledBy gets a reference to the given string and assigns it to the ControlledBy field.
-func (o *HttpsInspectionPolicyResponseData) SetControlledBy(v string) {
-	o.ControlledBy = &v
-}
-
 // GetCleanupBypassRuleDefaultAction returns the CleanupBypassRuleDefaultAction field value if set, zero value otherwise.
 func (o *HttpsInspectionPolicyResponseData) GetCleanupBypassRuleDefaultAction() string {
 	if o == nil || IsNil(o.CleanupBypassRuleDefaultAction) {
@@ -155,9 +121,6 @@ func (o HttpsInspectionPolicyResponseData) ToMap() (map[string]interface{}, erro
 	if !IsNil(o.BypassRules) {
 		toSerialize["bypassRules"] = o.BypassRules
 	}
-	if !IsNil(o.ControlledBy) {
-		toSerialize["controlledBy"] = o.ControlledBy
-	}
 	if !IsNil(o.CleanupBypassRuleDefaultAction) {
 		toSerialize["cleanupBypassRuleDefaultAction"] = o.CleanupBypassRuleDefaultAction
 	}
@@ -184,7 +147,6 @@ func (o *HttpsInspectionPolicyResponseData) UnmarshalJSON(data []byte) (err erro
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "bypassRules")
-		delete(additionalProperties, "controlledBy")
 		delete(additionalProperties, "cleanupBypassRuleDefaultAction")
 		o.AdditionalProperties = additionalProperties
 	}

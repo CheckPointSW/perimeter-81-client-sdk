@@ -123,7 +123,7 @@ func (a *EnhancedPrivateDNSAPIService) GetEnhancedNetworkPrivateDNSExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -134,7 +134,7 @@ func (a *EnhancedPrivateDNSAPIService) GetEnhancedNetworkPrivateDNSExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -284,7 +284,7 @@ func (a *EnhancedPrivateDNSAPIService) GetEnhancedRegionPrivateDNSExecute(r ApiG
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -295,7 +295,7 @@ func (a *EnhancedPrivateDNSAPIService) GetEnhancedRegionPrivateDNSExecute(r ApiG
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -363,7 +363,7 @@ UpdateEnhancedNetworkPrivateDNS Update network-level private DNS settings
 Required permissions: `["network:update"]`<br><br>Update the private DNS configuration for an enhanced network. This operation
 fully replaces the configuration: always send the complete desired object.
 Any field omitted from `attributes` (such as `searchDomains`) is cleared, not
-preserved — to keep current values, resend the full object returned by GET.
+preserved. To keep current values, resend the full object returned by GET.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -456,7 +456,7 @@ func (a *EnhancedPrivateDNSAPIService) UpdateEnhancedNetworkPrivateDNSExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -467,7 +467,7 @@ func (a *EnhancedPrivateDNSAPIService) UpdateEnhancedNetworkPrivateDNSExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -489,17 +489,6 @@ func (a *EnhancedPrivateDNSAPIService) UpdateEnhancedNetworkPrivateDNSExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 409 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -558,7 +547,7 @@ UpdateEnhancedRegionPrivateDNS Update region-level private DNS settings
 Required permissions: `["network:update"]`<br><br>Update the private DNS configuration for a region of an enhanced network. This
 operation fully replaces the configuration: always send the complete desired
 object. Any field omitted from `attributes` (such as `searchDomains`) is cleared,
-not preserved — to keep current values, resend the full object returned by GET.
+not preserved. To keep current values, resend the full object returned by GET.
 
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -654,7 +643,7 @@ func (a *EnhancedPrivateDNSAPIService) UpdateEnhancedRegionPrivateDNSExecute(r A
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -665,7 +654,7 @@ func (a *EnhancedPrivateDNSAPIService) UpdateEnhancedRegionPrivateDNSExecute(r A
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -687,17 +676,6 @@ func (a *EnhancedPrivateDNSAPIService) UpdateEnhancedRegionPrivateDNSExecute(r A
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 409 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {

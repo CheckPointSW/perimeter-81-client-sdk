@@ -26,15 +26,19 @@ type AccessPolicyRule struct {
 	Name string `json:"name" validate:"regexp=^[^<>]+$"`
 	// Where the rule is applied: Agents, Sites, or Both
 	AppliedOn string `json:"appliedOn"`
-	// Rule action
+	// Rule action. 'redirect' requires the Redirect feature; when the feature is not enabled for the tenant, adding or changing a rule that redirects is rejected with 422 VALIDATION_REDIRECT_NOT_ENABLED.
 	Action string `json:"action"`
+	// Absolute http or https URL the user is redirected to, up to 2048 characters and without a username or password. Required for 'redirect' rules and for 'block' rules with redirectAction 'afterBlockPage', otherwise the request is rejected with 422 VALIDATION_INVALID_REDIRECT_URL. On any other rule a valid URL is stored without taking effect, and applies again if the rule is switched back to redirecting. 
+	RedirectUrl *string `json:"redirectUrl,omitempty" validate:"regexp=^https?://[^\\s/$.?#].[^\\s]*$"`
+	// Optional. Send 'afterBlockPage', with redirectUrl, to make a 'block' rule show the block page and then redirect; 'none' (the default) means it does not redirect. Leave it out on 'redirect' rules — the service always sets 'immediate'. Any other combination is rejected with 422 VALIDATION_INVALID_REDIRECT_ACTION, or VALIDATION_REDIRECT_NOT_ALLOWED_FOR_ACTION on 'allow' and 'warning' rules. 
+	RedirectAction *string `json:"redirectAction,omitempty"`
 	// Optional time-based conditions, default is an empty array (no time constraints)
 	Conditions []Condition `json:"conditions"`
 	// List of destination objects
 	Destinations []AccessPolicyDestination `json:"destinations"`
 	// List of source objects
 	Sources []AccessPolicySource `json:"sources"`
-	// Logging mode (optional) – If not specified, the service automatically sets the logging mode based on the rule action: Disabled for Allow actions, and SummaryWithUrls for Block and Warning actions
+	// Logging mode (optional) – If not specified, the service automatically sets the logging mode based on the rule action: Disabled for Allow actions, and SummaryWithUrls for Block, Warning and Redirect actions
 	Log *string `json:"log,omitempty"`
 	// Rule status
 	Status string `json:"status"`
@@ -172,6 +176,70 @@ func (o *AccessPolicyRule) GetActionOk() (*string, bool) {
 // SetAction sets field value
 func (o *AccessPolicyRule) SetAction(v string) {
 	o.Action = v
+}
+
+// GetRedirectUrl returns the RedirectUrl field value if set, zero value otherwise.
+func (o *AccessPolicyRule) GetRedirectUrl() string {
+	if o == nil || IsNil(o.RedirectUrl) {
+		var ret string
+		return ret
+	}
+	return *o.RedirectUrl
+}
+
+// GetRedirectUrlOk returns a tuple with the RedirectUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyRule) GetRedirectUrlOk() (*string, bool) {
+	if o == nil || IsNil(o.RedirectUrl) {
+		return nil, false
+	}
+	return o.RedirectUrl, true
+}
+
+// HasRedirectUrl returns a boolean if a field has been set.
+func (o *AccessPolicyRule) HasRedirectUrl() bool {
+	if o != nil && !IsNil(o.RedirectUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetRedirectUrl gets a reference to the given string and assigns it to the RedirectUrl field.
+func (o *AccessPolicyRule) SetRedirectUrl(v string) {
+	o.RedirectUrl = &v
+}
+
+// GetRedirectAction returns the RedirectAction field value if set, zero value otherwise.
+func (o *AccessPolicyRule) GetRedirectAction() string {
+	if o == nil || IsNil(o.RedirectAction) {
+		var ret string
+		return ret
+	}
+	return *o.RedirectAction
+}
+
+// GetRedirectActionOk returns a tuple with the RedirectAction field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *AccessPolicyRule) GetRedirectActionOk() (*string, bool) {
+	if o == nil || IsNil(o.RedirectAction) {
+		return nil, false
+	}
+	return o.RedirectAction, true
+}
+
+// HasRedirectAction returns a boolean if a field has been set.
+func (o *AccessPolicyRule) HasRedirectAction() bool {
+	if o != nil && !IsNil(o.RedirectAction) {
+		return true
+	}
+
+	return false
+}
+
+// SetRedirectAction gets a reference to the given string and assigns it to the RedirectAction field.
+func (o *AccessPolicyRule) SetRedirectAction(v string) {
+	o.RedirectAction = &v
 }
 
 // GetConditions returns the Conditions field value
@@ -342,6 +410,12 @@ func (o AccessPolicyRule) ToMap() (map[string]interface{}, error) {
 	toSerialize["name"] = o.Name
 	toSerialize["appliedOn"] = o.AppliedOn
 	toSerialize["action"] = o.Action
+	if !IsNil(o.RedirectUrl) {
+		toSerialize["redirectUrl"] = o.RedirectUrl
+	}
+	if !IsNil(o.RedirectAction) {
+		toSerialize["redirectAction"] = o.RedirectAction
+	}
 	toSerialize["conditions"] = o.Conditions
 	toSerialize["destinations"] = o.Destinations
 	toSerialize["sources"] = o.Sources
@@ -404,6 +478,8 @@ func (o *AccessPolicyRule) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "appliedOn")
 		delete(additionalProperties, "action")
+		delete(additionalProperties, "redirectUrl")
+		delete(additionalProperties, "redirectAction")
 		delete(additionalProperties, "conditions")
 		delete(additionalProperties, "destinations")
 		delete(additionalProperties, "sources")

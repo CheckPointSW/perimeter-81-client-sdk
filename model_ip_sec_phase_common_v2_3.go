@@ -12,7 +12,6 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the IPSecPhaseCommonV23 type satisfies the MappedNullable interface at compile time
@@ -20,8 +19,8 @@ var _ MappedNullable = &IPSecPhaseCommonV23{}
 
 // IPSecPhaseCommonV23 struct for IPSecPhaseCommonV23
 type IPSecPhaseCommonV23 struct {
-	// Key exchange method encryption
-	KeyExchangeMethod []string `json:"keyExchangeMethod"`
+	// Key exchange algorithms offered for this phase. If provided, must contain at least one algorithm, and the remote gateway must support one of the values listed. 
+	KeyExchangeMethod []string `json:"keyExchangeMethod,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -31,9 +30,8 @@ type _IPSecPhaseCommonV23 IPSecPhaseCommonV23
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIPSecPhaseCommonV23(keyExchangeMethod []string) *IPSecPhaseCommonV23 {
+func NewIPSecPhaseCommonV23() *IPSecPhaseCommonV23 {
 	this := IPSecPhaseCommonV23{}
-	this.KeyExchangeMethod = keyExchangeMethod
 	return &this
 }
 
@@ -45,26 +43,34 @@ func NewIPSecPhaseCommonV23WithDefaults() *IPSecPhaseCommonV23 {
 	return &this
 }
 
-// GetKeyExchangeMethod returns the KeyExchangeMethod field value
+// GetKeyExchangeMethod returns the KeyExchangeMethod field value if set, zero value otherwise.
 func (o *IPSecPhaseCommonV23) GetKeyExchangeMethod() []string {
-	if o == nil {
+	if o == nil || IsNil(o.KeyExchangeMethod) {
 		var ret []string
 		return ret
 	}
-
 	return o.KeyExchangeMethod
 }
 
-// GetKeyExchangeMethodOk returns a tuple with the KeyExchangeMethod field value
+// GetKeyExchangeMethodOk returns a tuple with the KeyExchangeMethod field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IPSecPhaseCommonV23) GetKeyExchangeMethodOk() ([]string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.KeyExchangeMethod) {
 		return nil, false
 	}
 	return o.KeyExchangeMethod, true
 }
 
-// SetKeyExchangeMethod sets field value
+// HasKeyExchangeMethod returns a boolean if a field has been set.
+func (o *IPSecPhaseCommonV23) HasKeyExchangeMethod() bool {
+	if o != nil && !IsNil(o.KeyExchangeMethod) {
+		return true
+	}
+
+	return false
+}
+
+// SetKeyExchangeMethod gets a reference to the given []string and assigns it to the KeyExchangeMethod field.
 func (o *IPSecPhaseCommonV23) SetKeyExchangeMethod(v []string) {
 	o.KeyExchangeMethod = v
 }
@@ -79,7 +85,9 @@ func (o IPSecPhaseCommonV23) MarshalJSON() ([]byte, error) {
 
 func (o IPSecPhaseCommonV23) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["keyExchangeMethod"] = o.KeyExchangeMethod
+	if !IsNil(o.KeyExchangeMethod) {
+		toSerialize["keyExchangeMethod"] = o.KeyExchangeMethod
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -89,27 +97,6 @@ func (o IPSecPhaseCommonV23) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *IPSecPhaseCommonV23) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"keyExchangeMethod",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
 	varIPSecPhaseCommonV23 := _IPSecPhaseCommonV23{}
 
 	err = json.Unmarshal(data, &varIPSecPhaseCommonV23)

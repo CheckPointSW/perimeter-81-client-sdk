@@ -12,124 +12,185 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
-// SourcesAndDestinations - struct for SourcesAndDestinations
+// checks if the SourcesAndDestinations type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &SourcesAndDestinations{}
+
+// SourcesAndDestinations Resources a policy rule matches on. Any combination of users, groups and address objects may be present.
 type SourcesAndDestinations struct {
-	Addresses *Addresses
-	UsersAndGroups *UsersAndGroups
+	// List of IDs of users.
+	Users []string `json:"users,omitempty"`
+	// List of IDs of groups.
+	Groups []string `json:"groups,omitempty"`
+	// List of IDs of address objects.
+	Addresses []string `json:"addresses,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
-// AddressesAsSourcesAndDestinations is a convenience function that returns Addresses wrapped in SourcesAndDestinations
-func AddressesAsSourcesAndDestinations(v *Addresses) SourcesAndDestinations {
-	return SourcesAndDestinations{
-		Addresses: v,
-	}
+type _SourcesAndDestinations SourcesAndDestinations
+
+// NewSourcesAndDestinations instantiates a new SourcesAndDestinations object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewSourcesAndDestinations() *SourcesAndDestinations {
+	this := SourcesAndDestinations{}
+	return &this
 }
 
-// UsersAndGroupsAsSourcesAndDestinations is a convenience function that returns UsersAndGroups wrapped in SourcesAndDestinations
-func UsersAndGroupsAsSourcesAndDestinations(v *UsersAndGroups) SourcesAndDestinations {
-	return SourcesAndDestinations{
-		UsersAndGroups: v,
-	}
+// NewSourcesAndDestinationsWithDefaults instantiates a new SourcesAndDestinations object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewSourcesAndDestinationsWithDefaults() *SourcesAndDestinations {
+	this := SourcesAndDestinations{}
+	return &this
 }
 
-
-// Unmarshal JSON data into one of the pointers in the struct
-func (dst *SourcesAndDestinations) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into Addresses
-	err = json.Unmarshal(data, &dst.Addresses)
-	if err == nil {
-		jsonAddresses, _ := json.Marshal(dst.Addresses)
-		if string(jsonAddresses) == "{}" { // empty struct
-			dst.Addresses = nil
-		} else {
-			match++
-		}
-	} else {
-		dst.Addresses = nil
+// GetUsers returns the Users field value if set, zero value otherwise.
+func (o *SourcesAndDestinations) GetUsers() []string {
+	if o == nil || IsNil(o.Users) {
+		var ret []string
+		return ret
 	}
-
-	// try to unmarshal data into UsersAndGroups
-	err = json.Unmarshal(data, &dst.UsersAndGroups)
-	if err == nil {
-		jsonUsersAndGroups, _ := json.Marshal(dst.UsersAndGroups)
-		if string(jsonUsersAndGroups) == "{}" { // empty struct
-			dst.UsersAndGroups = nil
-		} else {
-			match++
-		}
-	} else {
-		dst.UsersAndGroups = nil
-	}
-
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.Addresses = nil
-		dst.UsersAndGroups = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(SourcesAndDestinations)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-        if err != nil {
-		   return fmt.Errorf("data failed to match schemas in oneOf(SourcesAndDestinations): %v", err)
-        } else {
-           return fmt.Errorf("data failed to match schemas in oneOf(SourcesAndDestinations)")
-        }
-        if err != nil {
-		   return fmt.Errorf("data failed to match schemas in oneOf(SourcesAndDestinations): %v", err)
-        } else {
-           return fmt.Errorf("data failed to match schemas in oneOf(SourcesAndDestinations)")
-        }
-	}
+	return o.Users
 }
 
-// Marshal data from the first non-nil pointers in the struct to JSON
-func (src SourcesAndDestinations) MarshalJSON() ([]byte, error) {
-	if src.Addresses != nil {
-		return json.Marshal(&src.Addresses)
+// GetUsersOk returns a tuple with the Users field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SourcesAndDestinations) GetUsersOk() ([]string, bool) {
+	if o == nil || IsNil(o.Users) {
+		return nil, false
 	}
-
-	if src.UsersAndGroups != nil {
-		return json.Marshal(&src.UsersAndGroups)
-	}
-
-	return nil, nil // no data in oneOf schemas
+	return o.Users, true
 }
 
-// Get the actual instance
-func (obj *SourcesAndDestinations) GetActualInstance() (interface{}) {
-	if obj == nil {
-		return nil
-	}
-	if obj.Addresses != nil {
-		return obj.Addresses
+// HasUsers returns a boolean if a field has been set.
+func (o *SourcesAndDestinations) HasUsers() bool {
+	if o != nil && !IsNil(o.Users) {
+		return true
 	}
 
-	if obj.UsersAndGroups != nil {
-		return obj.UsersAndGroups
-	}
-
-	// all schemas are nil
-	return nil
+	return false
 }
 
-// Get the actual instance value
-func (obj SourcesAndDestinations) GetActualInstanceValue() (interface{}) {
-	if obj.Addresses != nil {
-		return *obj.Addresses
+// SetUsers gets a reference to the given []string and assigns it to the Users field.
+func (o *SourcesAndDestinations) SetUsers(v []string) {
+	o.Users = v
+}
+
+// GetGroups returns the Groups field value if set, zero value otherwise.
+func (o *SourcesAndDestinations) GetGroups() []string {
+	if o == nil || IsNil(o.Groups) {
+		var ret []string
+		return ret
+	}
+	return o.Groups
+}
+
+// GetGroupsOk returns a tuple with the Groups field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SourcesAndDestinations) GetGroupsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Groups) {
+		return nil, false
+	}
+	return o.Groups, true
+}
+
+// HasGroups returns a boolean if a field has been set.
+func (o *SourcesAndDestinations) HasGroups() bool {
+	if o != nil && !IsNil(o.Groups) {
+		return true
 	}
 
-	if obj.UsersAndGroups != nil {
-		return *obj.UsersAndGroups
+	return false
+}
+
+// SetGroups gets a reference to the given []string and assigns it to the Groups field.
+func (o *SourcesAndDestinations) SetGroups(v []string) {
+	o.Groups = v
+}
+
+// GetAddresses returns the Addresses field value if set, zero value otherwise.
+func (o *SourcesAndDestinations) GetAddresses() []string {
+	if o == nil || IsNil(o.Addresses) {
+		var ret []string
+		return ret
+	}
+	return o.Addresses
+}
+
+// GetAddressesOk returns a tuple with the Addresses field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *SourcesAndDestinations) GetAddressesOk() ([]string, bool) {
+	if o == nil || IsNil(o.Addresses) {
+		return nil, false
+	}
+	return o.Addresses, true
+}
+
+// HasAddresses returns a boolean if a field has been set.
+func (o *SourcesAndDestinations) HasAddresses() bool {
+	if o != nil && !IsNil(o.Addresses) {
+		return true
 	}
 
-	// all schemas are nil
-	return nil
+	return false
+}
+
+// SetAddresses gets a reference to the given []string and assigns it to the Addresses field.
+func (o *SourcesAndDestinations) SetAddresses(v []string) {
+	o.Addresses = v
+}
+
+func (o SourcesAndDestinations) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o SourcesAndDestinations) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Users) {
+		toSerialize["users"] = o.Users
+	}
+	if !IsNil(o.Groups) {
+		toSerialize["groups"] = o.Groups
+	}
+	if !IsNil(o.Addresses) {
+		toSerialize["addresses"] = o.Addresses
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
+	return toSerialize, nil
+}
+
+func (o *SourcesAndDestinations) UnmarshalJSON(data []byte) (err error) {
+	varSourcesAndDestinations := _SourcesAndDestinations{}
+
+	err = json.Unmarshal(data, &varSourcesAndDestinations)
+
+	if err != nil {
+		return err
+	}
+
+	*o = SourcesAndDestinations(varSourcesAndDestinations)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "users")
+		delete(additionalProperties, "groups")
+		delete(additionalProperties, "addresses")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
 }
 
 type NullableSourcesAndDestinations struct {

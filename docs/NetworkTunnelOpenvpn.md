@@ -12,16 +12,16 @@ Name | Type | Description | Notes
 **Type** | **string** |  | 
 **IsHA** | **bool** | Indicates if it&#39;s a redundant tunnel. | 
 **TenantId** | **string** | ID of the tenant. | 
-**CreatedAt** | **time.Time** | The date when this record was created. | 
+**CreatedAt** | Pointer to **time.Time** | The date when this record was created. | [optional] 
 **UpdatedAt** | Pointer to **time.Time** | The date of last update of the record. | [optional] 
-**Passphrase** | **string** |  | 
+**Passphrase** | **string** | Passphrase as stored for a tunnel on a standard network.  | 
 **Username** | **string** | Openvpn username. | 
 
 ## Methods
 
 ### NewNetworkTunnelOpenvpn
 
-`func NewNetworkTunnelOpenvpn(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, createdAt time.Time, passphrase string, username string, ) *NetworkTunnelOpenvpn`
+`func NewNetworkTunnelOpenvpn(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, passphrase string, username string, ) *NetworkTunnelOpenvpn`
 
 NewNetworkTunnelOpenvpn instantiates a new NetworkTunnelOpenvpn object
 This constructor will assign default values to properties that have it defined,
@@ -215,6 +215,11 @@ and a boolean to check if the value has been set.
 
 SetCreatedAt sets CreatedAt field to given value.
 
+### HasCreatedAt
+
+`func (o *NetworkTunnelOpenvpn) HasCreatedAt() bool`
+
+HasCreatedAt returns a boolean if a field has been set.
 
 ### GetUpdatedAt
 

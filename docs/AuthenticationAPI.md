@@ -1,10 +1,10 @@
 # \AuthenticationAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AuthorizeToken**](AuthenticationAPI.md#AuthorizeToken) | **Post** /v3/auth/authorize | Get Access Token
+[**AuthorizeToken**](AuthenticationAPI.md#AuthorizeToken) | **Post** /v3/auth/authorize | Get access token
 
 
 
@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 > AuthorizeResponse AuthorizeToken(ctx).AuthorizeRequest(authorizeRequest).Execute()
 
-Get Access Token
+Get access token
 
 
 
@@ -62,7 +62,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[bearer](../README.md#bearer)
+No authorization required
 
 ### HTTP request headers
 

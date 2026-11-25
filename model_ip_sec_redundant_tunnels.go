@@ -26,7 +26,7 @@ type IPSecRedundantTunnels struct {
 	// The date of last update of the record.
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 	// The name of the tunnel
-	TunnelName *string `json:"tunnelName,omitempty" validate:"regexp=^[a-zA-Z0-9]*$"`
+	TunnelName *string `json:"tunnelName,omitempty" validate:"regexp=^[a-zA-Z0-9]+$"`
 	RegionID *string `json:"regionID,omitempty"`
 	Tunnel1 *IPSecRedundantTunnel `json:"tunnel1,omitempty"`
 	Tunnel2 *IPSecRedundantTunnel `json:"tunnel2,omitempty"`

@@ -7,10 +7,10 @@ Name | Type | Description | Notes
 **RegionID** | **string** | Region ID | 
 **GatewayID** | **string** | Gateway ID | 
 **TunnelName** | **string** | The name of the tunnel | 
-**P81GatewaySubnets** | **[]string** |  | 
-**RemoteGatewaySubnets** | **[]string** |  | 
-**P81ASN** | Pointer to **int32** |  | [optional] 
-**Features** | Pointer to [**IPSecSharedSettingsFeatures**](IPSecSharedSettingsFeatures.md) |  | [optional] 
+**P81GatewaySubnets** | **[]string** | Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \&quot;0.0.0.0/0\&quot;, to route all traffic through the tunnel, or the network&#39;s own subnet.  | 
+**RemoteGatewaySubnets** | **[]string** | Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation.  | 
+**P81ASN** | Pointer to **int32** | BGP ASN of the Check Point SASE side of the tunnel. Must differ from the ASN of the remote gateway.  | [optional] 
+**Features** | Pointer to [**IPSecSharedSettingsAllOfFeatures**](IPSecSharedSettingsAllOfFeatures.md) |  | [optional] 
 **KeyExchange** | **string** |  | 
 **IkeLifeTime** | **string** |  | 
 **Lifetime** | **string** |  | 
@@ -18,9 +18,9 @@ Name | Type | Description | Notes
 **DpdTimeout** | **string** |  | 
 **Phase1** | [**IPSecPhaseConfig**](IPSecPhaseConfig.md) |  | 
 **Phase2** | [**IPSecPhaseConfig**](IPSecPhaseConfig.md) |  | 
-**Passphrase** | Pointer to **string** |  | [optional] 
+**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication. 8-64 characters, using letters, digits, \&quot;.\&quot; and \&quot;_\&quot; only; the first character cannot be \&quot;0\&quot;.  | [optional] 
 **RemotePublicIP** | Pointer to **string** |  | [optional] 
-**RemoteID** | Pointer to [**RemoteID**](RemoteID.md) |  | [optional] 
+**RemoteID** | Pointer to **string** | IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.  | [optional] 
 **CreatedAt** | **time.Time** | The date when this record was created. | 
 **UpdatedAt** | Pointer to **time.Time** | The date of last update of the record. | [optional] 
 **Type** | Pointer to **string** |  | [optional] [default to "ipsec"]
@@ -172,20 +172,20 @@ HasP81ASN returns a boolean if a field has been set.
 
 ### GetFeatures
 
-`func (o *IPSecSingleTunnel) GetFeatures() IPSecSharedSettingsFeatures`
+`func (o *IPSecSingleTunnel) GetFeatures() IPSecSharedSettingsAllOfFeatures`
 
 GetFeatures returns the Features field if non-nil, zero value otherwise.
 
 ### GetFeaturesOk
 
-`func (o *IPSecSingleTunnel) GetFeaturesOk() (*IPSecSharedSettingsFeatures, bool)`
+`func (o *IPSecSingleTunnel) GetFeaturesOk() (*IPSecSharedSettingsAllOfFeatures, bool)`
 
 GetFeaturesOk returns a tuple with the Features field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFeatures
 
-`func (o *IPSecSingleTunnel) SetFeatures(v IPSecSharedSettingsFeatures)`
+`func (o *IPSecSingleTunnel) SetFeatures(v IPSecSharedSettingsAllOfFeatures)`
 
 SetFeatures sets Features field to given value.
 
@@ -387,20 +387,20 @@ HasRemotePublicIP returns a boolean if a field has been set.
 
 ### GetRemoteID
 
-`func (o *IPSecSingleTunnel) GetRemoteID() RemoteID`
+`func (o *IPSecSingleTunnel) GetRemoteID() string`
 
 GetRemoteID returns the RemoteID field if non-nil, zero value otherwise.
 
 ### GetRemoteIDOk
 
-`func (o *IPSecSingleTunnel) GetRemoteIDOk() (*RemoteID, bool)`
+`func (o *IPSecSingleTunnel) GetRemoteIDOk() (*string, bool)`
 
 GetRemoteIDOk returns a tuple with the RemoteID field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteID
 
-`func (o *IPSecSingleTunnel) SetRemoteID(v RemoteID)`
+`func (o *IPSecSingleTunnel) SetRemoteID(v string)`
 
 SetRemoteID sets RemoteID field to given value.
 

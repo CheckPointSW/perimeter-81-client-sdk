@@ -38,7 +38,7 @@ func (r ApiAuthorizeTokenRequest) Execute() (*AuthorizeResponse, *http.Response,
 }
 
 /*
-AuthorizeToken Get Access Token
+AuthorizeToken Get access token
 
 Retrieve an access token using an API key
 

@@ -17,21 +17,21 @@ import (
 // checks if the StaticTunnelUpdate type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &StaticTunnelUpdate{}
 
-// StaticTunnelUpdate struct for StaticTunnelUpdate
+// StaticTunnelUpdate Updates a static IPSec tunnel. Every field is optional, so send only what you want to change. The region cannot be changed after creation. 
 type StaticTunnelUpdate struct {
-	// Authentication type for tunnel (psk for pre-shared key, cert for certificate)
+	// Authentication method for the tunnel. \"psk\" (pre-shared key) requires `passphrase` and forbids `customerRootCA`; \"cert\" (certificate) requires `customerRootCA` and forbids `passphrase`. 
 	AuthType *string `json:"authType,omitempty"`
-	// Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk.
-	Passphrase *string `json:"passphrase,omitempty"`
-	// Customer root certificate authority. Required when authType is cert.
+	// Pre-shared key for tunnel authentication. Required when `authType` is \"psk\", and must be omitted when `authType` is \"cert\". 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
+	Passphrase *string `json:"passphrase,omitempty" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
+	// ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when `authType` is \"cert\", and must be omitted when `authType` is \"psk\". 
 	CustomerRootCA *string `json:"customerRootCA,omitempty"`
-	// Name of the static tunnel
-	TunnelName *string `json:"tunnelName,omitempty"`
-	// Harmony Sase gateway subnets
+	// Name of the static tunnel. 3-15 characters, letters and digits only. 
+	TunnelName *string `json:"tunnelName,omitempty" validate:"regexp=^[a-zA-Z0-9]+$"`
+	// Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \"0.0.0.0/0\", to route all traffic through the tunnel, or the network's own subnet. 
 	P81GatewaySubnets []string `json:"p81GatewaySubnets,omitempty"`
-	// Remote gateway subnets
+	// Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation. 
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets,omitempty"`
-	// IKE version for key exchange
+	// IKE version used for key exchange. Must match the remote gateway.
 	KeyExchange *string `json:"keyExchange,omitempty"`
 	IkeLifeTime *string `json:"ikeLifeTime,omitempty" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
 	Lifetime *string `json:"lifetime,omitempty" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
@@ -39,11 +39,11 @@ type StaticTunnelUpdate struct {
 	DpdTimeout *string `json:"dpdTimeout,omitempty" validate:"regexp=^([5-9]|[1-5][0-9]|60)s$"`
 	Phase1 *IPSecPhaseConfigV23 `json:"phase1,omitempty"`
 	Phase2 *IPSecPhaseConfigV23 `json:"phase2,omitempty"`
-	// Remote gateway public IP address
+	// Public, internet-routable address of the remote gateway. Must be unique within the region. 
 	RemotePublicIP *string `json:"remotePublicIP,omitempty"`
-	// Remote gateway ID
+	// IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters, and it must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. 
 	RemoteID *string `json:"remoteID,omitempty"`
-	// Optional tunnel description
+	// Free-text description of the tunnel.
 	Description *string `json:"description,omitempty"`
 	Features *NetworkFeaturesCreate `json:"features,omitempty"`
 	RoutingType *RoutingType `json:"routingType,omitempty"`

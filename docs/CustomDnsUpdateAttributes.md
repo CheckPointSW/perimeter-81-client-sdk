@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Servers** | [**[]CustomDnsServer**](CustomDnsServer.md) | Private DNS servers. Required, and must contain at least one entry when enabled is true. | 
-**SearchDomains** | **[]string** | DNS search domains. Required — send an empty array if you have none. Omitting it on update is rejected with 400; a non-empty value fully replaces any existing search domains. | 
+**SearchDomains** | **[]string** | DNS search domains. Required, so send an empty array if you have none. A non-empty value fully replaces any existing search domains. | 
 **DnsPolicy** | Pointer to [**DnsPolicy**](DnsPolicy.md) |  | [optional] 
 
 ## Methods

@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **Type** | **string** |  | 
 **IsHA** | **bool** | Indicates if it&#39;s a redundant tunnel. | 
 **TenantId** | **string** | ID of the tenant. | 
-**CreatedAt** | **time.Time** | The date when this record was created. | 
+**CreatedAt** | Pointer to **time.Time** | The date when this record was created. | [optional] 
 **UpdatedAt** | Pointer to **time.Time** | The date of last update of the record. | [optional] 
 **KeyExchange** | **string** |  | 
 **IkeLifeTime** | **string** |  | 
@@ -23,16 +23,16 @@ Name | Type | Description | Notes
 **Phase2** | [**IPSecPhaseConfig**](IPSecPhaseConfig.md) |  | 
 **Right** | **string** |  | 
 **RightID** | [**NetworkIpsecBaseAllOfRightID**](NetworkIpsecBaseAllOfRightID.md) |  | 
-**Passphrase** | **string** |  | 
-**DpdAction** | **string** | dpdAction. | 
+**Passphrase** | **string** | Passphrase as stored for a tunnel on a standard network.  | 
 **LeftSubnets** | **[]string** |  | 
 **RightSubnets** | **[]string** |  | 
+**DpdAction** | **string** | Action taken when dead peer detection declares the peer unreachable. Always \&quot;restart\&quot;; the value is fixed and is not accepted on create or update.  | 
 
 ## Methods
 
 ### NewNetworkTunnelIpsecSingle
 
-`func NewNetworkTunnelIpsecSingle(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, createdAt time.Time, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, passphrase string, dpdAction string, leftSubnets []string, rightSubnets []string, ) *NetworkTunnelIpsecSingle`
+`func NewNetworkTunnelIpsecSingle(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, passphrase string, leftSubnets []string, rightSubnets []string, dpdAction string, ) *NetworkTunnelIpsecSingle`
 
 NewNetworkTunnelIpsecSingle instantiates a new NetworkTunnelIpsecSingle object
 This constructor will assign default values to properties that have it defined,
@@ -226,6 +226,11 @@ and a boolean to check if the value has been set.
 
 SetCreatedAt sets CreatedAt field to given value.
 
+### HasCreatedAt
+
+`func (o *NetworkTunnelIpsecSingle) HasCreatedAt() bool`
+
+HasCreatedAt returns a boolean if a field has been set.
 
 ### GetUpdatedAt
 
@@ -452,26 +457,6 @@ and a boolean to check if the value has been set.
 SetPassphrase sets Passphrase field to given value.
 
 
-### GetDpdAction
-
-`func (o *NetworkTunnelIpsecSingle) GetDpdAction() string`
-
-GetDpdAction returns the DpdAction field if non-nil, zero value otherwise.
-
-### GetDpdActionOk
-
-`func (o *NetworkTunnelIpsecSingle) GetDpdActionOk() (*string, bool)`
-
-GetDpdActionOk returns a tuple with the DpdAction field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDpdAction
-
-`func (o *NetworkTunnelIpsecSingle) SetDpdAction(v string)`
-
-SetDpdAction sets DpdAction field to given value.
-
-
 ### GetLeftSubnets
 
 `func (o *NetworkTunnelIpsecSingle) GetLeftSubnets() []string`
@@ -510,6 +495,26 @@ and a boolean to check if the value has been set.
 `func (o *NetworkTunnelIpsecSingle) SetRightSubnets(v []string)`
 
 SetRightSubnets sets RightSubnets field to given value.
+
+
+### GetDpdAction
+
+`func (o *NetworkTunnelIpsecSingle) GetDpdAction() string`
+
+GetDpdAction returns the DpdAction field if non-nil, zero value otherwise.
+
+### GetDpdActionOk
+
+`func (o *NetworkTunnelIpsecSingle) GetDpdActionOk() (*string, bool)`
+
+GetDpdActionOk returns a tuple with the DpdAction field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDpdAction
+
+`func (o *NetworkTunnelIpsecSingle) SetDpdAction(v string)`
+
+SetDpdAction sets DpdAction field to given value.
 
 
 

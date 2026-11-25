@@ -25,7 +25,7 @@ type BaseTunnelValues struct {
 	// Gateway ID
 	GatewayID string `json:"gatewayID"`
 	// The name of the tunnel
-	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]*$"`
+	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]+$"`
 	AdditionalProperties map[string]interface{}
 }
 

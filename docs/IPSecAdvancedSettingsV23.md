@@ -4,19 +4,19 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**KeyExchange** | **string** |  | 
 **IkeLifeTime** | **string** |  | 
 **Lifetime** | **string** |  | 
 **DpdDelay** | **string** |  | 
 **DpdTimeout** | **string** |  | 
 **Phase1** | [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | 
 **Phase2** | [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | 
+**KeyExchange** | **string** |  | 
 
 ## Methods
 
 ### NewIPSecAdvancedSettingsV23
 
-`func NewIPSecAdvancedSettingsV23(keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, ) *IPSecAdvancedSettingsV23`
+`func NewIPSecAdvancedSettingsV23(ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, keyExchange string, ) *IPSecAdvancedSettingsV23`
 
 NewIPSecAdvancedSettingsV23 instantiates a new IPSecAdvancedSettingsV23 object
 This constructor will assign default values to properties that have it defined,
@@ -30,26 +30,6 @@ will change when the set of required properties is changed
 NewIPSecAdvancedSettingsV23WithDefaults instantiates a new IPSecAdvancedSettingsV23 object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
-
-### GetKeyExchange
-
-`func (o *IPSecAdvancedSettingsV23) GetKeyExchange() string`
-
-GetKeyExchange returns the KeyExchange field if non-nil, zero value otherwise.
-
-### GetKeyExchangeOk
-
-`func (o *IPSecAdvancedSettingsV23) GetKeyExchangeOk() (*string, bool)`
-
-GetKeyExchangeOk returns a tuple with the KeyExchange field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetKeyExchange
-
-`func (o *IPSecAdvancedSettingsV23) SetKeyExchange(v string)`
-
-SetKeyExchange sets KeyExchange field to given value.
-
 
 ### GetIkeLifeTime
 
@@ -169,6 +149,26 @@ and a boolean to check if the value has been set.
 `func (o *IPSecAdvancedSettingsV23) SetPhase2(v IPSecPhaseConfigV23)`
 
 SetPhase2 sets Phase2 field to given value.
+
+
+### GetKeyExchange
+
+`func (o *IPSecAdvancedSettingsV23) GetKeyExchange() string`
+
+GetKeyExchange returns the KeyExchange field if non-nil, zero value otherwise.
+
+### GetKeyExchangeOk
+
+`func (o *IPSecAdvancedSettingsV23) GetKeyExchangeOk() (*string, bool)`
+
+GetKeyExchangeOk returns a tuple with the KeyExchange field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetKeyExchange
+
+`func (o *IPSecAdvancedSettingsV23) SetKeyExchange(v string)`
+
+SetKeyExchange sets KeyExchange field to given value.
 
 
 

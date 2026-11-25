@@ -1,6 +1,6 @@
 # \ApplicationsAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -79,7 +79,7 @@ Name | Type | Description  | Notes
 
 ## GetApplicationById
 
-> GetApplicationById200Response GetApplicationById(ctx, applicationId).Execute()
+> ApplicationResponse GetApplicationById(ctx, applicationId).Execute()
 
 Get Application by ID
 
@@ -107,7 +107,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error when calling `ApplicationsAPI.GetApplicationById``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetApplicationById`: GetApplicationById200Response
+	// response from `GetApplicationById`: ApplicationResponse
 	fmt.Fprintf(os.Stdout, "Response from `ApplicationsAPI.GetApplicationById`: %v\n", resp)
 }
 ```
@@ -131,7 +131,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**GetApplicationById200Response**](GetApplicationById200Response.md)
+[**ApplicationResponse**](ApplicationResponse.md)
 
 ### Authorization
 

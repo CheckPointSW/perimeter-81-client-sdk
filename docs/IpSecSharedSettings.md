@@ -4,10 +4,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**P81GatewaySubnets** | **[]string** |  | 
-**RemoteGatewaySubnets** | **[]string** |  | 
-**P81ASN** | Pointer to **int32** |  | [optional] 
-**Features** | Pointer to [**IPSecSharedSettingsFeatures**](IPSecSharedSettingsFeatures.md) |  | [optional] 
+**P81GatewaySubnets** | **[]string** | Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \&quot;0.0.0.0/0\&quot;, to route all traffic through the tunnel, or the network&#39;s own subnet.  | 
+**RemoteGatewaySubnets** | **[]string** | Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation.  | 
+**P81ASN** | Pointer to **int32** | BGP ASN of the Check Point SASE side of the tunnel. Must differ from the ASN of the remote gateway.  | [optional] 
+**Features** | Pointer to [**IPSecSharedSettingsAllOfFeatures**](IPSecSharedSettingsAllOfFeatures.md) |  | [optional] 
 
 ## Methods
 
@@ -95,20 +95,20 @@ HasP81ASN returns a boolean if a field has been set.
 
 ### GetFeatures
 
-`func (o *IPSecSharedSettings) GetFeatures() IPSecSharedSettingsFeatures`
+`func (o *IPSecSharedSettings) GetFeatures() IPSecSharedSettingsAllOfFeatures`
 
 GetFeatures returns the Features field if non-nil, zero value otherwise.
 
 ### GetFeaturesOk
 
-`func (o *IPSecSharedSettings) GetFeaturesOk() (*IPSecSharedSettingsFeatures, bool)`
+`func (o *IPSecSharedSettings) GetFeaturesOk() (*IPSecSharedSettingsAllOfFeatures, bool)`
 
 GetFeaturesOk returns a tuple with the Features field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFeatures
 
-`func (o *IPSecSharedSettings) SetFeatures(v IPSecSharedSettingsFeatures)`
+`func (o *IPSecSharedSettings) SetFeatures(v IPSecSharedSettingsAllOfFeatures)`
 
 SetFeatures sets Features field to given value.
 

@@ -26,7 +26,7 @@ type OpenVPNTunnel struct {
 	// Gateway ID
 	GatewayID string `json:"gatewayID"`
 	// The name of the tunnel
-	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]*$"`
+	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]+$"`
 	// The date when this record was created.
 	CreatedAt time.Time `json:"createdAt"`
 	// The date of last update of the record.

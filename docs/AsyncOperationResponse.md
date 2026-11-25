@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**StatusUrl** | Pointer to **string** |  | [optional] 
-**SamplingTime** | Pointer to **int32** |  | [optional] 
+**StatusUrl** | Pointer to **string** | Absolute URL to poll for the outcome of this operation. Responds with an &#x60;AsyncOperationStatus&#x60; body.  | [optional] 
+**SamplingTime** | Pointer to **int32** | Recommended interval, in seconds, to wait between polls of &#x60;statusUrl&#x60;. Polling faster than this may be rate limited.  | [optional] 
 
 ## Methods
 

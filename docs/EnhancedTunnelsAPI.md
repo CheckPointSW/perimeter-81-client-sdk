@@ -1,18 +1,18 @@
 # \EnhancedTunnelsAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateDynamicTunnel**](EnhancedTunnelsAPI.md#CreateDynamicTunnel) | **Post** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic | Create dynamic IPSec tunnel
+[**CreateDynamicTunnel**](EnhancedTunnelsAPI.md#CreateDynamicTunnel) | **Post** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic | Create dynamic IPSec tunnel group
 [**CreateStaticTunnel**](EnhancedTunnelsAPI.md#CreateStaticTunnel) | **Post** /v3/networks/enhanced/{networkId}/tunnels/ipsec/static | Create static IPSec tunnel
-[**DeleteDynamicTunnel**](EnhancedTunnelsAPI.md#DeleteDynamicTunnel) | **Delete** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Delete dynamic IPSec tunnel
+[**DeleteDynamicTunnel**](EnhancedTunnelsAPI.md#DeleteDynamicTunnel) | **Delete** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Delete dynamic IPSec tunnel group
 [**DeleteStaticTunnel**](EnhancedTunnelsAPI.md#DeleteStaticTunnel) | **Delete** /v3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Delete static IPSec tunnel
-[**GetDynamicTunnel**](EnhancedTunnelsAPI.md#GetDynamicTunnel) | **Get** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Get dynamic IPSec tunnel
+[**GetDynamicTunnel**](EnhancedTunnelsAPI.md#GetDynamicTunnel) | **Get** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Get dynamic IPSec tunnel group
 [**GetEnhancedRegionTunnelsPerNetwork**](EnhancedTunnelsAPI.md#GetEnhancedRegionTunnelsPerNetwork) | **Get** /v3/networks/enhanced/{networkId}/tunnels | Get tunnels for a network
 [**GetEnhancedRegionTunnelsPerRegion**](EnhancedTunnelsAPI.md#GetEnhancedRegionTunnelsPerRegion) | **Get** /v3/networks/enhanced/{networkId}/regions/{regionId}/tunnels | Get tunnels for a region
 [**GetStaticTunnel**](EnhancedTunnelsAPI.md#GetStaticTunnel) | **Get** /v3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Get static IPSec tunnel
-[**UpdateDynamicTunnel**](EnhancedTunnelsAPI.md#UpdateDynamicTunnel) | **Put** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Update dynamic IPSec tunnel
+[**UpdateDynamicTunnel**](EnhancedTunnelsAPI.md#UpdateDynamicTunnel) | **Put** /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId} | Update dynamic IPSec tunnel group
 [**UpdateStaticTunnel**](EnhancedTunnelsAPI.md#UpdateStaticTunnel) | **Put** /v3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId} | Update static IPSec tunnel
 
 
@@ -21,7 +21,7 @@ Method | HTTP request | Description
 
 > AsyncOperationResponse CreateDynamicTunnel(ctx, networkId).DynamicTunnelCreate(dynamicTunnelCreate).Execute()
 
-Create dynamic IPSec tunnel
+Create dynamic IPSec tunnel group
 
 
 
@@ -39,7 +39,7 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	dynamicTunnelCreate := *openapiclient.NewDynamicTunnelCreate("TunnelName_example", []openapiclient.DynamicTunnelDetails{*openapiclient.NewDynamicTunnelDetails("AuthType_example", "RegionID_example", "P81GWInternalIP_example", "RemoteGWInternalIP_example", "RemotePublicIP_example", int32(123), "RemoteID_example", openapiclient.RoutingType("route"))}, *openapiclient.NewEnhancedIPSecSharedSettingsCreate([]string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}, *openapiclient.NewNetworkFeaturesCreate(*openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesDNSServices(*openapiclient.NewNetworkFeaturesDNSServicesRedirectToResolver(false))), int32(123)), *openapiclient.NewIPSecAdvancedSettingsV23("KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}))) // DynamicTunnelCreate | 
+	dynamicTunnelCreate := *openapiclient.NewDynamicTunnelCreate("londonlink", []openapiclient.DynamicTunnelDetails{*openapiclient.NewDynamicTunnelDetails("psk", "sXUeWwM8DM", "169.254.10.1", "169.254.10.2", "203.0.113.10", int32(65001), "remotegw01")}, *openapiclient.NewEnhancedIPSecSharedSettingsCreate([]string{"10.255.0.0/16"}, []string{"192.168.10.0/24"}, *openapiclient.NewNetworkFeaturesCreate(*openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesDNSServices(*openapiclient.NewNetworkFeaturesDNSServicesRedirectToResolver(false))), int32(64512)), *openapiclient.NewIPSecAdvancedSettingsV23("IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), "KeyExchange_example")) // DynamicTunnelCreate | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -111,7 +111,7 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	staticTunnelCreate := *openapiclient.NewStaticTunnelCreate("AuthType_example", "RegionID_example", "TunnelName_example", []string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}, "KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), "RemotePublicIP_example", "RemoteID_example", *openapiclient.NewNetworkFeaturesCreate(*openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesDNSServices(*openapiclient.NewNetworkFeaturesDNSServicesRedirectToResolver(false))), openapiclient.RoutingType("route")) // StaticTunnelCreate | 
+	staticTunnelCreate := *openapiclient.NewStaticTunnelCreate("psk", "sXUeWwM8DM", "londonlink01", []string{"10.255.0.0/16"}, []string{"192.168.10.0/24"}, "ikev2", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), *openapiclient.NewIPSecPhaseConfigV23([]string{"Auth_example"}, []string{"Encryption_example"}, []string{"KeyExchangeMethod_example"}), "203.0.113.10", *openapiclient.NewNetworkFeaturesCreate(*openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesCloudSecurity(false), *openapiclient.NewNetworkFeaturesDNSServices(*openapiclient.NewNetworkFeaturesDNSServicesRedirectToResolver(false)))) // StaticTunnelCreate | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -165,7 +165,7 @@ Name | Type | Description  | Notes
 
 > AsyncOperationResponse DeleteDynamicTunnel(ctx, networkId, dynamicTunnelId).Execute()
 
-Delete dynamic IPSec tunnel
+Delete dynamic IPSec tunnel group
 
 
 
@@ -183,7 +183,7 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	dynamicTunnelId := "dynamicTunnelId_example" // string | 
+	dynamicTunnelId := "dWkVMVLteY" // string | ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the `haTunnelID` field of any tunnel in the group. 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -204,7 +204,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **networkId** | **string** |  | 
-**dynamicTunnelId** | **string** |  | 
+**dynamicTunnelId** | **string** | ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the &#x60;haTunnelID&#x60; field of any tunnel in the group.  | 
 
 ### Other Parameters
 
@@ -311,7 +311,7 @@ Name | Type | Description  | Notes
 
 > []EnhancedTunnel GetDynamicTunnel(ctx, networkId, dynamicTunnelId).Execute()
 
-Get dynamic IPSec tunnel
+Get dynamic IPSec tunnel group
 
 
 
@@ -329,7 +329,7 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	dynamicTunnelId := "dynamicTunnelId_example" // string | 
+	dynamicTunnelId := "dWkVMVLteY" // string | ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the `haTunnelID` field of any tunnel in the group. 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -350,7 +350,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **networkId** | **string** |  | 
-**dynamicTunnelId** | **string** |  | 
+**dynamicTunnelId** | **string** | ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the &#x60;haTunnelID&#x60; field of any tunnel in the group.  | 
 
 ### Other Parameters
 
@@ -608,7 +608,7 @@ Name | Type | Description  | Notes
 
 > AsyncOperationResponse UpdateDynamicTunnel(ctx, networkId, dynamicTunnelId).DynamicTunnelUpdate(dynamicTunnelUpdate).Execute()
 
-Update dynamic IPSec tunnel
+Update dynamic IPSec tunnel group
 
 
 
@@ -626,8 +626,8 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	dynamicTunnelId := "dynamicTunnelId_example" // string | 
-	dynamicTunnelUpdate := *openapiclient.NewDynamicTunnelUpdate("TunnelName_example") // DynamicTunnelUpdate | 
+	dynamicTunnelId := "dWkVMVLteY" // string | ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the `haTunnelID` field of any tunnel in the group. 
+	dynamicTunnelUpdate := *openapiclient.NewDynamicTunnelUpdate("londonlink") // DynamicTunnelUpdate | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -648,7 +648,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **networkId** | **string** |  | 
-**dynamicTunnelId** | **string** |  | 
+**dynamicTunnelId** | **string** | ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the &#x60;haTunnelID&#x60; field of any tunnel in the group.  | 
 
 ### Other Parameters
 

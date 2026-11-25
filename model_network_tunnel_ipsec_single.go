@@ -36,7 +36,7 @@ type NetworkTunnelIpsecSingle struct {
 	// ID of the tenant.
 	TenantId string `json:"tenantId"`
 	// The date when this record was created.
-	CreatedAt time.Time `json:"createdAt"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	// The date of last update of the record.
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 	KeyExchange string `json:"keyExchange"`
@@ -48,12 +48,13 @@ type NetworkTunnelIpsecSingle struct {
 	Phase2 IPSecPhaseConfig `json:"phase2"`
 	Right string `json:"right"`
 	RightID NetworkIpsecBaseAllOfRightID `json:"rightID"`
+	// Passphrase as stored for a tunnel on a standard network. 
 	// Deprecated
 	Passphrase string `json:"passphrase" validate:"regexp=^[$a-zA-Z1-9_/\\.][$a-zA-Z0-9_/\\.]{7\\,101}$"`
-	// dpdAction.
-	DpdAction string `json:"dpdAction"`
 	LeftSubnets []string `json:"leftSubnets"`
 	RightSubnets []string `json:"rightSubnets"`
+	// Action taken when dead peer detection declares the peer unreachable. Always \"restart\"; the value is fixed and is not accepted on create or update. 
+	DpdAction string `json:"dpdAction"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -63,7 +64,7 @@ type _NetworkTunnelIpsecSingle NetworkTunnelIpsecSingle
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewNetworkTunnelIpsecSingle(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, createdAt time.Time, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, passphrase string, dpdAction string, leftSubnets []string, rightSubnets []string) *NetworkTunnelIpsecSingle {
+func NewNetworkTunnelIpsecSingle(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, passphrase string, leftSubnets []string, rightSubnets []string, dpdAction string) *NetworkTunnelIpsecSingle {
 	this := NetworkTunnelIpsecSingle{}
 	this.Id = id
 	this.Network = network
@@ -73,7 +74,6 @@ func NewNetworkTunnelIpsecSingle(id string, network string, region string, insta
 	this.Type = type_
 	this.IsHA = isHA
 	this.TenantId = tenantId
-	this.CreatedAt = createdAt
 	this.KeyExchange = keyExchange
 	this.IkeLifeTime = ikeLifeTime
 	this.Lifetime = lifetime
@@ -84,9 +84,9 @@ func NewNetworkTunnelIpsecSingle(id string, network string, region string, insta
 	this.Right = right
 	this.RightID = rightID
 	this.Passphrase = passphrase
-	this.DpdAction = dpdAction
 	this.LeftSubnets = leftSubnets
 	this.RightSubnets = rightSubnets
+	this.DpdAction = dpdAction
 	return &this
 }
 
@@ -290,28 +290,36 @@ func (o *NetworkTunnelIpsecSingle) SetTenantId(v string) {
 	o.TenantId = v
 }
 
-// GetCreatedAt returns the CreatedAt field value
+// GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *NetworkTunnelIpsecSingle) GetCreatedAt() time.Time {
-	if o == nil {
+	if o == nil || IsNil(o.CreatedAt) {
 		var ret time.Time
 		return ret
 	}
-
-	return o.CreatedAt
+	return *o.CreatedAt
 }
 
-// GetCreatedAtOk returns a tuple with the CreatedAt field value
+// GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NetworkTunnelIpsecSingle) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.CreatedAt) {
 		return nil, false
 	}
-	return &o.CreatedAt, true
+	return o.CreatedAt, true
 }
 
-// SetCreatedAt sets field value
+// HasCreatedAt returns a boolean if a field has been set.
+func (o *NetworkTunnelIpsecSingle) HasCreatedAt() bool {
+	if o != nil && !IsNil(o.CreatedAt) {
+		return true
+	}
+
+	return false
+}
+
+// SetCreatedAt gets a reference to the given time.Time and assigns it to the CreatedAt field.
 func (o *NetworkTunnelIpsecSingle) SetCreatedAt(v time.Time) {
-	o.CreatedAt = v
+	o.CreatedAt = &v
 }
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
@@ -589,30 +597,6 @@ func (o *NetworkTunnelIpsecSingle) SetPassphrase(v string) {
 	o.Passphrase = v
 }
 
-// GetDpdAction returns the DpdAction field value
-func (o *NetworkTunnelIpsecSingle) GetDpdAction() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.DpdAction
-}
-
-// GetDpdActionOk returns a tuple with the DpdAction field value
-// and a boolean to check if the value has been set.
-func (o *NetworkTunnelIpsecSingle) GetDpdActionOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.DpdAction, true
-}
-
-// SetDpdAction sets field value
-func (o *NetworkTunnelIpsecSingle) SetDpdAction(v string) {
-	o.DpdAction = v
-}
-
 // GetLeftSubnets returns the LeftSubnets field value
 func (o *NetworkTunnelIpsecSingle) GetLeftSubnets() []string {
 	if o == nil {
@@ -661,6 +645,30 @@ func (o *NetworkTunnelIpsecSingle) SetRightSubnets(v []string) {
 	o.RightSubnets = v
 }
 
+// GetDpdAction returns the DpdAction field value
+func (o *NetworkTunnelIpsecSingle) GetDpdAction() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.DpdAction
+}
+
+// GetDpdActionOk returns a tuple with the DpdAction field value
+// and a boolean to check if the value has been set.
+func (o *NetworkTunnelIpsecSingle) GetDpdActionOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.DpdAction, true
+}
+
+// SetDpdAction sets field value
+func (o *NetworkTunnelIpsecSingle) SetDpdAction(v string) {
+	o.DpdAction = v
+}
+
 func (o NetworkTunnelIpsecSingle) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -679,7 +687,9 @@ func (o NetworkTunnelIpsecSingle) ToMap() (map[string]interface{}, error) {
 	toSerialize["type"] = o.Type
 	toSerialize["isHA"] = o.IsHA
 	toSerialize["tenantId"] = o.TenantId
-	toSerialize["createdAt"] = o.CreatedAt
+	if !IsNil(o.CreatedAt) {
+		toSerialize["createdAt"] = o.CreatedAt
+	}
 	if !IsNil(o.UpdatedAt) {
 		toSerialize["updatedAt"] = o.UpdatedAt
 	}
@@ -693,9 +703,9 @@ func (o NetworkTunnelIpsecSingle) ToMap() (map[string]interface{}, error) {
 	toSerialize["right"] = o.Right
 	toSerialize["rightID"] = o.RightID
 	toSerialize["passphrase"] = o.Passphrase
-	toSerialize["dpdAction"] = o.DpdAction
 	toSerialize["leftSubnets"] = o.LeftSubnets
 	toSerialize["rightSubnets"] = o.RightSubnets
+	toSerialize["dpdAction"] = o.DpdAction
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -717,7 +727,6 @@ func (o *NetworkTunnelIpsecSingle) UnmarshalJSON(data []byte) (err error) {
 		"type",
 		"isHA",
 		"tenantId",
-		"createdAt",
 		"keyExchange",
 		"ikeLifeTime",
 		"lifetime",
@@ -728,9 +737,9 @@ func (o *NetworkTunnelIpsecSingle) UnmarshalJSON(data []byte) (err error) {
 		"right",
 		"rightID",
 		"passphrase",
-		"dpdAction",
 		"leftSubnets",
 		"rightSubnets",
+		"dpdAction",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -780,9 +789,9 @@ func (o *NetworkTunnelIpsecSingle) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "right")
 		delete(additionalProperties, "rightID")
 		delete(additionalProperties, "passphrase")
-		delete(additionalProperties, "dpdAction")
 		delete(additionalProperties, "leftSubnets")
 		delete(additionalProperties, "rightSubnets")
+		delete(additionalProperties, "dpdAction")
 		o.AdditionalProperties = additionalProperties
 	}
 

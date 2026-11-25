@@ -1,26 +1,26 @@
 # \StandardTunnelsAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**StandardCreateIPSecRedundantTunnel**](StandardTunnelsAPI.md#StandardCreateIPSecRedundantTunnel) | **Post** /v3/networks/standard/{networkId}/tunnels/ipsec/redundant | Create a new IPSec redundant tunnel
 [**StandardCreateIPSecSingleTunnel**](StandardTunnelsAPI.md#StandardCreateIPSecSingleTunnel) | **Post** /v3/networks/standard/{networkId}/tunnels/ipsec/single | Create a new IPSec Single tunnel
 [**StandardCreateOpenVPNTunnel**](StandardTunnelsAPI.md#StandardCreateOpenVPNTunnel) | **Post** /v3/networks/standard/{networkId}/tunnels/openvpn | Create a new OpenVPN tunnel
-[**StandardCreateWireguardTunnel**](StandardTunnelsAPI.md#StandardCreateWireguardTunnel) | **Post** /v3/networks/standard/{networkId}/tunnels/wireguard | Create a new Wireguard tunnel
+[**StandardCreateWireGuardTunnel**](StandardTunnelsAPI.md#StandardCreateWireGuardTunnel) | **Post** /v3/networks/standard/{networkId}/tunnels/wireguard | Create a new WireGuard tunnel
 [**StandardDeleteIPSecRedundantTunnel**](StandardTunnelsAPI.md#StandardDeleteIPSecRedundantTunnel) | **Delete** /v3/networks/standard/{networkId}/tunnels/ipsec/redundant/{haTunnelId} | Delete IPSec redundant tunnel
 [**StandardDeleteIPSecSingleTunnel**](StandardTunnelsAPI.md#StandardDeleteIPSecSingleTunnel) | **Delete** /v3/networks/standard/{networkId}/tunnels/ipsec/single/{tunnelId} | Delete IPSec single tunnel
 [**StandardDeleteOpenVPNTunnel**](StandardTunnelsAPI.md#StandardDeleteOpenVPNTunnel) | **Delete** /v3/networks/standard/{networkId}/tunnels/openvpn/{tunnelId} | Delete OpenVPN tunnel
-[**StandardDeleteWireguardTunnel**](StandardTunnelsAPI.md#StandardDeleteWireguardTunnel) | **Delete** /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId} | Delete Wireguard tunnel
+[**StandardDeleteWireGuardTunnel**](StandardTunnelsAPI.md#StandardDeleteWireGuardTunnel) | **Delete** /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId} | Delete WireGuard tunnel
 [**StandardGetIPSecRedundantTunnel**](StandardTunnelsAPI.md#StandardGetIPSecRedundantTunnel) | **Get** /v3/networks/standard/{networkId}/tunnels/ipsec/redundant/{haTunnelId} | Get IPSec redundant tunnel by ID
 [**StandardGetIPSecSingleTunnel**](StandardTunnelsAPI.md#StandardGetIPSecSingleTunnel) | **Get** /v3/networks/standard/{networkId}/tunnels/ipsec/single/{tunnelId} | Get IPSec single tunnel by ID
 [**StandardGetOpenVPNTunnel**](StandardTunnelsAPI.md#StandardGetOpenVPNTunnel) | **Get** /v3/networks/standard/{networkId}/tunnels/openvpn/{tunnelId} | Get one OpenVPN tunnel
-[**StandardGetWireguardConfigUrl**](StandardTunnelsAPI.md#StandardGetWireguardConfigUrl) | **Get** /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId}/config-token | Get Wireguard config download URL
-[**StandardGetWireguardTunnel**](StandardTunnelsAPI.md#StandardGetWireguardTunnel) | **Get** /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId} | Get a Wireguard tunnel
+[**StandardGetWireGuardConfigUrl**](StandardTunnelsAPI.md#StandardGetWireGuardConfigUrl) | **Get** /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId}/config-token | Get WireGuard config download URL
+[**StandardGetWireGuardTunnel**](StandardTunnelsAPI.md#StandardGetWireGuardTunnel) | **Get** /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId} | Get a WireGuard tunnel
 [**StandardUpdateIPSecRedundantTunnel**](StandardTunnelsAPI.md#StandardUpdateIPSecRedundantTunnel) | **Put** /v3/networks/standard/{networkId}/tunnels/ipsec/redundant/{haTunnelId} | Update a new IPSec redundant tunnel
 [**StandardUpdateIPSecSingleTunnel**](StandardTunnelsAPI.md#StandardUpdateIPSecSingleTunnel) | **Put** /v3/networks/standard/{networkId}/tunnels/ipsec/single/{tunnelId} | Update IPSec single tunnel
 [**StandardUpdateOpenVPNTunnel**](StandardTunnelsAPI.md#StandardUpdateOpenVPNTunnel) | **Put** /v3/networks/standard/{networkId}/tunnels/openvpn/{tunnelId} | Update OpenVPN tunnel
-[**StandardUpdateWireguardTunnel**](StandardTunnelsAPI.md#StandardUpdateWireguardTunnel) | **Put** /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId} | Update a Wireguard tunnel
+[**StandardUpdateWireGuardTunnel**](StandardTunnelsAPI.md#StandardUpdateWireGuardTunnel) | **Put** /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId} | Update a WireGuard tunnel
 
 
 
@@ -46,7 +46,7 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	createIPSecRedundantPayload := *openapiclient.NewCreateIPSecRedundantPayload("TunnelName_example", "RegionID_example", *openapiclient.NewIPSecRedundantTunnelPayload("Passphrase_example", "P81GWInternalIP_example", "RemoteGWInternalIP_example", "RemotePublicIP_example", int32(123), openapiclient.remoteID{String: new(string)}, "GatewayID_example"), *openapiclient.NewIPSecRedundantTunnelPayload("Passphrase_example", "P81GWInternalIP_example", "RemoteGWInternalIP_example", "RemotePublicIP_example", int32(123), openapiclient.remoteID{String: new(string)}, "GatewayID_example"), *openapiclient.NewIPSecSharedSettingsCreate([]string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}), *openapiclient.NewIPSecAdvancedSettings("KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}))) // CreateIPSecRedundantPayload | 
+	createIPSecRedundantPayload := *openapiclient.NewCreateIPSecRedundantPayload("londonlink01", "RegionID_example", *openapiclient.NewIPSecRedundantTunnelPayload("Str0ng.Shared_Key01", "P81GWInternalIP_example", "RemoteGWInternalIP_example", "RemotePublicIP_example", int32(65001), "remotegw01", "GatewayID_example"), *openapiclient.NewIPSecRedundantTunnelPayload("Str0ng.Shared_Key01", "P81GWInternalIP_example", "RemoteGWInternalIP_example", "RemotePublicIP_example", int32(65001), "remotegw01", "GatewayID_example"), *openapiclient.NewIPSecSharedSettingsCreate([]string{"10.255.0.0/16"}, []string{"192.168.10.0/24"}), *openapiclient.NewIPSecAdvancedSettings("KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}))) // CreateIPSecRedundantPayload | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -118,7 +118,7 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	createIPSecSinglePayload := *openapiclient.NewCreateIPSecSinglePayload("RegionID_example", "GatewayID_example", "TunnelName_example", []string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}, "KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), "Passphrase_example", "RemotePublicIP_example") // CreateIPSecSinglePayload | 
+	createIPSecSinglePayload := *openapiclient.NewCreateIPSecSinglePayload("RegionID_example", "GatewayID_example", "londonlink01", []string{"10.255.0.0/16"}, []string{"192.168.10.0/24"}, "KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), "Str0ng.Shared_Key01", "RemotePublicIP_example") // CreateIPSecSinglePayload | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -190,7 +190,7 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	baseTunnelValues := *openapiclient.NewBaseTunnelValues("RegionID_example", "GatewayID_example", "TunnelName_example") // BaseTunnelValues | 
+	baseTunnelValues := *openapiclient.NewBaseTunnelValues("RegionID_example", "GatewayID_example", "londonlink01") // BaseTunnelValues | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -240,11 +240,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## StandardCreateWireguardTunnel
+## StandardCreateWireGuardTunnel
 
-> AsyncOperationResponse StandardCreateWireguardTunnel(ctx, networkId).CreateWireguardTunnelPayload(createWireguardTunnelPayload).Execute()
+> AsyncOperationResponse StandardCreateWireGuardTunnel(ctx, networkId).CreateWireGuardTunnelPayload(createWireGuardTunnelPayload).Execute()
 
-Create a new Wireguard tunnel
+Create a new WireGuard tunnel
 
 
 
@@ -262,17 +262,17 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	createWireguardTunnelPayload := *openapiclient.NewCreateWireguardTunnelPayload("RemoteEndpoint_example", []string{"RemoteSubnets_example"}, "RegionID_example", "GatewayID_example", "TunnelName_example") // CreateWireguardTunnelPayload | 
+	createWireGuardTunnelPayload := *openapiclient.NewCreateWireGuardTunnelPayload("RemoteEndpoint_example", []string{"RemoteSubnets_example"}, "RegionID_example", "GatewayID_example", "londonlink01") // CreateWireGuardTunnelPayload | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.StandardTunnelsAPI.StandardCreateWireguardTunnel(context.Background(), networkId).CreateWireguardTunnelPayload(createWireguardTunnelPayload).Execute()
+	resp, r, err := apiClient.StandardTunnelsAPI.StandardCreateWireGuardTunnel(context.Background(), networkId).CreateWireGuardTunnelPayload(createWireGuardTunnelPayload).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardCreateWireguardTunnel``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardCreateWireGuardTunnel``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `StandardCreateWireguardTunnel`: AsyncOperationResponse
-	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardCreateWireguardTunnel`: %v\n", resp)
+	// response from `StandardCreateWireGuardTunnel`: AsyncOperationResponse
+	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardCreateWireGuardTunnel`: %v\n", resp)
 }
 ```
 
@@ -286,13 +286,13 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiStandardCreateWireguardTunnelRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiStandardCreateWireGuardTunnelRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **createWireguardTunnelPayload** | [**CreateWireguardTunnelPayload**](CreateWireguardTunnelPayload.md) |  | 
+ **createWireGuardTunnelPayload** | [**CreateWireGuardTunnelPayload**](CreateWireGuardTunnelPayload.md) |  | 
 
 ### Return type
 
@@ -531,11 +531,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## StandardDeleteWireguardTunnel
+## StandardDeleteWireGuardTunnel
 
-> AsyncOperationResponse StandardDeleteWireguardTunnel(ctx, networkId, tunnelId).Execute()
+> AsyncOperationResponse StandardDeleteWireGuardTunnel(ctx, networkId, tunnelId).Execute()
 
-Delete Wireguard tunnel
+Delete WireGuard tunnel
 
 
 
@@ -557,13 +557,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.StandardTunnelsAPI.StandardDeleteWireguardTunnel(context.Background(), networkId, tunnelId).Execute()
+	resp, r, err := apiClient.StandardTunnelsAPI.StandardDeleteWireGuardTunnel(context.Background(), networkId, tunnelId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardDeleteWireguardTunnel``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardDeleteWireGuardTunnel``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `StandardDeleteWireguardTunnel`: AsyncOperationResponse
-	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardDeleteWireguardTunnel`: %v\n", resp)
+	// response from `StandardDeleteWireGuardTunnel`: AsyncOperationResponse
+	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardDeleteWireGuardTunnel`: %v\n", resp)
 }
 ```
 
@@ -578,7 +578,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiStandardDeleteWireguardTunnelRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiStandardDeleteWireGuardTunnelRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -823,11 +823,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## StandardGetWireguardConfigUrl
+## StandardGetWireGuardConfigUrl
 
-> WireguardConfigUrl StandardGetWireguardConfigUrl(ctx, networkId, tunnelId).Execute()
+> WireGuardConfigUrl StandardGetWireGuardConfigUrl(ctx, networkId, tunnelId).Execute()
 
-Get Wireguard config download URL
+Get WireGuard config download URL
 
 
 
@@ -849,13 +849,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.StandardTunnelsAPI.StandardGetWireguardConfigUrl(context.Background(), networkId, tunnelId).Execute()
+	resp, r, err := apiClient.StandardTunnelsAPI.StandardGetWireGuardConfigUrl(context.Background(), networkId, tunnelId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardGetWireguardConfigUrl``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardGetWireGuardConfigUrl``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `StandardGetWireguardConfigUrl`: WireguardConfigUrl
-	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardGetWireguardConfigUrl`: %v\n", resp)
+	// response from `StandardGetWireGuardConfigUrl`: WireGuardConfigUrl
+	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardGetWireGuardConfigUrl`: %v\n", resp)
 }
 ```
 
@@ -870,7 +870,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiStandardGetWireguardConfigUrlRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiStandardGetWireGuardConfigUrlRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -880,7 +880,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**WireguardConfigUrl**](WireguardConfigUrl.md)
+[**WireGuardConfigUrl**](WireGuardConfigUrl.md)
 
 ### Authorization
 
@@ -896,11 +896,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## StandardGetWireguardTunnel
+## StandardGetWireGuardTunnel
 
-> WireguardTunnel StandardGetWireguardTunnel(ctx, networkId, tunnelId).Execute()
+> WireGuardTunnel StandardGetWireGuardTunnel(ctx, networkId, tunnelId).Execute()
 
-Get a Wireguard tunnel
+Get a WireGuard tunnel
 
 
 
@@ -922,13 +922,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.StandardTunnelsAPI.StandardGetWireguardTunnel(context.Background(), networkId, tunnelId).Execute()
+	resp, r, err := apiClient.StandardTunnelsAPI.StandardGetWireGuardTunnel(context.Background(), networkId, tunnelId).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardGetWireguardTunnel``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardGetWireGuardTunnel``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `StandardGetWireguardTunnel`: WireguardTunnel
-	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardGetWireguardTunnel`: %v\n", resp)
+	// response from `StandardGetWireGuardTunnel`: WireGuardTunnel
+	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardGetWireGuardTunnel`: %v\n", resp)
 }
 ```
 
@@ -943,7 +943,7 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiStandardGetWireguardTunnelRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiStandardGetWireGuardTunnelRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
@@ -953,7 +953,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**WireguardTunnel**](WireguardTunnel.md)
+[**WireGuardTunnel**](WireGuardTunnel.md)
 
 ### Authorization
 
@@ -992,7 +992,7 @@ import (
 func main() {
 	networkId := "networkId_example" // string | 
 	haTunnelId := "haTunnelId_example" // string | 
-	updateIPSecRedundantPayload := *openapiclient.NewUpdateIPSecRedundantPayload(*openapiclient.NewIPSecSharedSettings([]string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}), *openapiclient.NewIPSecAdvancedSettings("KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}))) // UpdateIPSecRedundantPayload | 
+	updateIPSecRedundantPayload := *openapiclient.NewUpdateIPSecRedundantPayload() // UpdateIPSecRedundantPayload | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -1067,7 +1067,7 @@ import (
 func main() {
 	networkId := "networkId_example" // string | 
 	tunnelId := "tunnelId_example" // string | 
-	iPSecSingleDetails := *openapiclient.NewIPSecSingleDetails("KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), []string{"P81GatewaySubnets_example"}, []string{"RemoteGatewaySubnets_example"}) // IPSecSingleDetails | 
+	iPSecSingleDetails := *openapiclient.NewIPSecSingleDetails("KeyExchange_example", "IkeLifeTime_example", "Lifetime_example", "DpdDelay_example", "DpdTimeout_example", *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), *openapiclient.NewIPSecPhaseConfig([]string{"Auth_example"}, []string{"Encryption_example"}, []int32{int32(123)}), []string{"10.255.0.0/16"}, []string{"192.168.10.0/24"}) // IPSecSingleDetails | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -1192,11 +1192,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## StandardUpdateWireguardTunnel
+## StandardUpdateWireGuardTunnel
 
-> AsyncOperationResponse StandardUpdateWireguardTunnel(ctx, networkId, tunnelId).WireGuradDetails(wireGuradDetails).Execute()
+> AsyncOperationResponse StandardUpdateWireGuardTunnel(ctx, networkId, tunnelId).WireGuardDetails(wireGuardDetails).Execute()
 
-Update a Wireguard tunnel
+Update a WireGuard tunnel
 
 
 
@@ -1215,17 +1215,17 @@ import (
 func main() {
 	networkId := "networkId_example" // string | 
 	tunnelId := "tunnelId_example" // string | 
-	wireGuradDetails := *openapiclient.NewWireGuradDetails("RemoteEndpoint_example", []string{"RemoteSubnets_example"}) // WireGuradDetails | 
+	wireGuardDetails := *openapiclient.NewWireGuardDetails("RemoteEndpoint_example", []string{"RemoteSubnets_example"}) // WireGuardDetails | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.StandardTunnelsAPI.StandardUpdateWireguardTunnel(context.Background(), networkId, tunnelId).WireGuradDetails(wireGuradDetails).Execute()
+	resp, r, err := apiClient.StandardTunnelsAPI.StandardUpdateWireGuardTunnel(context.Background(), networkId, tunnelId).WireGuardDetails(wireGuardDetails).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardUpdateWireguardTunnel``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `StandardTunnelsAPI.StandardUpdateWireGuardTunnel``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `StandardUpdateWireguardTunnel`: AsyncOperationResponse
-	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardUpdateWireguardTunnel`: %v\n", resp)
+	// response from `StandardUpdateWireGuardTunnel`: AsyncOperationResponse
+	fmt.Fprintf(os.Stdout, "Response from `StandardTunnelsAPI.StandardUpdateWireGuardTunnel`: %v\n", resp)
 }
 ```
 
@@ -1240,14 +1240,14 @@ Name | Type | Description  | Notes
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiStandardUpdateWireguardTunnelRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiStandardUpdateWireGuardTunnelRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **wireGuradDetails** | [**WireGuradDetails**](WireGuradDetails.md) |  | 
+ **wireGuardDetails** | [**WireGuardDetails**](WireGuardDetails.md) |  | 
 
 ### Return type
 

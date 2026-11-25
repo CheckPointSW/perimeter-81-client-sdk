@@ -13,16 +13,16 @@ Name | Type | Description | Notes
 **Phase2** | [**IPSecPhaseConfig**](IPSecPhaseConfig.md) |  | 
 **Right** | **string** |  | 
 **RightID** | [**NetworkIpsecBaseAllOfRightID**](NetworkIpsecBaseAllOfRightID.md) |  | 
-**Passphrase** | **string** |  | 
-**DpdAction** | **string** | dpdAction. | 
+**Passphrase** | **string** | Passphrase as stored for a tunnel on a standard network.  | 
 **LeftSubnets** | **[]string** |  | 
 **RightSubnets** | **[]string** |  | 
+**DpdAction** | **string** | Action taken when dead peer detection declares the peer unreachable. Always \&quot;restart\&quot;; the value is fixed and is not accepted on create or update.  | 
 
 ## Methods
 
 ### NewNetworkIpsecBase
 
-`func NewNetworkIpsecBase(keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, passphrase string, dpdAction string, leftSubnets []string, rightSubnets []string, ) *NetworkIpsecBase`
+`func NewNetworkIpsecBase(keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, passphrase string, leftSubnets []string, rightSubnets []string, dpdAction string, ) *NetworkIpsecBase`
 
 NewNetworkIpsecBase instantiates a new NetworkIpsecBase object
 This constructor will assign default values to properties that have it defined,
@@ -237,26 +237,6 @@ and a boolean to check if the value has been set.
 SetPassphrase sets Passphrase field to given value.
 
 
-### GetDpdAction
-
-`func (o *NetworkIpsecBase) GetDpdAction() string`
-
-GetDpdAction returns the DpdAction field if non-nil, zero value otherwise.
-
-### GetDpdActionOk
-
-`func (o *NetworkIpsecBase) GetDpdActionOk() (*string, bool)`
-
-GetDpdActionOk returns a tuple with the DpdAction field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDpdAction
-
-`func (o *NetworkIpsecBase) SetDpdAction(v string)`
-
-SetDpdAction sets DpdAction field to given value.
-
-
 ### GetLeftSubnets
 
 `func (o *NetworkIpsecBase) GetLeftSubnets() []string`
@@ -295,6 +275,26 @@ and a boolean to check if the value has been set.
 `func (o *NetworkIpsecBase) SetRightSubnets(v []string)`
 
 SetRightSubnets sets RightSubnets field to given value.
+
+
+### GetDpdAction
+
+`func (o *NetworkIpsecBase) GetDpdAction() string`
+
+GetDpdAction returns the DpdAction field if non-nil, zero value otherwise.
+
+### GetDpdActionOk
+
+`func (o *NetworkIpsecBase) GetDpdActionOk() (*string, bool)`
+
+GetDpdActionOk returns a tuple with the DpdAction field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDpdAction
+
+`func (o *NetworkIpsecBase) SetDpdAction(v string)`
+
+SetDpdAction sets DpdAction field to given value.
 
 
 

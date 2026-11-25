@@ -24,7 +24,6 @@ type HttpsApplication struct {
 	Id string `json:"id"`
 	// Application name
 	Name string `json:"name"`
-	// Application type
 	Type string `json:"type"`
 	// Application enabling status
 	Enabled *bool `json:"enabled,omitempty"`

@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Name** | Pointer to **string** |  | [optional] 
+**Name** | Pointer to **string** | Must not contain the characters ! # $ % ^ &amp; * | [optional] 
 **Description** | Pointer to **string** |  | [optional] 
 **Categories** | Pointer to [**[]CategoryEntry**](CategoryEntry.md) |  | [optional] 
 

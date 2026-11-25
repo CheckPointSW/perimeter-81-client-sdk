@@ -18,23 +18,26 @@ import (
 // checks if the StaticTunnelCreate type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &StaticTunnelCreate{}
 
-// StaticTunnelCreate struct for StaticTunnelCreate
+// StaticTunnelCreate Creates a static (policy-routed) IPSec tunnel in an enhanced network. There is no BGP peering and no ASN: reachable subnets are stated explicitly in `p81GatewaySubnets` and `remoteGatewaySubnets`. 
 type StaticTunnelCreate struct {
-	// Authentication type for tunnel (psk for pre-shared key, cert for certificate)
+	// Authentication method for the tunnel. \"psk\" (pre-shared key) requires `passphrase` and forbids `customerRootCA`; \"cert\" (certificate) requires `customerRootCA` and forbids `passphrase`. 
 	AuthType string `json:"authType"`
-	// Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk.
-	Passphrase *string `json:"passphrase,omitempty"`
-	// Customer root certificate authority. Required when authType is cert.
+	// Pre-shared key for tunnel authentication. Required when `authType` is \"psk\", and must be omitted when `authType` is \"cert\". 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
+	Passphrase *string `json:"passphrase,omitempty" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
+	// ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when `authType` is \"cert\", and must be omitted when `authType` is \"psk\". 
 	CustomerRootCA *string `json:"customerRootCA,omitempty"`
-	// Target region ID
+	// ID of the enhanced region to deploy the tunnel in. Must be a region that already exists *on this network*. 
 	RegionID string `json:"regionID"`
-	// Name of the static tunnel
-	TunnelName string `json:"tunnelName"`
-	// Harmony Sase gateway subnets
+	// Name of the static tunnel. 3-15 characters, letters and digits only. 
+	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]+$"`
+	// Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \"0.0.0.0/0\", to route all traffic through the tunnel, or the network's own subnet. 
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
-	// Remote gateway subnets
+	// Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation. 
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
-	// IKE version for key exchange
+	// Deprecated: ignored for non-China regions. China regions still use this field. Expected peak throughput of the tunnel in Mbps. A typical connection is 1000. Consumes bandwidth licenses, so set it no higher than the tunnel needs. 
+	// Deprecated
+	PeakBandwidthMbps *int32 `json:"peakBandwidthMbps,omitempty"`
+	// IKE version used for key exchange. Must match the remote gateway.
 	KeyExchange string `json:"keyExchange"`
 	IkeLifeTime string `json:"ikeLifeTime" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
 	Lifetime string `json:"lifetime" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
@@ -42,16 +45,14 @@ type StaticTunnelCreate struct {
 	DpdTimeout string `json:"dpdTimeout" validate:"regexp=^([5-9]|[1-5][0-9]|60)s$"`
 	Phase1 IPSecPhaseConfigV23 `json:"phase1"`
 	Phase2 IPSecPhaseConfigV23 `json:"phase2"`
-	// Remote gateway public IP address
+	// Public, internet-routable address of the remote gateway, the IKE peer this tunnel dials. Must be unique within the region. 
 	RemotePublicIP string `json:"remotePublicIP"`
-	// Remote gateway ID
-	RemoteID string `json:"remoteID"`
-	// Optional tunnel description
+	// IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters, and it must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. Optional: if omitted, defaults to `remotePublicIP`. 
+	RemoteID *string `json:"remoteID,omitempty"`
+	// Free-text description of the tunnel.
 	Description *string `json:"description,omitempty"`
 	Features NetworkFeaturesCreate `json:"features"`
-	RoutingType RoutingType `json:"routingType"`
-	// Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps.
-	PeakBandwidthMbps *int32 `json:"peakBandwidthMbps,omitempty"`
+	RoutingType *RoutingType `json:"routingType,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -61,13 +62,15 @@ type _StaticTunnelCreate StaticTunnelCreate
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewStaticTunnelCreate(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, remotePublicIP string, remoteID string, features NetworkFeaturesCreate, routingType RoutingType) *StaticTunnelCreate {
+func NewStaticTunnelCreate(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, remotePublicIP string, features NetworkFeaturesCreate) *StaticTunnelCreate {
 	this := StaticTunnelCreate{}
 	this.AuthType = authType
 	this.RegionID = regionID
 	this.TunnelName = tunnelName
 	this.P81GatewaySubnets = p81GatewaySubnets
 	this.RemoteGatewaySubnets = remoteGatewaySubnets
+	var peakBandwidthMbps int32 = 1000
+	this.PeakBandwidthMbps = &peakBandwidthMbps
 	this.KeyExchange = keyExchange
 	this.IkeLifeTime = ikeLifeTime
 	this.Lifetime = lifetime
@@ -76,11 +79,9 @@ func NewStaticTunnelCreate(authType string, regionID string, tunnelName string, 
 	this.Phase1 = phase1
 	this.Phase2 = phase2
 	this.RemotePublicIP = remotePublicIP
-	this.RemoteID = remoteID
 	this.Features = features
-	this.RoutingType = routingType
-	var peakBandwidthMbps int32 = 1000
-	this.PeakBandwidthMbps = &peakBandwidthMbps
+	var routingType RoutingType = ROUTINGTYPE_ROUTE
+	this.RoutingType = &routingType
 	return &this
 }
 
@@ -89,12 +90,12 @@ func NewStaticTunnelCreate(authType string, regionID string, tunnelName string, 
 // but it doesn't guarantee that properties required by API are set
 func NewStaticTunnelCreateWithDefaults() *StaticTunnelCreate {
 	this := StaticTunnelCreate{}
+	var peakBandwidthMbps int32 = 1000
+	this.PeakBandwidthMbps = &peakBandwidthMbps
 	var keyExchange string = "ikev2"
 	this.KeyExchange = keyExchange
 	var routingType RoutingType = ROUTINGTYPE_ROUTE
-	this.RoutingType = routingType
-	var peakBandwidthMbps int32 = 1000
-	this.PeakBandwidthMbps = &peakBandwidthMbps
+	this.RoutingType = &routingType
 	return &this
 }
 
@@ -280,6 +281,41 @@ func (o *StaticTunnelCreate) GetRemoteGatewaySubnetsOk() ([]string, bool) {
 // SetRemoteGatewaySubnets sets field value
 func (o *StaticTunnelCreate) SetRemoteGatewaySubnets(v []string) {
 	o.RemoteGatewaySubnets = v
+}
+
+// GetPeakBandwidthMbps returns the PeakBandwidthMbps field value if set, zero value otherwise.
+// Deprecated
+func (o *StaticTunnelCreate) GetPeakBandwidthMbps() int32 {
+	if o == nil || IsNil(o.PeakBandwidthMbps) {
+		var ret int32
+		return ret
+	}
+	return *o.PeakBandwidthMbps
+}
+
+// GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// Deprecated
+func (o *StaticTunnelCreate) GetPeakBandwidthMbpsOk() (*int32, bool) {
+	if o == nil || IsNil(o.PeakBandwidthMbps) {
+		return nil, false
+	}
+	return o.PeakBandwidthMbps, true
+}
+
+// HasPeakBandwidthMbps returns a boolean if a field has been set.
+func (o *StaticTunnelCreate) HasPeakBandwidthMbps() bool {
+	if o != nil && !IsNil(o.PeakBandwidthMbps) {
+		return true
+	}
+
+	return false
+}
+
+// SetPeakBandwidthMbps gets a reference to the given int32 and assigns it to the PeakBandwidthMbps field.
+// Deprecated
+func (o *StaticTunnelCreate) SetPeakBandwidthMbps(v int32) {
+	o.PeakBandwidthMbps = &v
 }
 
 // GetKeyExchange returns the KeyExchange field value
@@ -474,28 +510,36 @@ func (o *StaticTunnelCreate) SetRemotePublicIP(v string) {
 	o.RemotePublicIP = v
 }
 
-// GetRemoteID returns the RemoteID field value
+// GetRemoteID returns the RemoteID field value if set, zero value otherwise.
 func (o *StaticTunnelCreate) GetRemoteID() string {
-	if o == nil {
+	if o == nil || IsNil(o.RemoteID) {
 		var ret string
 		return ret
 	}
-
-	return o.RemoteID
+	return *o.RemoteID
 }
 
-// GetRemoteIDOk returns a tuple with the RemoteID field value
+// GetRemoteIDOk returns a tuple with the RemoteID field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *StaticTunnelCreate) GetRemoteIDOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.RemoteID) {
 		return nil, false
 	}
-	return &o.RemoteID, true
+	return o.RemoteID, true
 }
 
-// SetRemoteID sets field value
+// HasRemoteID returns a boolean if a field has been set.
+func (o *StaticTunnelCreate) HasRemoteID() bool {
+	if o != nil && !IsNil(o.RemoteID) {
+		return true
+	}
+
+	return false
+}
+
+// SetRemoteID gets a reference to the given string and assigns it to the RemoteID field.
 func (o *StaticTunnelCreate) SetRemoteID(v string) {
-	o.RemoteID = v
+	o.RemoteID = &v
 }
 
 // GetDescription returns the Description field value if set, zero value otherwise.
@@ -554,60 +598,36 @@ func (o *StaticTunnelCreate) SetFeatures(v NetworkFeaturesCreate) {
 	o.Features = v
 }
 
-// GetRoutingType returns the RoutingType field value
+// GetRoutingType returns the RoutingType field value if set, zero value otherwise.
 func (o *StaticTunnelCreate) GetRoutingType() RoutingType {
-	if o == nil {
+	if o == nil || IsNil(o.RoutingType) {
 		var ret RoutingType
 		return ret
 	}
-
-	return o.RoutingType
+	return *o.RoutingType
 }
 
-// GetRoutingTypeOk returns a tuple with the RoutingType field value
+// GetRoutingTypeOk returns a tuple with the RoutingType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *StaticTunnelCreate) GetRoutingTypeOk() (*RoutingType, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.RoutingType) {
 		return nil, false
 	}
-	return &o.RoutingType, true
+	return o.RoutingType, true
 }
 
-// SetRoutingType sets field value
-func (o *StaticTunnelCreate) SetRoutingType(v RoutingType) {
-	o.RoutingType = v
-}
-
-// GetPeakBandwidthMbps returns the PeakBandwidthMbps field value if set, zero value otherwise.
-func (o *StaticTunnelCreate) GetPeakBandwidthMbps() int32 {
-	if o == nil || IsNil(o.PeakBandwidthMbps) {
-		var ret int32
-		return ret
-	}
-	return *o.PeakBandwidthMbps
-}
-
-// GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *StaticTunnelCreate) GetPeakBandwidthMbpsOk() (*int32, bool) {
-	if o == nil || IsNil(o.PeakBandwidthMbps) {
-		return nil, false
-	}
-	return o.PeakBandwidthMbps, true
-}
-
-// HasPeakBandwidthMbps returns a boolean if a field has been set.
-func (o *StaticTunnelCreate) HasPeakBandwidthMbps() bool {
-	if o != nil && !IsNil(o.PeakBandwidthMbps) {
+// HasRoutingType returns a boolean if a field has been set.
+func (o *StaticTunnelCreate) HasRoutingType() bool {
+	if o != nil && !IsNil(o.RoutingType) {
 		return true
 	}
 
 	return false
 }
 
-// SetPeakBandwidthMbps gets a reference to the given int32 and assigns it to the PeakBandwidthMbps field.
-func (o *StaticTunnelCreate) SetPeakBandwidthMbps(v int32) {
-	o.PeakBandwidthMbps = &v
+// SetRoutingType gets a reference to the given RoutingType and assigns it to the RoutingType field.
+func (o *StaticTunnelCreate) SetRoutingType(v RoutingType) {
+	o.RoutingType = &v
 }
 
 func (o StaticTunnelCreate) MarshalJSON() ([]byte, error) {
@@ -631,6 +651,9 @@ func (o StaticTunnelCreate) ToMap() (map[string]interface{}, error) {
 	toSerialize["tunnelName"] = o.TunnelName
 	toSerialize["p81GatewaySubnets"] = o.P81GatewaySubnets
 	toSerialize["remoteGatewaySubnets"] = o.RemoteGatewaySubnets
+	if !IsNil(o.PeakBandwidthMbps) {
+		toSerialize["peakBandwidthMbps"] = o.PeakBandwidthMbps
+	}
 	toSerialize["keyExchange"] = o.KeyExchange
 	toSerialize["ikeLifeTime"] = o.IkeLifeTime
 	toSerialize["lifetime"] = o.Lifetime
@@ -639,14 +662,15 @@ func (o StaticTunnelCreate) ToMap() (map[string]interface{}, error) {
 	toSerialize["phase1"] = o.Phase1
 	toSerialize["phase2"] = o.Phase2
 	toSerialize["remotePublicIP"] = o.RemotePublicIP
-	toSerialize["remoteID"] = o.RemoteID
+	if !IsNil(o.RemoteID) {
+		toSerialize["remoteID"] = o.RemoteID
+	}
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
 	toSerialize["features"] = o.Features
-	toSerialize["routingType"] = o.RoutingType
-	if !IsNil(o.PeakBandwidthMbps) {
-		toSerialize["peakBandwidthMbps"] = o.PeakBandwidthMbps
+	if !IsNil(o.RoutingType) {
+		toSerialize["routingType"] = o.RoutingType
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -674,9 +698,7 @@ func (o *StaticTunnelCreate) UnmarshalJSON(data []byte) (err error) {
 		"phase1",
 		"phase2",
 		"remotePublicIP",
-		"remoteID",
 		"features",
-		"routingType",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -713,6 +735,7 @@ func (o *StaticTunnelCreate) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "tunnelName")
 		delete(additionalProperties, "p81GatewaySubnets")
 		delete(additionalProperties, "remoteGatewaySubnets")
+		delete(additionalProperties, "peakBandwidthMbps")
 		delete(additionalProperties, "keyExchange")
 		delete(additionalProperties, "ikeLifeTime")
 		delete(additionalProperties, "lifetime")
@@ -725,7 +748,6 @@ func (o *StaticTunnelCreate) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "description")
 		delete(additionalProperties, "features")
 		delete(additionalProperties, "routingType")
-		delete(additionalProperties, "peakBandwidthMbps")
 		o.AdditionalProperties = additionalProperties
 	}
 

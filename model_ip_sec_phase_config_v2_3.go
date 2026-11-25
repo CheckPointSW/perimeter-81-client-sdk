@@ -22,7 +22,7 @@ var _ MappedNullable = &IPSecPhaseConfigV23{}
 type IPSecPhaseConfigV23 struct {
 	Auth []string `json:"auth"`
 	Encryption []string `json:"encryption"`
-	// Key exchange method encryption
+	// Key exchange algorithms offered for this phase. If provided, must contain at least one algorithm, and the remote gateway must support one of the values listed. 
 	KeyExchangeMethod []string `json:"keyExchangeMethod"`
 	AdditionalProperties map[string]interface{}
 }

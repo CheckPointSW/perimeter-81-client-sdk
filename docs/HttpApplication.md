@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **string** | Unique application ID | 
 **Name** | **string** | Application name | 
-**Type** | **string** | Application type | 
+**Type** | **string** |  | 
 **Enabled** | Pointer to **bool** | Application enabling status | [optional] 
 **Policy** | Pointer to [**CommonApplicationPolicy**](CommonApplicationPolicy.md) |  | [optional] 
 **CreatedAt** | Pointer to **string** | Application create date | [optional] 

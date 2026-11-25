@@ -21,7 +21,7 @@ var _ MappedNullable = &HttpsInspectionDestination{}
 // HttpsInspectionDestination Destination for HTTPS inspection rules
 type HttpsInspectionDestination struct {
 	Type string `json:"type"`
-	// Array of IDs (strings)
+	// Array of string values. For categories, addresses, updatableObjects, and applicationControlApplications: object IDs. For domains: domain patterns (e.g. \"*.example.com\", \"example.com\").
 	Value []string `json:"value"`
 	AdditionalProperties map[string]interface{}
 }

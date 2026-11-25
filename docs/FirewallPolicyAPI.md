@@ -1,6 +1,6 @@
 # \FirewallPolicyAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -101,7 +101,7 @@ import (
 
 func main() {
 	networkId := "networkId_example" // string | 
-	granularFirewallPolicy := *openapiclient.NewGranularFirewallPolicy(false, false, "ZwAeo5wqiF", false, []openapiclient.GranularFirewallPolicyRule{*openapiclient.NewGranularFirewallPolicyRule("Name_example", false, false, openapiclient.SourcesAndDestinations{Addresses: openapiclient.NewAddresses([]string{"Addresses_example"})}, openapiclient.SourcesAndDestinations{Addresses: openapiclient.NewAddresses([]string{"Addresses_example"})}, false)}) // GranularFirewallPolicy | 
+	granularFirewallPolicy := *openapiclient.NewGranularFirewallPolicy(false, false, "ZwAeo5wqiF", false, []openapiclient.GranularFirewallPolicyRule{*openapiclient.NewGranularFirewallPolicyRule("Name_example", false, false, *openapiclient.NewSourcesAndDestinations(), *openapiclient.NewSourcesAndDestinations(), false)}) // GranularFirewallPolicy | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

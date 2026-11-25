@@ -18,15 +18,18 @@ import (
 // checks if the DynamicTunnelUpdate type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &DynamicTunnelUpdate{}
 
-// DynamicTunnelUpdate struct for DynamicTunnelUpdate
+// DynamicTunnelUpdate Updates a dynamic tunnel group. `removeTunnels` is applied first, then `updateTunnels`, then `addTunnels`, so `updateTunnels` can only reference members that already exist and not ones added by the same request. A single request may add members or remove members, but never both. The group may hold at most 8 members afterwards. 
 type DynamicTunnelUpdate struct {
-	// Name of the tunnel
-	TunnelName string `json:"tunnelName"`
-	// Optional description for the tunnel
+	// Name of the dynamic tunnel group. 1-13 characters, letters and digits only. 
+	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]+$"`
+	// Free-text description of the tunnel group.
 	Description *string `json:"description,omitempty"`
+	// New member tunnels to add to the group.
 	AddTunnels []DynamicTunnelDetails `json:"addTunnels,omitempty"`
+	// Existing member tunnels to modify. Each entry is the tunnel `id` plus the fields to change. 
 	UpdateTunnels []DynamicTunnelUpdateUpdateTunnelsInner `json:"updateTunnels,omitempty"`
-	RemoveTunnels []DynamicTunnelUpdateRemoveTunnelsInner `json:"removeTunnels,omitempty"`
+	// IDs of the member tunnels to remove from the group, as plain strings. An ID that does not belong to this group is ignored. 
+	RemoveTunnels []string `json:"removeTunnels,omitempty"`
 	SharedSettings *EnhancedIPSecSharedSettingsUpdate `json:"sharedSettings,omitempty"`
 	AdvancedSettings *IPSecAdvancedSettingsV23 `json:"advancedSettings,omitempty"`
 	RoutingType *RoutingType `json:"routingType,omitempty"`
@@ -178,9 +181,9 @@ func (o *DynamicTunnelUpdate) SetUpdateTunnels(v []DynamicTunnelUpdateUpdateTunn
 }
 
 // GetRemoveTunnels returns the RemoveTunnels field value if set, zero value otherwise.
-func (o *DynamicTunnelUpdate) GetRemoveTunnels() []DynamicTunnelUpdateRemoveTunnelsInner {
+func (o *DynamicTunnelUpdate) GetRemoveTunnels() []string {
 	if o == nil || IsNil(o.RemoveTunnels) {
-		var ret []DynamicTunnelUpdateRemoveTunnelsInner
+		var ret []string
 		return ret
 	}
 	return o.RemoveTunnels
@@ -188,7 +191,7 @@ func (o *DynamicTunnelUpdate) GetRemoveTunnels() []DynamicTunnelUpdateRemoveTunn
 
 // GetRemoveTunnelsOk returns a tuple with the RemoveTunnels field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *DynamicTunnelUpdate) GetRemoveTunnelsOk() ([]DynamicTunnelUpdateRemoveTunnelsInner, bool) {
+func (o *DynamicTunnelUpdate) GetRemoveTunnelsOk() ([]string, bool) {
 	if o == nil || IsNil(o.RemoveTunnels) {
 		return nil, false
 	}
@@ -204,8 +207,8 @@ func (o *DynamicTunnelUpdate) HasRemoveTunnels() bool {
 	return false
 }
 
-// SetRemoveTunnels gets a reference to the given []DynamicTunnelUpdateRemoveTunnelsInner and assigns it to the RemoveTunnels field.
-func (o *DynamicTunnelUpdate) SetRemoveTunnels(v []DynamicTunnelUpdateRemoveTunnelsInner) {
+// SetRemoveTunnels gets a reference to the given []string and assigns it to the RemoveTunnels field.
+func (o *DynamicTunnelUpdate) SetRemoveTunnels(v []string) {
 	o.RemoveTunnels = v
 }
 

@@ -18,27 +18,27 @@ import (
 // checks if the DynamicTunnelDetails type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &DynamicTunnelDetails{}
 
-// DynamicTunnelDetails struct for DynamicTunnelDetails
+// DynamicTunnelDetails One member tunnel of a dynamic (BGP-routed) tunnel group. The three IP addresses below must all be different from each other, and must not collide with those of any other tunnel on the network. 
 type DynamicTunnelDetails struct {
-	// Authentication type for tunnel (psk for pre-shared key, cert for certificate)
+	// Authentication method for the tunnel. \"psk\" (pre-shared key) requires `passphrase` and forbids `customerRootCA`; \"cert\" (certificate) requires `customerRootCA` and forbids `passphrase`. 
 	AuthType string `json:"authType"`
-	// Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk.
-	Passphrase *string `json:"passphrase,omitempty"`
-	// Customer root certificate authority. Required when authType is cert.
+	// Pre-shared key for tunnel authentication. Required when `authType` is \"psk\", and must be omitted when `authType` is \"cert\". 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
+	Passphrase *string `json:"passphrase,omitempty" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
+	// ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when `authType` is \"cert\", and must be omitted when `authType` is \"psk\". 
 	CustomerRootCA *string `json:"customerRootCA,omitempty"`
-	// Dynamic tunnel enhanced region ID
+	// ID of the enhanced region to deploy this tunnel in. Must be a region that already exists *on this network*. 
 	RegionID string `json:"regionID"`
-	// Harmony Sase gateway internal IP address
+	// Address of the Check Point SASE end of the BGP peering link, inside the tunnel. Must be unique within the region. 
 	P81GWInternalIP string `json:"p81GWInternalIP"`
-	// Remote gateway internal IP address
+	// Address of the remote end of the BGP peering link, inside the tunnel. Usually the neighboring address in the same /30 as `p81GWInternalIP`, and must differ from it. 
 	RemoteGWInternalIP string `json:"remoteGWInternalIP"`
-	// Remote gateway public IP address
+	// Public, internet-routable address of the remote gateway, the IKE peer this tunnel dials. Must be unique within the region. 
 	RemotePublicIP string `json:"remotePublicIP"`
-	// Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set.
+	// BGP ASN of the remote gateway. Must differ from the network ASN (`leftASN` in `sharedSettings`). 
 	RemoteASN int32 `json:"remoteASN"`
-	// Remote gateway ID
+	// IKE identity presented by the remote gateway, typically an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. 
 	RemoteID string `json:"remoteID"`
-	RoutingType RoutingType `json:"routingType"`
+	RoutingType *RoutingType `json:"routingType,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -48,7 +48,7 @@ type _DynamicTunnelDetails DynamicTunnelDetails
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string, routingType RoutingType) *DynamicTunnelDetails {
+func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string) *DynamicTunnelDetails {
 	this := DynamicTunnelDetails{}
 	this.AuthType = authType
 	this.RegionID = regionID
@@ -57,7 +57,8 @@ func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP s
 	this.RemotePublicIP = remotePublicIP
 	this.RemoteASN = remoteASN
 	this.RemoteID = remoteID
-	this.RoutingType = routingType
+	var routingType RoutingType = ROUTINGTYPE_ROUTE
+	this.RoutingType = &routingType
 	return &this
 }
 
@@ -67,7 +68,7 @@ func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP s
 func NewDynamicTunnelDetailsWithDefaults() *DynamicTunnelDetails {
 	this := DynamicTunnelDetails{}
 	var routingType RoutingType = ROUTINGTYPE_ROUTE
-	this.RoutingType = routingType
+	this.RoutingType = &routingType
 	return &this
 }
 
@@ -303,28 +304,36 @@ func (o *DynamicTunnelDetails) SetRemoteID(v string) {
 	o.RemoteID = v
 }
 
-// GetRoutingType returns the RoutingType field value
+// GetRoutingType returns the RoutingType field value if set, zero value otherwise.
 func (o *DynamicTunnelDetails) GetRoutingType() RoutingType {
-	if o == nil {
+	if o == nil || IsNil(o.RoutingType) {
 		var ret RoutingType
 		return ret
 	}
-
-	return o.RoutingType
+	return *o.RoutingType
 }
 
-// GetRoutingTypeOk returns a tuple with the RoutingType field value
+// GetRoutingTypeOk returns a tuple with the RoutingType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *DynamicTunnelDetails) GetRoutingTypeOk() (*RoutingType, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.RoutingType) {
 		return nil, false
 	}
-	return &o.RoutingType, true
+	return o.RoutingType, true
 }
 
-// SetRoutingType sets field value
+// HasRoutingType returns a boolean if a field has been set.
+func (o *DynamicTunnelDetails) HasRoutingType() bool {
+	if o != nil && !IsNil(o.RoutingType) {
+		return true
+	}
+
+	return false
+}
+
+// SetRoutingType gets a reference to the given RoutingType and assigns it to the RoutingType field.
 func (o *DynamicTunnelDetails) SetRoutingType(v RoutingType) {
-	o.RoutingType = v
+	o.RoutingType = &v
 }
 
 func (o DynamicTunnelDetails) MarshalJSON() ([]byte, error) {
@@ -350,7 +359,9 @@ func (o DynamicTunnelDetails) ToMap() (map[string]interface{}, error) {
 	toSerialize["remotePublicIP"] = o.RemotePublicIP
 	toSerialize["remoteASN"] = o.RemoteASN
 	toSerialize["remoteID"] = o.RemoteID
-	toSerialize["routingType"] = o.RoutingType
+	if !IsNil(o.RoutingType) {
+		toSerialize["routingType"] = o.RoutingType
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -371,7 +382,6 @@ func (o *DynamicTunnelDetails) UnmarshalJSON(data []byte) (err error) {
 		"remotePublicIP",
 		"remoteASN",
 		"remoteID",
-		"routingType",
 	}
 
 	allProperties := make(map[string]interface{})

@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**TunnelIds** | **[]string** | All IDs of dynamic tunnels | 
+**TunnelIds** | **[]string** | IDs of the member tunnels of one dynamic tunnel group. Must list every member of the group, since the route table is created for the group as a whole. Take the values from the &#x60;id&#x60; field of the tunnels returned for that group.  | 
 **Subnets** | **[]string** | List of subnet CIDR blocks | 
 
 ## Methods

@@ -4,9 +4,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**TunnelName** | **string** | Name of the tunnel | 
-**Description** | Pointer to **string** | Optional description for the tunnel | [optional] 
-**Tunnels** | [**[]DynamicTunnelDetails**](DynamicTunnelDetails.md) | List of tunnels | 
+**TunnelName** | **string** | Name of the dynamic tunnel group. 1-13 characters, letters and digits only.  | 
+**Description** | Pointer to **string** | Free-text description of the tunnel group. | [optional] 
+**Tunnels** | [**[]DynamicTunnelDetails**](DynamicTunnelDetails.md) | The member tunnels of this group. One entry creates a single tunnel; two or more create an HA group. Each entry must use a distinct set of IP addresses.  | 
 **SharedSettings** | [**EnhancedIPSecSharedSettingsCreate**](EnhancedIPSecSharedSettingsCreate.md) |  | 
 **AdvancedSettings** | [**IPSecAdvancedSettingsV23**](IPSecAdvancedSettingsV23.md) |  | 
 

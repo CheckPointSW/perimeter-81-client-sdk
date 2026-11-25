@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AuthType** | Pointer to **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | [optional] 
-**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk. | [optional] 
-**CustomerRootCA** | Pointer to **string** | Customer root certificate authority. Required when authType is cert. | [optional] 
-**RemotePublicIP** | Pointer to **string** | Remote gateway public IP address | [optional] 
-**RemoteASN** | Pointer to **int32** | Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set. | [optional] 
-**RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
+**AuthType** | Pointer to **string** | Authentication method for the tunnel. \&quot;psk\&quot; (pre-shared key) requires &#x60;passphrase&#x60; and forbids &#x60;customerRootCA&#x60;; \&quot;cert\&quot; (certificate) requires &#x60;customerRootCA&#x60; and forbids &#x60;passphrase&#x60;.  | [optional] 
+**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication. Required when &#x60;authType&#x60; is \&quot;psk\&quot;, and must be omitted when &#x60;authType&#x60; is \&quot;cert\&quot;. 8-64 characters, using letters, digits, \&quot;.\&quot; and \&quot;_\&quot; only; the first character cannot be \&quot;0\&quot;.  | [optional] 
+**CustomerRootCA** | Pointer to **string** | ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when &#x60;authType&#x60; is \&quot;cert\&quot;, and must be omitted when &#x60;authType&#x60; is \&quot;psk\&quot;.  | [optional] 
+**RemotePublicIP** | Pointer to **string** | Public, internet-routable address of the remote gateway. Must be unique within the region.  | [optional] 
+**RemoteASN** | Pointer to **int32** | BGP ASN of the remote gateway. Must differ from the network ASN. | [optional] 
+**RemoteID** | Pointer to **string** | IKE identity presented by the remote gateway, typically an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.  | [optional] 
 **RoutingType** | Pointer to [**RoutingTypeUpdate**](RoutingTypeUpdate.md) |  | [optional] 
 
 ## Methods

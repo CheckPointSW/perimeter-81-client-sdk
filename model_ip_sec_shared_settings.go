@@ -20,10 +20,13 @@ var _ MappedNullable = &IPSecSharedSettings{}
 
 // IPSecSharedSettings struct for IPSecSharedSettings
 type IPSecSharedSettings struct {
+	// Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \"0.0.0.0/0\", to route all traffic through the tunnel, or the network's own subnet. 
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
+	// Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation. 
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
+	// BGP ASN of the Check Point SASE side of the tunnel. Must differ from the ASN of the remote gateway. 
 	P81ASN *int32 `json:"p81ASN,omitempty"`
-	Features *IPSecSharedSettingsFeatures `json:"features,omitempty"`
+	Features *IPSecSharedSettingsAllOfFeatures `json:"features,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -129,9 +132,9 @@ func (o *IPSecSharedSettings) SetP81ASN(v int32) {
 }
 
 // GetFeatures returns the Features field value if set, zero value otherwise.
-func (o *IPSecSharedSettings) GetFeatures() IPSecSharedSettingsFeatures {
+func (o *IPSecSharedSettings) GetFeatures() IPSecSharedSettingsAllOfFeatures {
 	if o == nil || IsNil(o.Features) {
-		var ret IPSecSharedSettingsFeatures
+		var ret IPSecSharedSettingsAllOfFeatures
 		return ret
 	}
 	return *o.Features
@@ -139,7 +142,7 @@ func (o *IPSecSharedSettings) GetFeatures() IPSecSharedSettingsFeatures {
 
 // GetFeaturesOk returns a tuple with the Features field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *IPSecSharedSettings) GetFeaturesOk() (*IPSecSharedSettingsFeatures, bool) {
+func (o *IPSecSharedSettings) GetFeaturesOk() (*IPSecSharedSettingsAllOfFeatures, bool) {
 	if o == nil || IsNil(o.Features) {
 		return nil, false
 	}
@@ -155,8 +158,8 @@ func (o *IPSecSharedSettings) HasFeatures() bool {
 	return false
 }
 
-// SetFeatures gets a reference to the given IPSecSharedSettingsFeatures and assigns it to the Features field.
-func (o *IPSecSharedSettings) SetFeatures(v IPSecSharedSettingsFeatures) {
+// SetFeatures gets a reference to the given IPSecSharedSettingsAllOfFeatures and assigns it to the Features field.
+func (o *IPSecSharedSettings) SetFeatures(v IPSecSharedSettingsAllOfFeatures) {
 	o.Features = &v
 }
 

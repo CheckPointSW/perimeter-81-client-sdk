@@ -15,120 +15,86 @@ import (
 	"fmt"
 )
 
-
-// NetworkTunnel struct for NetworkTunnel
+// NetworkTunnel - struct for NetworkTunnel
 type NetworkTunnel struct {
-	NetworkTunnelBase *NetworkTunnelBase
-	NetworkTunnelIpsecRedundant *NetworkTunnelIpsecRedundant
 	NetworkTunnelIpsecSingle *NetworkTunnelIpsecSingle
 	NetworkTunnelOpenvpn *NetworkTunnelOpenvpn
-	NetworkTunnelWireguard *NetworkTunnelWireguard
+	NetworkTunnelWireGuard *NetworkTunnelWireGuard
 }
 
-// Unmarshal JSON data into any of the pointers in the struct
-//
-// LOCAL OVERRIDE — see api/overlay.yaml entry
-// A15-network-tunnel-anyof-add-base-fallback for the full story. Stock
-// openapi-generator (7.24.0) tries anyOf members in the order given by
-// CodegenModel.anyOf, which is a java.util.TreeSet<String> hardcoded in
-// openapi-generator itself (confirmed via javap on CodegenModel.class) —
-// not configurable through any additional-property. That means member try
-// order is ALWAYS alphabetical by Go type name, regardless of the anyOf
-// list's order in api/swagger.yaml. NetworkTunnel is, as of this writing,
-// the only anyOf-composed schema in this spec (verified: `grep anyOf:
-// api/swagger.yaml` matches exactly once), and its fallback member
-// (NetworkTunnelBase, added by A15) must be tried LAST — its required
-// fields are a strict subset of every concrete variant's, so trying it
-// first would silently swallow payloads that belong to a concrete variant
-// before that variant's decoder ever ran.
-// "NetworkTunnelBase" happens to sort alphabetically first among
-// NetworkTunnel's five anyOf members ('B' precedes 'I', 'O', 'W'), so the
-// two-pass split below — try every non-first-sorted member in the loop's
-// natural (alphabetical) order first, then try the first-sorted member
-// last, using this template's "dash-first" section marker to split the
-// anyOf loop into those two passes — is what makes NetworkTunnelBase the
-// last candidate tried, without hand-editing generated output. This is
-// deliberately narrow: it assumes whichever member is alphabetically first
-// is the one meant to be tried last, which is true for NetworkTunnel today
-// but is not a general property of anyOf. If a second anyOf schema is ever
-// added to this spec with different ordering needs, this template must be
-// revisited — do not assume this split generalizes.
+// NetworkTunnelIpsecSingleAsNetworkTunnel is a convenience function that returns NetworkTunnelIpsecSingle wrapped in NetworkTunnel
+func NetworkTunnelIpsecSingleAsNetworkTunnel(v *NetworkTunnelIpsecSingle) NetworkTunnel {
+	return NetworkTunnel{
+		NetworkTunnelIpsecSingle: v,
+	}
+}
+
+// NetworkTunnelOpenvpnAsNetworkTunnel is a convenience function that returns NetworkTunnelOpenvpn wrapped in NetworkTunnel
+func NetworkTunnelOpenvpnAsNetworkTunnel(v *NetworkTunnelOpenvpn) NetworkTunnel {
+	return NetworkTunnel{
+		NetworkTunnelOpenvpn: v,
+	}
+}
+
+// NetworkTunnelWireGuardAsNetworkTunnel is a convenience function that returns NetworkTunnelWireGuard wrapped in NetworkTunnel
+func NetworkTunnelWireGuardAsNetworkTunnel(v *NetworkTunnelWireGuard) NetworkTunnel {
+	return NetworkTunnel{
+		NetworkTunnelWireGuard: v,
+	}
+}
+
+
+// Unmarshal JSON data into one of the pointers in the struct
 func (dst *NetworkTunnel) UnmarshalJSON(data []byte) error {
 	var err error
-	// try to unmarshal JSON data into NetworkTunnelIpsecRedundant
-	err = json.Unmarshal(data, &dst.NetworkTunnelIpsecRedundant);
-	if err == nil {
-		jsonNetworkTunnelIpsecRedundant, _ := json.Marshal(dst.NetworkTunnelIpsecRedundant)
-		if string(jsonNetworkTunnelIpsecRedundant) == "{}" { // empty struct
-			dst.NetworkTunnelIpsecRedundant = nil
-		} else {
-			return nil // data stored in dst.NetworkTunnelIpsecRedundant, return on the first match
-		}
-	} else {
-		dst.NetworkTunnelIpsecRedundant = nil
+	// use discriminator value to speed up the lookup
+	var jsonDict map[string]interface{}
+	err = newStrictDecoder(data).Decode(&jsonDict)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal JSON into map for the discriminator lookup")
 	}
 
-	// try to unmarshal JSON data into NetworkTunnelIpsecSingle
-	err = json.Unmarshal(data, &dst.NetworkTunnelIpsecSingle);
-	if err == nil {
-		jsonNetworkTunnelIpsecSingle, _ := json.Marshal(dst.NetworkTunnelIpsecSingle)
-		if string(jsonNetworkTunnelIpsecSingle) == "{}" { // empty struct
-			dst.NetworkTunnelIpsecSingle = nil
+	// check if the discriminator value is 'connector'
+	if jsonDict["type"] == "connector" {
+		// try to unmarshal JSON data into NetworkTunnelWireGuard
+		err = json.Unmarshal(data, &dst.NetworkTunnelWireGuard)
+		if err == nil {
+			return nil // data stored in dst.NetworkTunnelWireGuard, return on the first match
 		} else {
+			dst.NetworkTunnelWireGuard = nil
+			return fmt.Errorf("failed to unmarshal NetworkTunnel as NetworkTunnelWireGuard: %s", err.Error())
+		}
+	}
+
+	// check if the discriminator value is 'ipsec'
+	if jsonDict["type"] == "ipsec" {
+		// try to unmarshal JSON data into NetworkTunnelIpsecSingle
+		err = json.Unmarshal(data, &dst.NetworkTunnelIpsecSingle)
+		if err == nil {
 			return nil // data stored in dst.NetworkTunnelIpsecSingle, return on the first match
+		} else {
+			dst.NetworkTunnelIpsecSingle = nil
+			return fmt.Errorf("failed to unmarshal NetworkTunnel as NetworkTunnelIpsecSingle: %s", err.Error())
 		}
-	} else {
-		dst.NetworkTunnelIpsecSingle = nil
 	}
 
-	// try to unmarshal JSON data into NetworkTunnelOpenvpn
-	err = json.Unmarshal(data, &dst.NetworkTunnelOpenvpn);
-	if err == nil {
-		jsonNetworkTunnelOpenvpn, _ := json.Marshal(dst.NetworkTunnelOpenvpn)
-		if string(jsonNetworkTunnelOpenvpn) == "{}" { // empty struct
-			dst.NetworkTunnelOpenvpn = nil
-		} else {
+	// check if the discriminator value is 'openvpn'
+	if jsonDict["type"] == "openvpn" {
+		// try to unmarshal JSON data into NetworkTunnelOpenvpn
+		err = json.Unmarshal(data, &dst.NetworkTunnelOpenvpn)
+		if err == nil {
 			return nil // data stored in dst.NetworkTunnelOpenvpn, return on the first match
-		}
-	} else {
-		dst.NetworkTunnelOpenvpn = nil
-	}
-
-	// try to unmarshal JSON data into NetworkTunnelWireguard
-	err = json.Unmarshal(data, &dst.NetworkTunnelWireguard);
-	if err == nil {
-		jsonNetworkTunnelWireguard, _ := json.Marshal(dst.NetworkTunnelWireguard)
-		if string(jsonNetworkTunnelWireguard) == "{}" { // empty struct
-			dst.NetworkTunnelWireguard = nil
 		} else {
-			return nil // data stored in dst.NetworkTunnelWireguard, return on the first match
+			dst.NetworkTunnelOpenvpn = nil
+			return fmt.Errorf("failed to unmarshal NetworkTunnel as NetworkTunnelOpenvpn: %s", err.Error())
 		}
-	} else {
-		dst.NetworkTunnelWireguard = nil
 	}
 
-	// try to unmarshal JSON data into NetworkTunnelBase (deferred to last — see the LOCAL OVERRIDE comment above)
-	err = json.Unmarshal(data, &dst.NetworkTunnelBase);
-	if err == nil {
-		jsonNetworkTunnelBase, _ := json.Marshal(dst.NetworkTunnelBase)
-		if string(jsonNetworkTunnelBase) == "{}" { // empty struct
-			dst.NetworkTunnelBase = nil
-		} else {
-			return nil // data stored in dst.NetworkTunnelBase, return on the first match
-		}
-	} else {
-		dst.NetworkTunnelBase = nil
-	}
-
-	return fmt.Errorf("data failed to match schemas in anyOf(NetworkTunnel)")
+	return nil
 }
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src NetworkTunnel) MarshalJSON() ([]byte, error) {
-	if src.NetworkTunnelIpsecRedundant != nil {
-		return json.Marshal(&src.NetworkTunnelIpsecRedundant)
-	}
-
 	if src.NetworkTunnelIpsecSingle != nil {
 		return json.Marshal(&src.NetworkTunnelIpsecSingle)
 	}
@@ -137,17 +103,51 @@ func (src NetworkTunnel) MarshalJSON() ([]byte, error) {
 		return json.Marshal(&src.NetworkTunnelOpenvpn)
 	}
 
-	if src.NetworkTunnelWireguard != nil {
-		return json.Marshal(&src.NetworkTunnelWireguard)
+	if src.NetworkTunnelWireGuard != nil {
+		return json.Marshal(&src.NetworkTunnelWireGuard)
 	}
 
-	if src.NetworkTunnelBase != nil {
-		return json.Marshal(&src.NetworkTunnelBase)
-	}
-
-	return nil, nil // no data in anyOf schemas
+	return nil, nil // no data in oneOf schemas
 }
 
+// Get the actual instance
+func (obj *NetworkTunnel) GetActualInstance() (interface{}) {
+	if obj == nil {
+		return nil
+	}
+	if obj.NetworkTunnelIpsecSingle != nil {
+		return obj.NetworkTunnelIpsecSingle
+	}
+
+	if obj.NetworkTunnelOpenvpn != nil {
+		return obj.NetworkTunnelOpenvpn
+	}
+
+	if obj.NetworkTunnelWireGuard != nil {
+		return obj.NetworkTunnelWireGuard
+	}
+
+	// all schemas are nil
+	return nil
+}
+
+// Get the actual instance value
+func (obj NetworkTunnel) GetActualInstanceValue() (interface{}) {
+	if obj.NetworkTunnelIpsecSingle != nil {
+		return *obj.NetworkTunnelIpsecSingle
+	}
+
+	if obj.NetworkTunnelOpenvpn != nil {
+		return *obj.NetworkTunnelOpenvpn
+	}
+
+	if obj.NetworkTunnelWireGuard != nil {
+		return *obj.NetworkTunnelWireGuard
+	}
+
+	// all schemas are nil
+	return nil
+}
 
 type NullableNetworkTunnel struct {
 	value *NetworkTunnel
@@ -184,4 +184,5 @@ func (v *NullableNetworkTunnel) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
+
 

@@ -4,29 +4,15 @@
 # api/swagger.yaml is a build product — never edit it either.
 # Every entry below records why it exists and when it can be deleted.
 entries:
-  - id: A1a-restore-bearer-security-scheme
-    reason: >
-      v3 declares no components.securitySchemes at all (the key is absent, not
-      empty) and no top-level security, unlike v2.3 which declared a bearer/JWT
-      scheme. Without this, generated methods have no notion of authentication.
-    remove_when: upstream restores components.securitySchemes.bearer
-    op: set
-    path: [components, securitySchemes]
-    value:
-      bearer:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
-
-  - id: A1b-apply-security-globally
-    reason: >
-      Re-declares bearer auth as a global requirement, matching v2.3, so the
-      generated client applies it centrally instead of per-operation.
-    remove_when: upstream restores a top-level security block
-    op: set
-    path: [security]
-    value:
-      - bearer: []
+  # A1a-restore-bearer-security-scheme and A1b-apply-security-globally were
+  # deleted in the 2026-11 spec refresh: their remove_when conditions came
+  # true together. Upstream now ships components.securitySchemes.bearer
+  # (http/bearer/JWT) and a top-level `security: [{bearer: []}]`, both
+  # byte-identical to what those two entries used to set, so they had become
+  # no-op overwrites. A1c below is still needed — upstream added the central
+  # scheme without dropping the per-operation authParam, so both are declared
+  # at once and the generator would still emit the required
+  # .Authorization(string) argument on every method.
 
   - id: A1c-strip-per-operation-auth-param
     reason: >
@@ -135,30 +121,14 @@ entries:
   # including the candidates that turned out ALREADY-FIXED and therefore have
   # no entry here (A6's other two schemas, A8, A9), and A3 (DEFERRED).
 
-  - id: A4-application-get-discriminator
-    reason: >
-      GET /v3/applications/{applicationId} 200 response is an inline oneOf
-      across the five Application variants (HttpApplication,
-      HttpsApplication, RdpApplication, SshApplication, VncApplication) with
-      no discriminator. openapi-generator emits a try-each-and-count-matches
-      UnmarshalJSON; the five variants inherit identical required properties
-      from CommonApplication and carry no distinguishing validation, so
-      every real response matches all five and decoding fails with "data
-      matches more than one schema in oneOf". v2.3 replaced the generated
-      decoder by hand (P81-126016) to dispatch on the `type` field instead.
-      This schema is inline in the path item rather than a named component,
-      so the discriminator is set directly on that inline schema.
-    remove_when: upstream adds a discriminator (propertyName "type") to this oneOf itself
-    op: set
-    path: [paths, "/v3/applications/{applicationId}", get, responses, "200", content, application/json, schema, discriminator]
-    value:
-      propertyName: type
-      mapping:
-        http: '#/components/schemas/HttpApplication'
-        https: '#/components/schemas/HttpsApplication'
-        rdp: '#/components/schemas/RdpApplication'
-        ssh: '#/components/schemas/SshApplication'
-        vnc: '#/components/schemas/VncApplication'
+  # A4-application-get-discriminator was deleted in the 2026-11 spec refresh:
+  # its remove_when ("upstream adds a discriminator (propertyName \"type\") to
+  # this oneOf itself") came true. Upstream lifted the inline oneOf out of the
+  # path item into a named ApplicationResponse schema and gave it exactly the
+  # discriminator + 5-entry mapping this entry used to set. The
+  # useOneOfDiscriminatorLookup=true generator flag in scripts/generate.sh is
+  # still required — it is what makes any discriminator effective — but it is
+  # now driven by upstream's own declaration rather than by this overlay.
 
   - id: A5-application-auth-not-required
     reason: >
@@ -209,22 +179,15 @@ entries:
       schema: IPSecRedundantTunnel
       required: [p81GWInternalIP, remoteGWInternalIP, remotePublicIP, remoteASN, gatewayID]
 
-  - id: A6-network-tunnel-ipsec-redundant-not-required
-    reason: >
-      Fix round 1 correction: the first audit pass checked only
-      NetworkTunnelIpsecRedundant's own top-level `required` (empty) and
-      missed that its own inline allOf branch declares rightASN,
-      rightPrivateIP, and leftPrivateIP required alongside haTunnelID,
-      recording a false ALREADY-FIXED. The list-network response (the only
-      place this schema is used) omits all three; only haTunnelID is always
-      present there (P81-124405). That branch is a private inline object
-      literal, not a shared named schema, so trimming its required list in
-      place cannot affect any other schema.
-    remove_when: upstream drops rightASN/rightPrivateIP/leftPrivateIP from NetworkTunnelIpsecRedundant's required list
-    op: transform
-    transform: trim_network_tunnel_ipsec_redundant_required
-    params:
-      drop: [rightASN, rightPrivateIP, leftPrivateIP]
+  # A6-network-tunnel-ipsec-redundant-not-required was deleted in the 2026-11
+  # spec refresh: its target schema no longer exists. Upstream collapsed
+  # NetworkTunnelIpsecRedundant into NetworkTunnelIpsecSingle — a redundant
+  # tunnel is now reported as the same shape with NetworkTunnelBase.isHA
+  # true, and NetworkTunnel's union enumerates only openvpn/connector/ipsec.
+  # The rightASN/rightPrivateIP/leftPrivateIP required-ness this entry
+  # trimmed went with it. scripts/build_spec.py's
+  # trim_network_tunnel_ipsec_redundant_required transform was deleted too;
+  # it had no other caller.
 
   - id: A10-enhanced-health-check-meta-not-required
     reason: >
@@ -239,19 +202,13 @@ entries:
     path: [components, schemas, EnhancedHealthCheckMeta, required]
     value: []
 
-  - id: A8-rename-peak-bandwidth
-    reason: >
-      Fix round 1 correction: the first audit pass checked only each
-      schema's top-level `properties` and missed that peakBandwidth is
-      declared inside allOf branches of EnhancedTunnelBase (feeding
-      EnhancedTunnel, a live response schema) and StaticTunnelCreate (a
-      request body), recording a false ALREADY-FIXED. The live API's field
-      name is peakBandwidthMbps, not peakBandwidth. The transform walks
-      allOf/oneOf/anyOf branches within each named schema, since a
-      top-level-only rename would find nothing.
-    remove_when: upstream renames peakBandwidth to peakBandwidthMbps itself
-    op: transform
-    transform: rename_peak_bandwidth
+  # A8-rename-peak-bandwidth was deleted in the 2026-11 spec refresh: its
+  # remove_when ("upstream renames peakBandwidth to peakBandwidthMbps
+  # itself") came true. Upstream now declares peakBandwidthMbps directly and
+  # renamed the standalone PeakBandwidth schema to PeakBandwidthMbps, so the
+  # transform had become a no-op that found nothing to rename.
+  # scripts/build_spec.py's rename_peak_bandwidth transform and its
+  # _rename_peak_bandwidth_in_tree helper were deleted with it.
 
   - id: A11-objects-services-response-obj-id
     reason: >
@@ -348,6 +305,78 @@ entries:
     remove_when: See A9-asn-remove-redundant-oneof.
     op: remove
     path: [components, schemas, RemoteASN, oneOf]
+
+  - id: A27-remote-id-remove-redundant-oneof
+    reason: >
+      Same defect class as A9, surfaced by the 2026-11 refresh. The shared
+      `remoteID` schema has always been a `oneOf` of two string forms (an IP,
+      or a 3-25 character alphanumeric), but until the refresh the tunnel
+      write bodies did not use it: StaticTunnelCreate.remoteID and
+      StaticTunnelUpdate.remoteID were declared inline as plain
+      `type: string`. The refresh points them at the shared schema via
+      allOf, so openapi-generator now materializes the oneOf as a
+      `RemoteID{String *string}` wrapper and the two payload fields change
+      Go type from string to *RemoteID.
+
+      Both oneOf branches are strings that differ only by pattern, so, exactly
+      as A9 reasoned for ASN's three integer ranges, Go has no type that could
+      express the distinction and the wrapper buys nothing — the server
+      enforces the patterns either way. Replacing the schema with a plain
+      `type: string` keeps the refresh's much better description and example
+      while leaving remoteID typed as the string it has always been in
+      practice.
+
+      Scoped to this schema deliberately: NetworkIpsecBase.rightID carries a
+      structurally identical inline oneOf and keeps its generated
+      NetworkIpsecBaseAllOfRightID wrapper, because that one predates this
+      refresh and the provider already handles it.
+    remove_when: >
+      upstream declares remoteID as a plain string (keeping the patterns as
+      documentation), or openapi-generator stops materializing a wrapper type
+      for a oneOf whose branches all resolve to the same primitive.
+    op: set
+    path: [components, schemas, remoteID]
+    value:
+      type: string
+      description: >
+        IKE identity presented by the remote gateway. Either an IP address or
+        an alphanumeric string of 3-25 characters. It must match the local
+        identity configured on the remote device, otherwise phase 1
+        negotiation fails.
+      example: remotegw01
+
+  - id: A28-async-operation-response-not-required
+    reason: >
+      The 2026-11 refresh documented AsyncOperationResponse properly and, in
+      doing so, marked statusUrl and samplingTime required. Generated response
+      models enforce required-ness in UnmarshalJSON, so a 202 that arrives
+      without a statusUrl now fails to decode at all.
+
+      That specific response is one the provider handles deliberately rather
+      than treats as impossible. putSplitTunnelingAndWait and
+      putPrivateDNSAndWait both detect it and return (accepted=true,
+      errNoStatusUrl), so the operator is told "accepted but did not complete"
+      — the write may well have happened, there is just nothing to poll —
+      instead of "refused". resourceNetworkCreate does the same thing on the
+      create path to keep an orphaned network reachable by a later plan.
+      Strict decoding collapses all of that into a generic decode error, which
+      the callers can only report as a refusal: the one outcome those helpers
+      exist to prevent. See the provider's TestPutSplitTunnelingAndWaitOnMissingStatusUrl,
+      TestPutPrivateDNSAndWaitOnMissingStatusUrl and
+      TestResourceNetworkCreateSetsIdOnCtxTimeoutWhenResourceIsKnown.
+
+      Clearing `required` leaves both fields present as optional properties,
+      so the normal path is untouched and the degraded path stays
+      classifiable. This is the same shape as A5/A10/A20: upstream's
+      required-ness describes the happy path, and the SDK's strict decoder
+      turns any deviation into a total read failure.
+    remove_when: >
+      the API guarantees a statusUrl on every 202 and the provider's
+      no-status-url branches are deleted as unreachable, or the generated
+      decoder stops enforcing required-ness on response models.
+    op: set
+    path: [components, schemas, AsyncOperationResponse, required]
+    value: []
 
   - id: A7-objects-services-protocol-request-obj-flatten
     reason: >
@@ -461,207 +490,89 @@ entries:
   # --- Amendment (2026-08-11): NetworkTunnel's anyOf is missing a fallback
   # member for tunnel types the spec does not enumerate.
 
-  - id: A15-network-tunnel-anyof-add-base-fallback
+  # --- 2026-11 spec refresh: the A15/A16/A17a-d family was deleted as a
+  # group, and replaced by A25a-A25c below.
+  #
+  # A15 existed because NetworkTunnel was an `anyOf` over four variants that
+  # did not enumerate the `connector` type the live API returns, so a
+  # connector tunnel matched no branch and failed the whole network read; it
+  # added NetworkTunnelBase as a catch-all fifth member. A16 then trimmed
+  # NetworkTunnelBase's composed required set to [id] so that fallback could
+  # actually catch the realistic connector payload (observed to omit
+  # createdAt), and A17a-d re-pinned the four concrete variants' required
+  # lists so A16's trim did not cascade into them through allOf.
+  #
+  # Upstream has now fixed the root cause: NetworkTunnel is a `oneOf` with a
+  # real discriminator on `type`, and `connector` is enumerated and mapped to
+  # NetworkTunnelWireGuard. `connector` was never an undocumented extra type
+  # — it was the WireGuard tunnel's actual wire value, and the old spec's
+  # enum was simply wrong. With a discriminator there is no try-each decoder
+  # and no ordering requirement, so the fallback member, the trim that made
+  # it work, and the four re-pins that contained the trim are all moot.
+  # templates/model_anyof.mustache was deleted with them — it was an
+  # ordering workaround that existed solely to keep A15's fallback member
+  # last, and NetworkTunnel was the only anyOf it applied to.
+  #
+  # What does NOT go away is the underlying wire observation A16 was built
+  # on, which is why A25a-A25c exist.
+
+  - id: A25a-network-tunnel-openvpn-created-at-not-required
     reason: >
-      GET /v3/networks/standard/{id} returns tunnel objects, and the live API
-      returns tunnel types this anyOf does not enumerate — `connector` is the
-      documented example. v3 declares only NetworkTunnelOpenvpn,
-      NetworkTunnelWireguard, NetworkTunnelIpsecSingle, and
-      NetworkTunnelIpsecRedundant as NetworkTunnel's anyOf members, so any
-      tunnel of an unlisted type fails every branch of the generated
-      try-each-and-return-first-match decoder with "data failed to match
-      schemas in anyOf(NetworkTunnel)", failing the entire network read. This
-      is confirmed to persist in v3: the project has established that v3
-      contains v2.3 (an endpoint present in both versions is served by the
-      same microservice), so the undocumented extra tunnel types v2.3
-      observed on the wire are still returned by v3 — this is not a spec
-      defect v3 happens to have fixed. v2.3 solved this by hand-editing the
-      generated Go (model_network_tunnel.go) to add a fifth
-      NetworkTunnelBase member plus a hand-written UnmarshalJSON tail that
-      unmarshalled into a local anonymous 8-field struct and populated the
-      base member when `id` was non-empty — one of the 20 hand-patched files
-      this project exists to eliminate. NetworkTunnelBase already exists as
-      a named v3 schema (via allOf) composing all 10 fields shared by every
-      tunnel variant (createdAt, updatedAt, id, network, region, instance,
-      interfaceName, type, isHA, tenantId), so adding it as NetworkTunnel's
-      fifth anyOf member gives unrecognised tunnel types somewhere to land
-      without a hand-edit. This is set via op: set on the whole array
-      (rather than an in-place append) to guarantee ordering, and
-      NetworkTunnelBase must be LAST: the generated anyOf decoder tries
-      members in list order and returns on the first match, and
-      NetworkTunnelBase's fields are a subset of every concrete variant's, so
-      if it came first it would swallow payloads that belong to the four
-      concrete variants before they ever got a chance to match.
+      With A15's catch-all member gone, a tunnel payload that is correctly
+      discriminated but missing a field the spec marks required no longer
+      has anywhere to land: the generated discriminator branch unmarshals
+      straight into the mapped variant, whose UnmarshalJSON enforces the
+      composed required list, and the error propagates up through
+      NetworkRegion.instances[].tunnels to fail the entire standard-network
+      read. createdAt is the one field with direct evidence of being absent
+      on these read payloads: v2.3 shipped a hand-patched decoder whose
+      guard was `raw.Id != ""` and nothing else, and A16's own regression
+      test (TestNetworkTunnel_UnrecognizedTypeWithoutCreatedAt_FallsBackToBase)
+      was written against a real connector payload with no createdAt. The
+      three variants inherit createdAt's required-ness from BaseDates, which
+      is shared well beyond the tunnel schemas — so, exactly as
+      A6-ipsec-redundant-tunnel-not-required reasoned about its own shared
+      ancestor, this flattens each tunnel variant individually and restores
+      its full composed required list minus createdAt, rather than loosening
+      BaseDates for every schema that composes it. Every other field stays
+      required, so this does not turn the rest of the model into pointers.
     remove_when: >
-      upstream adds the missing tunnel types (e.g. connector) to
-      NetworkTunnel's anyOf itself, or documents that no such types exist.
-    op: set
-    path: [components, schemas, NetworkTunnel, anyOf]
-    value:
-      - $ref: '#/components/schemas/NetworkTunnelOpenvpn'
-      - $ref: '#/components/schemas/NetworkTunnelWireguard'
-      - $ref: '#/components/schemas/NetworkTunnelIpsecSingle'
-      - $ref: '#/components/schemas/NetworkTunnelIpsecRedundant'
-      - $ref: '#/components/schemas/NetworkTunnelBase'
-
-  # --- Fix round 1 of 5 (2026-08-11): A15 added NetworkTunnelBase as a
-  # fallback anyOf member, but composition-resolved it still requires 9
-  # fields (its own 8-field inline branch plus createdAt via allOf ->
-  # BaseDates), so it rejected the realistic connector payload (createdAt
-  # absent) it was meant to catch — confirmed by
-  # TestNetworkTunnel_UnrecognizedTypeWithoutCreatedAt_StillErrors. A16-A17d
-  # fix that without loosening BaseDates (shared by other schemas) or
-  # silently loosening the four concrete tunnel variants that also compose
-  # NetworkTunnelBase (NetworkTunnelOpenvpn, NetworkTunnelWireguard,
-  # NetworkTunnelIpsecSingle, NetworkTunnelIpsecRedundant) — see
-  # api/AUDIT-2026-08-10.md for none of these (this family postdates that
-  # audit); the reasoning parallels A6-ipsec-redundant-tunnel-not-required's
-  # shared-ancestor hazard instead.
-
-  - id: A16-network-tunnel-base-trim-required-to-id
-    reason: >
-      NetworkTunnelBase plays two roles: (1) the allOf ancestor every
-      concrete tunnel variant composes, where all 9 of its fields (id,
-      network, region, instance, interfaceName, type, isHA, tenantId,
-      createdAt) are genuinely always present; and (2), since A15, the
-      literal fifth anyOf member NetworkTunnel falls back to for tunnel
-      types the spec doesn't enumerate. Those two roles need different
-      required-ness. Composition-resolved, NetworkTunnelBase currently
-      requires all 9 fields (8 from its own inline allOf branch, plus
-      createdAt inherited via its other allOf branch, $ref BaseDates, whose
-      own required is [createdAt] — confirmed via
-      model_network_tunnel_base.go's generated requiredProperties list,
-      which lists all 9). A fallback that requires 9 fields can never do its
-      job for the case that actually needs it: the live API's undocumented
-      tunnel types (e.g. `connector`) are observed to omit createdAt on the
-      wire — the same realistic shape the v2.3 hand-patch's guard was
-      written against, `if err = json.Unmarshal(data, &raw); err == nil &&
-      raw.Id != ""` — non-empty id and nothing else. This flattens
-      NetworkTunnelBase's own allOf composition into a standalone object
-      with required trimmed to [id] alone, reproducing that exact v2.3
-      guard declaratively: permissive enough to catch any unrecognised
-      tunnel type, strict enough that an empty or garbage payload still
-      fails to match. BaseDates itself is deliberately left untouched here —
-      it is shared by schemas beyond NetworkTunnelBase, and trimming its
-      required there would silently relax validation for all of them, not
-      just this one (the same shared-ancestor hazard
-      A6-ipsec-redundant-tunnel-not-required already hit and solved by
-      flattening the specific downstream schema instead of the shared
-      ancestor). NetworkTunnelBase is itself a shared ancestor for four
-      other schemas (see A17a-A17d), which is why those four entries exist:
-      openapi-generator unions required fields across all of a schema's
-      allOf branches at generation time, so trimming NetworkTunnelBase's own
-      required here would otherwise silently cascade into
-      NetworkTunnelOpenvpn/Wireguard/IpsecSingle/IpsecRedundant's composed
-      required sets too, even though none of those four needed loosening.
-    remove_when: >
-      upstream's NetworkTunnelBase schema itself declares only `id` as
-      required, or upstream provides a distinct, purpose-built schema for
-      anyOf(NetworkTunnel)'s "unrecognised tunnel type" fallback role so
-      this schema no longer needs to serve both roles at once.
-    op: transform
-    transform: flatten_and_trim_required
-    params:
-      schema: NetworkTunnelBase
-      required: [id]
-
-  - id: A17a-network-tunnel-openvpn-restore-required
-    reason: >
-      See A16. NetworkTunnelOpenvpn's allOf composes NetworkTunnelBase (for
-      the 9 shared tunnel fields) plus its own inline branch (requiring only
-      passphrase and username) — before A16, its composition-resolved
-      required set was [id, network, region, instance, interfaceName, type,
-      isHA, tenantId, createdAt, passphrase, username] (confirmed from
-      model_network_tunnel_openvpn.go's generated requiredProperties prior
-      to this fix round). A16 trims NetworkTunnelBase's own required to
-      [id], which would silently drop network/region/instance/
-      interfaceName/type/isHA/tenantId/createdAt from this list too, since
-      openapi-generator unions required fields across allOf branches — this
-      flattens NetworkTunnelOpenvpn into a standalone object with that exact
-      pre-A16 required list restored explicitly, decoupling it from
-      NetworkTunnelBase's required propagation entirely so A16 cannot affect
-      it.
-    remove_when: See A16.
+      upstream drops createdAt from BaseDates' required list for the tunnel
+      read shapes, or confirms that every tunnel the standard-network read
+      returns always carries createdAt.
     op: transform
     transform: flatten_and_trim_required
     params:
       schema: NetworkTunnelOpenvpn
-      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, passphrase, username]
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, passphrase, username]
 
-  - id: A17b-network-tunnel-wireguard-restore-required
+  - id: A25b-network-tunnel-wireguard-created-at-not-required
     reason: >
-      See A16 and A17a — same mechanism, applied to NetworkTunnelWireguard.
-      Its pre-A16 composition-resolved required set was [id, network,
-      region, instance, interfaceName, type, isHA, tenantId, createdAt,
-      leftAllowedIP, leftEndpoint, vault, requestConfigToken] (confirmed
-      from model_network_tunnel_wireguard.go's generated requiredProperties
-      prior to this fix round). This is also the schema whose regression
-      this fix round is most protective of:
-      TestNetworkTunnel_ConcreteVariantDoesNotFallBackToBase decodes a
-      wireguard payload and asserts it lands in NetworkTunnelWireguard, not
-      NetworkTunnelBase — a guarantee that matters even more now that
-      NetworkTunnelBase (post-A16) accepts almost any payload with a
-      non-empty id.
-    remove_when: See A16.
+      See A25a — same mechanism, applied to NetworkTunnelWireGuard (upstream
+      renamed this schema from NetworkTunnelWireguard in the 2026-11
+      refresh). This is the variant the evidence actually concerns: it is
+      what `connector` now maps to, and the connector payload A16's test was
+      built from is precisely the one observed without createdAt.
+    remove_when: See A25a.
     op: transform
     transform: flatten_and_trim_required
     params:
-      schema: NetworkTunnelWireguard
-      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, leftAllowedIP, leftEndpoint, vault, requestConfigToken]
+      schema: NetworkTunnelWireGuard
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, leftAllowedIP, leftEndpoint, vault, requestConfigToken]
 
-  - id: A17c-network-tunnel-ipsec-single-restore-required
+  - id: A25c-network-tunnel-ipsec-single-created-at-not-required
     reason: >
-      See A16 and A17a — same mechanism, applied to NetworkTunnelIpsecSingle.
-      Its pre-A16 composition-resolved required set was [id, network,
-      region, instance, interfaceName, type, isHA, tenantId, createdAt,
-      keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1,
-      phase2, right, rightID, passphrase, dpdAction, leftSubnets,
-      rightSubnets] (confirmed from
-      model_network_tunnel_ipsec_single.go's generated requiredProperties
-      prior to this fix round). NetworkTunnelIpsecSingle's allOf also
-      composes NetworkIpsecBase alongside NetworkTunnelBase; flattening
-      pulls that schema's properties in too (via the same _flatten_schema
-      helper A6-ipsec-redundant-tunnel-not-required already uses), so no
-      properties are lost — only the required list is replaced, explicitly,
-      with the value it already had.
-    remove_when: See A16.
+      See A25a — same mechanism, applied to NetworkTunnelIpsecSingle. This
+      variant now also carries redundant (HA) tunnels, which upstream used
+      to model separately as NetworkTunnelIpsecRedundant and now reports as
+      this same shape with isHA true, so it covers both cases A17c and A17d
+      used to cover separately.
+    remove_when: See A25a.
     op: transform
     transform: flatten_and_trim_required
     params:
       schema: NetworkTunnelIpsecSingle
-      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction, leftSubnets, rightSubnets]
-
-  - id: A17d-network-tunnel-ipsec-redundant-restore-required
-    reason: >
-      See A16 and A17a — same mechanism, applied to
-      NetworkTunnelIpsecRedundant. Its pre-A16 composition-resolved required
-      set was [id, network, region, instance, interfaceName, type, isHA,
-      tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay,
-      dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction,
-      leftSubnets, rightSubnets, haTunnelID] (confirmed from
-      model_network_tunnel_ipsec_redundant.go's generated requiredProperties
-      prior to this fix round — this already reflects
-      A6-network-tunnel-ipsec-redundant-not-required's earlier trim of
-      rightASN/rightPrivateIP/leftPrivateIP from this schema's own inline
-      branch, which ran before this entry and is preserved by using this
-      exact, already-trimmed list rather than the wider pre-A6 set).
-      NetworkTunnelIpsecRedundant's allOf composes NetworkTunnelBase and
-      NetworkIpsecBase plus its own inline branch (haTunnelID, post-A6); this
-      flattening supersedes A6's in-place trim of that inline branch with an
-      equivalent, fully-flattened result — A6's transform still runs first
-      (entries apply in file order) but becomes a harmless no-op against an
-      already-empty allOf once this entry has run for a later regeneration,
-      since flattening replaces the allOf list entirely. Both entries are
-      kept: A6's reasoning about rightASN/rightPrivateIP/leftPrivateIP is
-      independently true and worth keeping documented even though this
-      entry's explicit required list is what actually takes effect on the
-      built spec.
-    remove_when: See A16.
-    op: transform
-    transform: flatten_and_trim_required
-    params:
-      schema: NetworkTunnelIpsecRedundant
-      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, createdAt, keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction, leftSubnets, rightSubnets, haTunnelID]
+      required: [id, network, region, instance, interfaceName, type, isHA, tenantId, keyExchange, ikeLifeTime, lifetime, dpdDelay, dpdTimeout, phase1, phase2, right, rightID, passphrase, dpdAction, leftSubnets, rightSubnets]
 
   # --- Task 27 (2026-08-12): validate-spec suppression audit. generate.sh has
   # run with --skip-validate-spec since inception without a record of what it
@@ -740,6 +651,111 @@ entries:
         required:
           - groups
         additionalProperties: true
+
+  - id: A23-custom-url-write-request-oneof-items
+    reason: >
+      Same defect class as A18, in a schema the 2026-11 spec refresh
+      introduced. CustomUrlWriteRequest's `oneOf` branches redeclare
+      properties.urls/properties.urlPatterns as bare `type: array` with no
+      `items`, even though the schema's own top-level urls/urlPatterns
+      declare them correctly. That produces 8 "Undefined array inner type
+      for `null`. Default to String." log lines and the schema-level
+      "attribute components.schemas.CustomUrlWriteRequest.items is missing"
+      validation error, which aborts generation outright (generate.sh
+      deliberately carries no --skip-validate-spec — see Task 27's
+      reasoning in scripts/generate.sh).
+
+      The branches are reproduced here with their discriminating
+      constraints intact — the enum pin on entryType, the minItems: 1 on
+      the branch's own array, and the maxItems: 0 on the other one, which
+      together are what make the two branches mutually exclusive — and with
+      the missing `items` added from the top-level declarations. Dropping
+      the oneOf instead (the other way to clear the error) would lose that
+      exclusivity, which is the only place the spec states that a url
+      object carries no urlPatterns and a regex object carries no urls.
+    remove_when: >
+      upstream adds items to both oneOf branches itself, or expresses the
+      url/regex split some other way (e.g. a discriminator on entryType
+      across two named schemas).
+    op: set
+    path: [components, schemas, CustomUrlWriteRequest, oneOf]
+    value:
+      - title: url object
+        properties:
+          entryType:
+            enum:
+              - url
+          urls:
+            type: array
+            minItems: 1
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2048
+              pattern: '^[^<>]+$'
+          urlPatterns:
+            type: array
+            maxItems: 0
+            items:
+              type: string
+              minLength: 1
+              maxLength: 1024
+              pattern: '^[^<>]+$'
+        required:
+          - urls
+        additionalProperties: true
+      - title: regex object
+        properties:
+          entryType:
+            enum:
+              - regex
+          urls:
+            type: array
+            maxItems: 0
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2048
+              pattern: '^[^<>]+$'
+          urlPatterns:
+            type: array
+            minItems: 1
+            items:
+              type: string
+              minLength: 1
+              maxLength: 1024
+              pattern: '^[^<>]+$'
+        required:
+          - entryType
+          - urlPatterns
+        additionalProperties: true
+
+  - id: A26-fixed-host-value-oneof-drop-additional-properties
+    reason: >
+      Introduced by the 2026-11 spec refresh. FixedHost.value's first oneOf
+      branch resolves, via allOf -> $ref FQDN, to a plain string, but the
+      refresh also added `additionalProperties: true` to that same branch.
+      openapi-generator composes the two into a single Go type name and
+      emits the literal `*string[string]interface{}` for the union member in
+      model_fixed_host_value.go — not valid Go, so `go build` fails and
+      generation aborts. The previous spec's equivalent branch carried no
+      additionalProperties, so this is a regression rather than a
+      long-standing defect.
+
+      Twelve places in the refreshed spec pair a scalar-resolving allOf with
+      `additionalProperties: true` (FirewallPolicyRule.id,
+      NetworkIpsecBase.passphrase, the various ASN properties, and so on),
+      but only this one sits inside a `oneOf`. Everywhere else the construct
+      is an ordinary property, where the generator resolves the scalar type
+      and ignores additionalProperties harmlessly; only a oneOf branch gets
+      materialized as a named union member whose type name is built by
+      concatenation. So this entry is deliberately scoped to the single
+      branch that breaks, not to the pattern at large.
+    remove_when: >
+      upstream drops additionalProperties from this oneOf branch, or stops
+      describing FixedHost.value as a oneOf of scalar formats.
+    op: remove
+    path: [components, schemas, FixedHost, properties, value, oneOf, 0, additionalProperties]
 
   # --- Task 34 (2026-08-16): the enhanced-tunnel READ shape. Unlike every
   # entry above, this one is grounded in a captured live response, not in
@@ -858,7 +874,7 @@ entries:
             minItems: 1
             description: Remote gateway subnets
           peakBandwidthMbps:
-            $ref: '#/components/schemas/PeakBandwidth'
+            $ref: '#/components/schemas/PeakBandwidthMbps'
           keyExchange:
             type: string
             description: IKE version for key exchange

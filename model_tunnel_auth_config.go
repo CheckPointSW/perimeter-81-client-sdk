@@ -17,13 +17,13 @@ import (
 // checks if the TunnelAuthConfig type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &TunnelAuthConfig{}
 
-// TunnelAuthConfig struct for TunnelAuthConfig
+// TunnelAuthConfig How the tunnel authenticates. `authType` selects the method, and exactly one of `passphrase` / `customerRootCA` must accompany it. Send only the one that matches `authType`, never both. 
 type TunnelAuthConfig struct {
-	// Authentication type for tunnel (psk for pre-shared key, cert for certificate)
+	// Authentication method for the tunnel. \"psk\" (pre-shared key) requires `passphrase` and forbids `customerRootCA`; \"cert\" (certificate) requires `customerRootCA` and forbids `passphrase`. 
 	AuthType *string `json:"authType,omitempty"`
-	// Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk.
-	Passphrase *string `json:"passphrase,omitempty"`
-	// Customer root certificate authority. Required when authType is cert.
+	// Pre-shared key for tunnel authentication. Required when `authType` is \"psk\", and must be omitted when `authType` is \"cert\". 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
+	Passphrase *string `json:"passphrase,omitempty" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
+	// ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when `authType` is \"cert\", and must be omitted when `authType` is \"psk\". 
 	CustomerRootCA *string `json:"customerRootCA,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

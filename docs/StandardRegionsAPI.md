@@ -1,13 +1,13 @@
 # \StandardRegionsAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**StandardGetRegion**](StandardRegionsAPI.md#StandardGetRegion) | **Get** /v3/networks/standard/{networkId}/regions/{regionId} | Get region by ID
 [**StandardNetworksControllerV2AddNetworkRegion**](StandardRegionsAPI.md#StandardNetworksControllerV2AddNetworkRegion) | **Put** /v3/networks/standard/{networkId}/regions | Add regions to a network
 [**StandardNetworksControllerV2DeleteNetworkRegion**](StandardRegionsAPI.md#StandardNetworksControllerV2DeleteNetworkRegion) | **Delete** /v3/networks/standard/{networkId}/regions | Remove regions from network
-[**StandardNetworksControllerV2GetRegions**](StandardRegionsAPI.md#StandardNetworksControllerV2GetRegions) | **Get** /v3/networks/standard/harmony-sase-regions | List of available Harmony SASE regions that support standard networks
+[**StandardNetworksControllerV2GetRegions**](StandardRegionsAPI.md#StandardNetworksControllerV2GetRegions) | **Get** /v3/networks/standard/harmony-sase-regions | List available Check Point SASE regions that support standard networks
 
 
 
@@ -232,7 +232,7 @@ Name | Type | Description  | Notes
 
 > []Region StandardNetworksControllerV2GetRegions(ctx).Execute()
 
-List of available Harmony SASE regions that support standard networks
+List available Check Point SASE regions that support standard networks
 
 
 

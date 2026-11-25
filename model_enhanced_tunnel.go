@@ -20,11 +20,11 @@ var _ MappedNullable = &EnhancedTunnel{}
 
 // EnhancedTunnel struct for EnhancedTunnel
 type EnhancedTunnel struct {
-	// Authentication type for tunnel (psk for pre-shared key, cert for certificate)
+	// Authentication method for the tunnel. \"psk\" (pre-shared key) requires `passphrase` and forbids `customerRootCA`; \"cert\" (certificate) requires `customerRootCA` and forbids `passphrase`. 
 	AuthType string `json:"authType"`
-	// Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk.
-	Passphrase *string `json:"passphrase,omitempty"`
-	// Customer root certificate authority. Required when authType is cert.
+	// Pre-shared key for tunnel authentication. Required when `authType` is \"psk\", and must be omitted when `authType` is \"cert\". 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
+	Passphrase *string `json:"passphrase,omitempty" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
+	// ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when `authType` is \"cert\", and must be omitted when `authType` is \"psk\". 
 	CustomerRootCA *string `json:"customerRootCA,omitempty"`
 	// Target region ID
 	RegionID string `json:"regionID"`
@@ -34,7 +34,8 @@ type EnhancedTunnel struct {
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
 	// Remote gateway subnets
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
-	// Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps.
+	// Deprecated: ignored for non-China regions. China regions still use this field. Expected peak throughput of the tunnel in Mbps. A typical connection is 1000. Consumes bandwidth licenses, so set it no higher than the tunnel needs. 
+	// Deprecated
 	PeakBandwidthMbps *int32 `json:"peakBandwidthMbps,omitempty"`
 	// IKE version for key exchange
 	KeyExchange string `json:"keyExchange"`
@@ -49,15 +50,15 @@ type EnhancedTunnel struct {
 	RemotePublicIP *string `json:"remotePublicIP,omitempty"`
 	// Remote gateway ID
 	RemoteID *string `json:"remoteID,omitempty"`
-	// Optional tunnel description
+	// Free-text description of the tunnel.
 	Description *string `json:"description,omitempty"`
-	// Whether this tunnel is part of a high-availability pair
-	IsHA *bool `json:"isHA,omitempty"`
-	// Enhanced tunnel ID
+	// Indicates if it's a redundant tunnel.
+	IsHA bool `json:"isHA"`
+	// Unique ID of this tunnel, and the value to use in the route table payloads. For a static tunnel it is also the `tunnelId` path parameter. For a member of a dynamic tunnel group it identifies that single member, so it is the value to use in `removeTunnels` and `updateTunnels`, not the `dynamicTunnelId` path parameter. 
 	Id string `json:"id"`
-	// Enhanced dynamic tunnel group ID (or tunnel ID for static tunnel)
+	// ID of the tunnel group this tunnel belongs to. For a dynamic tunnel this is the ID of the group shared by all of its member tunnels, and it is the value to use as the `dynamicTunnelId` path parameter. For a static tunnel it is the tunnel's own ID. 
 	HaTunnelID string `json:"haTunnelID"`
-	// Enhanced tunnel DPDTime actions.
+	// Action taken when dead peer detection declares the peer unreachable. Always \"restart\"; the value is fixed and is not accepted on create or update. 
 	DpdAction string `json:"dpdAction"`
 	AdditionalProperties map[string]interface{}
 }
@@ -68,7 +69,7 @@ type _EnhancedTunnel EnhancedTunnel
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEnhancedTunnel(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, id string, haTunnelID string, dpdAction string) *EnhancedTunnel {
+func NewEnhancedTunnel(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, isHA bool, id string, haTunnelID string, dpdAction string) *EnhancedTunnel {
 	this := EnhancedTunnel{}
 	this.AuthType = authType
 	this.RegionID = regionID
@@ -80,6 +81,7 @@ func NewEnhancedTunnel(authType string, regionID string, tunnelName string, p81G
 	this.KeyExchange = keyExchange
 	var routingType RoutingType = ROUTINGTYPE_ROUTE
 	this.RoutingType = &routingType
+	this.IsHA = isHA
 	this.Id = id
 	this.HaTunnelID = haTunnelID
 	this.DpdAction = dpdAction
@@ -285,6 +287,7 @@ func (o *EnhancedTunnel) SetRemoteGatewaySubnets(v []string) {
 }
 
 // GetPeakBandwidthMbps returns the PeakBandwidthMbps field value if set, zero value otherwise.
+// Deprecated
 func (o *EnhancedTunnel) GetPeakBandwidthMbps() int32 {
 	if o == nil || IsNil(o.PeakBandwidthMbps) {
 		var ret int32
@@ -295,6 +298,7 @@ func (o *EnhancedTunnel) GetPeakBandwidthMbps() int32 {
 
 // GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// Deprecated
 func (o *EnhancedTunnel) GetPeakBandwidthMbpsOk() (*int32, bool) {
 	if o == nil || IsNil(o.PeakBandwidthMbps) {
 		return nil, false
@@ -312,6 +316,7 @@ func (o *EnhancedTunnel) HasPeakBandwidthMbps() bool {
 }
 
 // SetPeakBandwidthMbps gets a reference to the given int32 and assigns it to the PeakBandwidthMbps field.
+// Deprecated
 func (o *EnhancedTunnel) SetPeakBandwidthMbps(v int32) {
 	o.PeakBandwidthMbps = &v
 }
@@ -660,36 +665,28 @@ func (o *EnhancedTunnel) SetDescription(v string) {
 	o.Description = &v
 }
 
-// GetIsHA returns the IsHA field value if set, zero value otherwise.
+// GetIsHA returns the IsHA field value
 func (o *EnhancedTunnel) GetIsHA() bool {
-	if o == nil || IsNil(o.IsHA) {
+	if o == nil {
 		var ret bool
 		return ret
 	}
-	return *o.IsHA
+
+	return o.IsHA
 }
 
-// GetIsHAOk returns a tuple with the IsHA field value if set, nil otherwise
+// GetIsHAOk returns a tuple with the IsHA field value
 // and a boolean to check if the value has been set.
 func (o *EnhancedTunnel) GetIsHAOk() (*bool, bool) {
-	if o == nil || IsNil(o.IsHA) {
+	if o == nil {
 		return nil, false
 	}
-	return o.IsHA, true
+	return &o.IsHA, true
 }
 
-// HasIsHA returns a boolean if a field has been set.
-func (o *EnhancedTunnel) HasIsHA() bool {
-	if o != nil && !IsNil(o.IsHA) {
-		return true
-	}
-
-	return false
-}
-
-// SetIsHA gets a reference to the given bool and assigns it to the IsHA field.
+// SetIsHA sets field value
 func (o *EnhancedTunnel) SetIsHA(v bool) {
-	o.IsHA = &v
+	o.IsHA = v
 }
 
 // GetId returns the Id field value
@@ -819,9 +816,7 @@ func (o EnhancedTunnel) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Description) {
 		toSerialize["description"] = o.Description
 	}
-	if !IsNil(o.IsHA) {
-		toSerialize["isHA"] = o.IsHA
-	}
+	toSerialize["isHA"] = o.IsHA
 	toSerialize["id"] = o.Id
 	toSerialize["haTunnelID"] = o.HaTunnelID
 	toSerialize["dpdAction"] = o.DpdAction
@@ -844,6 +839,7 @@ func (o *EnhancedTunnel) UnmarshalJSON(data []byte) (err error) {
 		"p81GatewaySubnets",
 		"remoteGatewaySubnets",
 		"keyExchange",
+		"isHA",
 		"id",
 		"haTunnelID",
 		"dpdAction",

@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Passphrase** | **string** |  | 
+**Passphrase** | **string** | Pre-shared key for tunnel authentication. 8-64 characters, using letters, digits, \&quot;.\&quot; and \&quot;_\&quot; only; the first character cannot be \&quot;0\&quot;.  | 
 **P81GWInternalIP** | **string** |  | 
 **RemoteGWInternalIP** | **string** |  | 
 **RemotePublicIP** | **string** |  | 
-**RemoteASN** | **int32** |  | 
-**RemoteID** | [**RemoteID**](RemoteID.md) |  | 
+**RemoteASN** | **int32** | BGP ASN of the remote gateway. Must differ from the ASN of the Check Point SASE side (&#x60;p81ASN&#x60; in &#x60;sharedSettings&#x60;).  | 
+**RemoteID** | **string** | IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.  | 
 **GatewayID** | **string** |  | 
 **TunnelId** | **string** |  | 
 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 
 ### NewIPSecRedundantTunnelUpdatePayload
 
-`func NewIPSecRedundantTunnelUpdatePayload(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID RemoteID, gatewayID string, tunnelId string, ) *IPSecRedundantTunnelUpdatePayload`
+`func NewIPSecRedundantTunnelUpdatePayload(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string, gatewayID string, tunnelId string, ) *IPSecRedundantTunnelUpdatePayload`
 
 NewIPSecRedundantTunnelUpdatePayload instantiates a new IPSecRedundantTunnelUpdatePayload object
 This constructor will assign default values to properties that have it defined,
@@ -134,20 +134,20 @@ SetRemoteASN sets RemoteASN field to given value.
 
 ### GetRemoteID
 
-`func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteID() RemoteID`
+`func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteID() string`
 
 GetRemoteID returns the RemoteID field if non-nil, zero value otherwise.
 
 ### GetRemoteIDOk
 
-`func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteIDOk() (*RemoteID, bool)`
+`func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteIDOk() (*string, bool)`
 
 GetRemoteIDOk returns a tuple with the RemoteID field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteID
 
-`func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteID(v RemoteID)`
+`func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteID(v string)`
 
 SetRemoteID sets RemoteID field to given value.
 

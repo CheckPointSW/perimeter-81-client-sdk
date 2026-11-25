@@ -19,6 +19,7 @@ var _ MappedNullable = &HttpsInspectionPolicyGetResponse{}
 
 // HttpsInspectionPolicyGetResponse struct for HttpsInspectionPolicyGetResponse
 type HttpsInspectionPolicyGetResponse struct {
+	Status *int32 `json:"status,omitempty"`
 	Data *HttpsInspectionPolicyGetResponseData `json:"data,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -40,6 +41,38 @@ func NewHttpsInspectionPolicyGetResponse() *HttpsInspectionPolicyGetResponse {
 func NewHttpsInspectionPolicyGetResponseWithDefaults() *HttpsInspectionPolicyGetResponse {
 	this := HttpsInspectionPolicyGetResponse{}
 	return &this
+}
+
+// GetStatus returns the Status field value if set, zero value otherwise.
+func (o *HttpsInspectionPolicyGetResponse) GetStatus() int32 {
+	if o == nil || IsNil(o.Status) {
+		var ret int32
+		return ret
+	}
+	return *o.Status
+}
+
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *HttpsInspectionPolicyGetResponse) GetStatusOk() (*int32, bool) {
+	if o == nil || IsNil(o.Status) {
+		return nil, false
+	}
+	return o.Status, true
+}
+
+// HasStatus returns a boolean if a field has been set.
+func (o *HttpsInspectionPolicyGetResponse) HasStatus() bool {
+	if o != nil && !IsNil(o.Status) {
+		return true
+	}
+
+	return false
+}
+
+// SetStatus gets a reference to the given int32 and assigns it to the Status field.
+func (o *HttpsInspectionPolicyGetResponse) SetStatus(v int32) {
+	o.Status = &v
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
@@ -84,6 +117,9 @@ func (o HttpsInspectionPolicyGetResponse) MarshalJSON() ([]byte, error) {
 
 func (o HttpsInspectionPolicyGetResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.Status) {
+		toSerialize["status"] = o.Status
+	}
 	if !IsNil(o.Data) {
 		toSerialize["data"] = o.Data
 	}
@@ -109,6 +145,7 @@ func (o *HttpsInspectionPolicyGetResponse) UnmarshalJSON(data []byte) (err error
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "status")
 		delete(additionalProperties, "data")
 		o.AdditionalProperties = additionalProperties
 	}

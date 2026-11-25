@@ -4,11 +4,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**TunnelName** | **string** | Name of the tunnel | 
-**Description** | Pointer to **string** | Optional description for the tunnel | [optional] 
-**AddTunnels** | Pointer to [**[]DynamicTunnelDetails**](DynamicTunnelDetails.md) |  | [optional] 
-**UpdateTunnels** | Pointer to [**[]DynamicTunnelUpdateUpdateTunnelsInner**](DynamicTunnelUpdateUpdateTunnelsInner.md) |  | [optional] 
-**RemoveTunnels** | Pointer to [**[]DynamicTunnelUpdateRemoveTunnelsInner**](DynamicTunnelUpdateRemoveTunnelsInner.md) |  | [optional] 
+**TunnelName** | **string** | Name of the dynamic tunnel group. 1-13 characters, letters and digits only.  | 
+**Description** | Pointer to **string** | Free-text description of the tunnel group. | [optional] 
+**AddTunnels** | Pointer to [**[]DynamicTunnelDetails**](DynamicTunnelDetails.md) | New member tunnels to add to the group. | [optional] 
+**UpdateTunnels** | Pointer to [**[]DynamicTunnelUpdateUpdateTunnelsInner**](DynamicTunnelUpdateUpdateTunnelsInner.md) | Existing member tunnels to modify. Each entry is the tunnel &#x60;id&#x60; plus the fields to change.  | [optional] 
+**RemoveTunnels** | Pointer to **[]string** | IDs of the member tunnels to remove from the group, as plain strings. An ID that does not belong to this group is ignored.  | [optional] 
 **SharedSettings** | Pointer to [**EnhancedIPSecSharedSettingsUpdate**](EnhancedIPSecSharedSettingsUpdate.md) |  | [optional] 
 **AdvancedSettings** | Pointer to [**IPSecAdvancedSettingsV23**](IPSecAdvancedSettingsV23.md) |  | [optional] 
 **RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
@@ -129,20 +129,20 @@ HasUpdateTunnels returns a boolean if a field has been set.
 
 ### GetRemoveTunnels
 
-`func (o *DynamicTunnelUpdate) GetRemoveTunnels() []DynamicTunnelUpdateRemoveTunnelsInner`
+`func (o *DynamicTunnelUpdate) GetRemoveTunnels() []string`
 
 GetRemoveTunnels returns the RemoveTunnels field if non-nil, zero value otherwise.
 
 ### GetRemoveTunnelsOk
 
-`func (o *DynamicTunnelUpdate) GetRemoveTunnelsOk() (*[]DynamicTunnelUpdateRemoveTunnelsInner, bool)`
+`func (o *DynamicTunnelUpdate) GetRemoveTunnelsOk() (*[]string, bool)`
 
 GetRemoveTunnelsOk returns a tuple with the RemoveTunnels field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoveTunnels
 
-`func (o *DynamicTunnelUpdate) SetRemoveTunnels(v []DynamicTunnelUpdateRemoveTunnelsInner)`
+`func (o *DynamicTunnelUpdate) SetRemoveTunnels(v []string)`
 
 SetRemoveTunnels sets RemoveTunnels field to given value.
 

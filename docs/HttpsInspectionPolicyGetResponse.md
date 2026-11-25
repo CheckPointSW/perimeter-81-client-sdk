@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**Status** | Pointer to **int32** |  | [optional] 
 **Data** | Pointer to [**HttpsInspectionPolicyGetResponseData**](HttpsInspectionPolicyGetResponseData.md) |  | [optional] 
 
 ## Methods
@@ -24,6 +25,31 @@ will change when the set of required properties is changed
 NewHttpsInspectionPolicyGetResponseWithDefaults instantiates a new HttpsInspectionPolicyGetResponse object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
+
+### GetStatus
+
+`func (o *HttpsInspectionPolicyGetResponse) GetStatus() int32`
+
+GetStatus returns the Status field if non-nil, zero value otherwise.
+
+### GetStatusOk
+
+`func (o *HttpsInspectionPolicyGetResponse) GetStatusOk() (*int32, bool)`
+
+GetStatusOk returns a tuple with the Status field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetStatus
+
+`func (o *HttpsInspectionPolicyGetResponse) SetStatus(v int32)`
+
+SetStatus sets Status field to given value.
+
+### HasStatus
+
+`func (o *HttpsInspectionPolicyGetResponse) HasStatus() bool`
+
+HasStatus returns a boolean if a field has been set.
 
 ### GetData
 

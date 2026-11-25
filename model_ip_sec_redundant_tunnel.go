@@ -20,12 +20,15 @@ var _ MappedNullable = &IPSecRedundantTunnel{}
 
 // IPSecRedundantTunnel struct for IPSecRedundantTunnel
 type IPSecRedundantTunnel struct {
+	// Pre-shared key for tunnel authentication. 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
 	Passphrase *string `json:"passphrase,omitempty" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
 	P81GWInternalIP string `json:"p81GWInternalIP"`
 	RemoteGWInternalIP string `json:"remoteGWInternalIP"`
 	RemotePublicIP string `json:"remotePublicIP"`
+	// BGP ASN of the remote gateway. Must differ from the ASN of the Check Point SASE side (`p81ASN` in `sharedSettings`). 
 	RemoteASN int32 `json:"remoteASN"`
-	RemoteID *RemoteID `json:"remoteID,omitempty"`
+	// IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. 
+	RemoteID *string `json:"remoteID,omitempty"`
 	GatewayID string `json:"gatewayID"`
 	TunnelID *string `json:"tunnelID,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -184,9 +187,9 @@ func (o *IPSecRedundantTunnel) SetRemoteASN(v int32) {
 }
 
 // GetRemoteID returns the RemoteID field value if set, zero value otherwise.
-func (o *IPSecRedundantTunnel) GetRemoteID() RemoteID {
+func (o *IPSecRedundantTunnel) GetRemoteID() string {
 	if o == nil || IsNil(o.RemoteID) {
-		var ret RemoteID
+		var ret string
 		return ret
 	}
 	return *o.RemoteID
@@ -194,7 +197,7 @@ func (o *IPSecRedundantTunnel) GetRemoteID() RemoteID {
 
 // GetRemoteIDOk returns a tuple with the RemoteID field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *IPSecRedundantTunnel) GetRemoteIDOk() (*RemoteID, bool) {
+func (o *IPSecRedundantTunnel) GetRemoteIDOk() (*string, bool) {
 	if o == nil || IsNil(o.RemoteID) {
 		return nil, false
 	}
@@ -210,8 +213,8 @@ func (o *IPSecRedundantTunnel) HasRemoteID() bool {
 	return false
 }
 
-// SetRemoteID gets a reference to the given RemoteID and assigns it to the RemoteID field.
-func (o *IPSecRedundantTunnel) SetRemoteID(v RemoteID) {
+// SetRemoteID gets a reference to the given string and assigns it to the RemoteID field.
+func (o *IPSecRedundantTunnel) SetRemoteID(v string) {
 	o.RemoteID = &v
 }
 

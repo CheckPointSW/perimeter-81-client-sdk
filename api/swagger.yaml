@@ -9,8 +9,6 @@ x-amazon-apigateway-request-validators:
     validateRequestParameters: true
     validateRequestHeaders: true
 servers:
-- description: SwaggerHub API Auto Mocking
-  url: https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0
 - description: SASE Public API US
   url: https://public-apigw.us.sase.checkpoint.com
 - description: SASE Public API EU
@@ -21,6 +19,8 @@ servers:
   url: https://public-apigw.in.sase.checkpoint.com
 - description: SASE Public API Canada
   url: https://public-apigw.ca.sase.checkpoint.com
+security:
+- bearer: []
 paths:
   /v3/ia/access/policy:
     get:
@@ -140,7 +140,11 @@ paths:
       tags:
       - Internet Access Policies
     delete:
-      description: Delete all HTTPS Inspection policy rules
+      description: 'Delete all HTTPS Inspection policy rules.
+
+        Returns 422 if the request carries a non-empty rules array or a cleanupBypassRuleDefaultAction.
+
+        '
       summary: Delete all HTTPS Inspection policy rules
       operationId: deleteHttpsInspectionPolicy
       responses:
@@ -150,6 +154,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       tags:
@@ -213,6 +219,364 @@ paths:
                     - active
                     - inactive
                 additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+  /v3/ia/file-access/policy:
+    get:
+      description: List all file access policy rules
+      summary: Get all file access policy rules
+      operationId: getFileAccessPolicy
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileAccessPolicyGetResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+    post:
+      description: 'Update/Create all file access policy rules.
+
+        Sends all rules in a single request (full replace). At least one rule is required.
+
+        '
+      summary: Update/Create all file access policy rules
+      operationId: updateFileAccessPolicy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFileAccessPolicyRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileAccessPolicyGetResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      tags:
+      - Internet Access Policies
+    delete:
+      description: Delete all tenant-owned file access policy rules. The global default rule is unaffected.
+      summary: Delete all file access policy rules
+      operationId: deleteFileAccessPolicy
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+  /v3/ia/host-firewall/policy:
+    get:
+      description: List all host firewall (network security protocol) rules
+      summary: Get all host firewall rules
+      operationId: getHostFirewallPolicy
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostFirewallPolicyResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+    post:
+      description: 'Update/Create all host firewall rules.
+
+        Sends all rules in a single request (full replace). Rules omitted from the request are deleted.
+
+        Returns 403 when the Host Firewall feature is not enabled for the tenant.
+
+        '
+      summary: Update/Create all host firewall rules
+      operationId: updateHostFirewallPolicy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHostFirewallPolicyRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostFirewallPolicyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+    delete:
+      description: 'Delete all host firewall rules.
+
+        The body is optional. If sent, `protocolRules` must be an empty array; a non-empty array returns 422
+
+        (DELETE_REQUEST_MUST_HAVE_EMPTY_ARRAY). Other keys are ignored.
+
+        '
+      summary: Delete all host firewall rules
+      operationId: deleteHostFirewallPolicy
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteHostFirewallPolicyRequest'
+      responses:
+        '204':
+          description: No content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+  /v3/ia/notification-pages:
+    get:
+      description: List notification pages
+      summary: Get notification pages
+      operationId: getNotificationPages
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPagesGetResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+    post:
+      description: Create or update notification pages
+      summary: Create or update notification pages
+      operationId: updateNotificationPages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNotificationPagesRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPagesMessageResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      tags:
+      - Internet Access Policies
+    delete:
+      description: Delete notification pages
+      summary: Delete notification pages
+      operationId: deleteNotificationPages
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationPagesMessageResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+  /v3/ia/inspection-settings:
+    get:
+      description: Get traffic inspection settings (custom ports, certificate validation rules, revocation check timeout and CRLite)
+      summary: Get traffic inspection settings
+      operationId: getInspectionSettings
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InspectionSettingsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+    post:
+      description: 'Update traffic inspection settings (custom ports, certificate validation rules and/or
+
+        revocation check timeout and/or CRLite). At least one section is required.
+
+        Each section (ports, invalidCertificatesSettings, revocationCheckTimeoutMs, crliteEnabled) is saved
+
+        independently — omitting one preserves the existing value for that section.
+
+        '
+      summary: Update traffic inspection settings
+      operationId: updateInspectionSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInspectionSettingsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InspectionSettingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      tags:
+      - Internet Access Policies
+    delete:
+      description: Reset traffic inspection settings to factory defaults, including the revocation check timeout. Certificate validation rules return to their defaults (the revoked action defaults to Block) and crliteEnabled returns to true.
+      summary: Reset traffic inspection settings
+      operationId: deleteInspectionSettings
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+  /v3/ia/dlp-settings:
+    get:
+      description: Get Data Loss Prevention (DLP) settings (fail type). Returns 403 when the feature is not enabled for the tenant.
+      summary: Get DLP settings
+      operationId: getDlpSettings
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DlpSettingsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+      - Internet Access Policies
+    post:
+      description: 'Update Data Loss Prevention (DLP) settings. The fail type controls whether traffic is allowed (open)
+
+        or blocked (close) when DLP inspection cannot be completed. Applies to all DLP rules.
+
+        Rejected with 403 when the feature is not enabled for the tenant.
+
+        '
+      summary: Update DLP settings
+      operationId: updateDlpSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDlpSettingsRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DlpSettingsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: SWG profile not found for the tenant
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      tags:
+      - Internet Access Policies
+    delete:
+      description: Reset DLP settings to their default values (fail type open).
+      summary: Reset DLP settings
+      operationId: deleteDlpSettings
+      responses:
+        '204':
+          description: No content
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -301,8 +665,6 @@ paths:
           $ref: '#/components/responses/400_BadRequest'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
-        '402':
-          $ref: '#/components/responses/402_Insufficient_licenses'
         '403':
           $ref: '#/components/responses/403_Forbidden'
   /v3/networks/enhanced/{networkId}:
@@ -398,8 +760,8 @@ paths:
   /v3/networks/enhanced/harmony-sase-regions:
     get:
       operationId: Enhanced_NetworksControllerV2_getRegions
-      summary: List of available Harmony SASE regions that supports enhanced networks
-      description: 'Required permissions: `["addon:read"]`<br><br>List of regions.'
+      summary: List available Check Point SASE regions that support enhanced networks
+      description: 'Required permissions: `["network:read"]`<br><br>List of regions.'
       responses:
         '200':
           description: Completed successfully
@@ -408,16 +770,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/HarmonySaseRegionsList'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
       tags:
       - Enhanced Regions
   /v3/networks/enhanced/network-customer-certificate:
     get:
       operationId: Enhanced_NetworksControllerV2_3_getNetworkCustomerCertificate
-      summary: Get network customer certificate
-      description: 'Required permissions: `["network:read"]`<br><br>Get network customer certificate details.'
+      summary: Get network customer certificates
+      description: 'Required permissions: `["network:read"]`<br><br>Get the details of the network customer certificates.'
       responses:
         '200':
           description: Completed successfully
@@ -426,9 +788,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/NetworkCustomerCertificateResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
       tags:
       - Enhanced Networks
   /v3/networks/enhanced/{networkId}/regions:
@@ -480,8 +842,6 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         '404':
           $ref: '#/components/responses/404_NotFound'
-        '409':
-          description: Network region doesn't exists
   /v3/networks/enhanced/{networkId}/regions/{regionId}:
     get:
       tags:
@@ -527,8 +887,6 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         '404':
           $ref: '#/components/responses/404_NotFound'
-        '409':
-          description: Network region doesn't exists
   /v3/networks/enhanced/{networkId}/regions/{regionId}/scale-unit/increase:
     put:
       tags:
@@ -558,8 +916,6 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         '404':
           $ref: '#/components/responses/404_NotFound'
-        '409':
-          description: Network region not found
   /v3/networks/enhanced/{networkId}/regions/{regionId}/scale-unit/reduce:
     put:
       tags:
@@ -589,8 +945,6 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         '404':
           $ref: '#/components/responses/404_NotFound'
-        '409':
-          description: Network region not found
   /v3/networks/enhanced/{networkId}/privateDNS:
     get:
       tags:
@@ -627,7 +981,7 @@ paths:
 
         Any field omitted from `attributes` (such as `searchDomains`) is cleared, not
 
-        preserved — to keep current values, resend the full object returned by GET.
+        preserved. To keep current values, resend the full object returned by GET.
 
         '
       operationId: updateEnhancedNetworkPrivateDNS
@@ -652,8 +1006,6 @@ paths:
           $ref: '#/components/responses/404_NotFound'
         '409':
           $ref: '#/components/responses/409_Conflict'
-        '422':
-          $ref: '#/components/responses/422_UnprocessableEntity'
         '429':
           $ref: '#/components/responses/429_TooManyRequests'
   /v3/networks/enhanced/{networkId}/regions/{regionId}/privateDNS:
@@ -693,7 +1045,7 @@ paths:
 
         object. Any field omitted from `attributes` (such as `searchDomains`) is cleared,
 
-        not preserved — to keep current values, resend the full object returned by GET.
+        not preserved. To keep current values, resend the full object returned by GET.
 
         '
       operationId: updateEnhancedRegionPrivateDNS
@@ -719,8 +1071,6 @@ paths:
           $ref: '#/components/responses/404_NotFound'
         '409':
           $ref: '#/components/responses/409_Conflict'
-        '422':
-          $ref: '#/components/responses/422_UnprocessableEntity'
         '429':
           $ref: '#/components/responses/429_TooManyRequests'
   /v3/networks/enhanced/{networkId}/tunnels:
@@ -830,8 +1180,8 @@ paths:
     post:
       tags:
       - Enhanced Tunnels
-      summary: Create dynamic IPSec tunnel
-      description: 'Required permissions: `["network:create"]`<br><br>Create a new dynamic IPSec tunnel in an enhanced network'
+      summary: Create dynamic IPSec tunnel group
+      description: 'Required permissions: `["network:create"]`<br><br>Create a new dynamic IPSec tunnel group in an enhanced network. The group holds 1-8 member tunnels that are configured and managed together.'
       operationId: createDynamicTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
@@ -841,6 +1191,123 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DynamicTunnelCreate'
+            examples:
+              singleTunnelPsk:
+                summary: Single tunnel, pre-shared key
+                description: 'Minimal working request. One member tunnel authenticated with a pre-shared key, routing all traffic (0.0.0.0/0) through the SASE network. `leftASN` fixes the network ASN, since this is the first dynamic tunnel on the network.
+
+                  '
+                value:
+                  tunnelName: londonlink
+                  description: Primary link to the London data center
+                  tunnels:
+                  - regionID: sXUeWwM8DM
+                    authType: psk
+                    passphrase: Str0ng.Shared_Key01
+                    p81GWInternalIP: 169.254.10.1
+                    remoteGWInternalIP: 169.254.10.2
+                    remotePublicIP: 203.0.113.10
+                    remoteASN: 65001
+                    remoteID: londongw01
+                    routingType: route
+                  sharedSettings:
+                    p81GatewaySubnets:
+                    - 0.0.0.0/0
+                    remoteGatewaySubnets:
+                    - 192.168.10.0/24
+                    leftASN: 64512
+                    peakBandwidthMbps: 1000
+                    features:
+                      cloudSecurity:
+                        enabled: false
+                      symmetricInnerMesh:
+                        enabled: false
+                      DNSServices:
+                        redirectToResolver:
+                          enabled: true
+                  advancedSettings:
+                    keyExchange: ikev2
+                    ikeLifeTime: 8h
+                    lifetime: 1h
+                    dpdDelay: 10s
+                    dpdTimeout: 30s
+                    phase1:
+                      auth:
+                      - sha256
+                      encryption:
+                      - aes256
+                      keyExchangeMethod:
+                      - modp2048
+                    phase2:
+                      auth:
+                      - sha256
+                      encryption:
+                      - aes256
+                      keyExchangeMethod:
+                      - modp2048
+              haTunnelCert:
+                summary: HA pair (two tunnels), certificate auth
+                description: 'Redundant group with two member tunnels, authenticated with certificates. Each member uses a distinct set of IP addresses and its own remote ASN, but both share one `leftASN` and one set of traffic selectors. `customerRootCA` is the ID of a certificate already in the store.
+
+                  '
+                value:
+                  tunnelName: dclink
+                  description: Redundant link to the Frankfurt data center
+                  tunnels:
+                  - regionID: sXUeWwM8DM
+                    authType: cert
+                    customerRootCA: GCt8HauIPH
+                    p81GWInternalIP: 169.254.10.1
+                    remoteGWInternalIP: 169.254.10.2
+                    remotePublicIP: 203.0.113.10
+                    remoteASN: 65001
+                    remoteID: frankfurtgw01
+                    routingType: route
+                  - regionID: sXUeWwM8DM
+                    authType: cert
+                    customerRootCA: GCt8HauIPH
+                    p81GWInternalIP: 169.254.10.5
+                    remoteGWInternalIP: 169.254.10.6
+                    remotePublicIP: 203.0.113.11
+                    remoteASN: 65002
+                    remoteID: frankfurtgw02
+                    routingType: route
+                  sharedSettings:
+                    p81GatewaySubnets:
+                    - 10.255.0.0/16
+                    remoteGatewaySubnets:
+                    - 192.168.10.0/24
+                    - 192.168.20.0/24
+                    leftASN: 64512
+                    peakBandwidthMbps: 2000
+                    features:
+                      cloudSecurity:
+                        enabled: false
+                      symmetricInnerMesh:
+                        enabled: true
+                      DNSServices:
+                        redirectToResolver:
+                          enabled: true
+                  advancedSettings:
+                    keyExchange: ikev2
+                    ikeLifeTime: 8h
+                    lifetime: 1h
+                    dpdDelay: 10s
+                    dpdTimeout: 30s
+                    phase1:
+                      auth:
+                      - sha256
+                      encryption:
+                      - aes256
+                      keyExchangeMethod:
+                      - modp2048
+                    phase2:
+                      auth:
+                      - sha256
+                      encryption:
+                      - aes256
+                      keyExchangeMethod:
+                      - modp2048
       responses:
         '202':
           $ref: '#/components/responses/202_Accepted'
@@ -854,14 +1321,12 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         '404':
           $ref: '#/components/responses/404_NotFound'
-        '422':
-          $ref: '#/components/responses/422_UnprocessableEntity'
   /v3/networks/enhanced/{networkId}/tunnels/ipsec/dynamic/{dynamicTunnelId}:
     get:
       tags:
       - Enhanced Tunnels
-      summary: Get dynamic IPSec tunnel
-      description: 'Required permissions: `["network:read"]`<br><br>Get details of a dynamic IPSec tunnel'
+      summary: Get dynamic IPSec tunnel group
+      description: 'Required permissions: `["network:read"]`<br><br>Get details of a dynamic IPSec tunnel group. Returns one entry per member tunnel in the group.'
       operationId: getDynamicTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
@@ -884,8 +1349,8 @@ paths:
     put:
       tags:
       - Enhanced Tunnels
-      summary: Update dynamic IPSec tunnel
-      description: 'Required permissions: `["network:update"]`<br><br>Update a dynamic IPSec tunnel configuration'
+      summary: Update dynamic IPSec tunnel group
+      description: 'Required permissions: `["network:update"]`<br><br>Update a dynamic IPSec tunnel group. Settings sent at the top level apply to every member tunnel. A single request may add members or remove members, but never both, so use separate requests for an addition and a removal.'
       operationId: updateDynamicTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
@@ -896,6 +1361,67 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DynamicTunnelUpdate'
+            examples:
+              addAndUpdateMembers:
+                summary: Add one member tunnel and update another
+                description: 'Grows the group by one peer and changes the remote address of an existing peer in the same call. A single request may add members or remove members, but never both, so `removeTunnels` is not used here.
+
+                  '
+                value:
+                  tunnelName: dclink
+                  description: Redundant link to the Frankfurt data center
+                  addTunnels:
+                  - regionID: sXUeWwM8DM
+                    authType: psk
+                    passphrase: Str0ng.Shared_Key02
+                    p81GWInternalIP: 169.254.10.9
+                    remoteGWInternalIP: 169.254.10.10
+                    remotePublicIP: 203.0.113.12
+                    remoteASN: 65003
+                    remoteID: frankfurtgw03
+                    routingType: route
+                  updateTunnels:
+                  - id: P8a38hEkwt
+                    authType: psk
+                    passphrase: Str0ng.Shared_Key01
+                    remotePublicIP: 203.0.113.20
+                    remoteASN: 65001
+                    remoteID: frankfurtgw01
+                    routingType: route
+                  sharedSettings:
+                    p81GatewaySubnets:
+                    - 10.255.0.0/16
+                    remoteGatewaySubnets:
+                    - 192.168.10.0/24
+                    peakBandwidthMbps: 2000
+                    features:
+                      cloudSecurity:
+                        enabled: false
+                      symmetricInnerMesh:
+                        enabled: true
+                      DNSServices:
+                        redirectToResolver:
+                          enabled: true
+                  advancedSettings:
+                    keyExchange: ikev2
+                    ikeLifeTime: 8h
+                    lifetime: 1h
+                    dpdDelay: 10s
+                    dpdTimeout: 30s
+                    phase1:
+                      auth:
+                      - sha256
+                      encryption:
+                      - aes256
+                      keyExchangeMethod:
+                      - modp2048
+                    phase2:
+                      auth:
+                      - sha256
+                      encryption:
+                      - aes256
+                      keyExchangeMethod:
+                      - modp2048
       responses:
         '202':
           $ref: '#/components/responses/202_Accepted'
@@ -910,8 +1436,8 @@ paths:
     delete:
       tags:
       - Enhanced Tunnels
-      summary: Delete dynamic IPSec tunnel
-      description: 'Required permissions: `["network:delete"]`<br><br>Delete a dynamic IPSec tunnel'
+      summary: Delete dynamic IPSec tunnel group
+      description: 'Required permissions: `["network:delete"]`<br><br>Delete a dynamic IPSec tunnel group, including every member tunnel in it. To remove a single member and keep the group, use the update operation with `removeTunnels`.'
       operationId: deleteDynamicTunnel
       parameters:
       - $ref: '#/components/parameters/networkId'
@@ -927,8 +1453,6 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         '404':
           $ref: '#/components/responses/404_NotFound'
-        '422':
-          $ref: '#/components/responses/422_UnprocessableEntity'
   /v3/networks/enhanced/{networkId}/tunnels/ipsec/static:
     post:
       tags:
@@ -944,6 +1468,53 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StaticTunnelCreate'
+            examples:
+              staticTunnelPsk:
+                summary: Static tunnel, pre-shared key
+                description: 'Complete working request. A static tunnel has no BGP peering, so it has no ASN and no per-peer internal IPs. Reachable subnets are stated explicitly instead.
+
+                  '
+                value:
+                  regionID: sXUeWwM8DM
+                  tunnelName: branchlink
+                  description: Static link to the Manchester branch office
+                  authType: psk
+                  passphrase: Str0ng.Shared_Key01
+                  p81GatewaySubnets:
+                  - 10.255.0.0/16
+                  remoteGatewaySubnets:
+                  - 192.168.10.0/24
+                  remotePublicIP: 203.0.113.10
+                  remoteID: manchestergw01
+                  peakBandwidthMbps: 1000
+                  keyExchange: ikev2
+                  ikeLifeTime: 8h
+                  lifetime: 1h
+                  dpdDelay: 10s
+                  dpdTimeout: 30s
+                  routingType: route
+                  features:
+                    cloudSecurity:
+                      enabled: false
+                    symmetricInnerMesh:
+                      enabled: false
+                    DNSServices:
+                      redirectToResolver:
+                        enabled: true
+                  phase1:
+                    auth:
+                    - sha256
+                    encryption:
+                    - aes256
+                    keyExchangeMethod:
+                    - modp2048
+                  phase2:
+                    auth:
+                    - sha256
+                    encryption:
+                    - aes256
+                    keyExchangeMethod:
+                    - modp2048
       responses:
         '202':
           $ref: '#/components/responses/202_Accepted'
@@ -957,8 +1528,6 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         '404':
           $ref: '#/components/responses/404_NotFound'
-        '422':
-          $ref: '#/components/responses/422_UnprocessableEntity'
   /v3/networks/enhanced/{networkId}/tunnels/ipsec/static/{tunnelId}:
     get:
       tags:
@@ -1028,8 +1597,6 @@ paths:
           $ref: '#/components/responses/403_Forbidden'
         '404':
           $ref: '#/components/responses/404_NotFound'
-        '422':
-          $ref: '#/components/responses/422_UnprocessableEntity'
   /v3/networks/enhanced/{networkId}/route-table:
     get:
       tags:
@@ -1114,7 +1681,7 @@ paths:
       tags:
       - Enhanced Route Tables
       summary: Create dynamic route
-      description: 'Required permissions: `["network:create"]`<br><br>Create a new dynamic route entry. The selected dynamic tunnel must not already have a route table.'
+      description: 'Required permissions: `["network:create"]`<br><br>Create a new dynamic route entry. The route belongs to a whole dynamic tunnel group, and the group must not already have a route table.'
       operationId: createDynamicRoute
       parameters:
       - $ref: '#/components/parameters/networkId'
@@ -1227,9 +1794,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/AsyncOperationStatus'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Status not found
       tags:
@@ -1266,7 +1833,7 @@ paths:
 
         **Important validation rules:**
 
-        - Exceptions are only supported in ''out_of_tunnel'' mode. Providing exceptions when defaultTunnelingMode is ''via_tunnel'' will result in a 400 Bad Request error.
+        - Exceptions are only supported in ''out_of_tunnel'' mode. Do not provide exceptions when defaultTunnelingMode is ''via_tunnel''.
 
         - Addresses cannot be defined in a private network (routing table) and be excluded from ''tunnel all'' at the same time.
 
@@ -1320,9 +1887,9 @@ paths:
                 type: array
                 description: Network list.
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbbiden
+          $ref: '#/components/responses/403_Forbidden'
       tags:
       - Standard Networks
     post:
@@ -1347,11 +1914,9 @@ paths:
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
-        '402':
-          description: Insufficient licenses
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
       tags:
       - Standard Networks
   /v3/networks/standard/{networkId}:
@@ -1375,9 +1940,9 @@ paths:
         '429':
           $ref: '#/components/responses/429_TooManyRequests'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
       tags:
@@ -1400,9 +1965,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Network'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
       tags:
@@ -1433,9 +1998,9 @@ paths:
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
       tags:
@@ -1460,9 +2025,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/StandardHealthResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
       tags:
@@ -1496,11 +2061,9 @@ paths:
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
-        '402':
-          description: Insufficient licenses
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
       tags:
@@ -1533,9 +2096,9 @@ paths:
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
       tags:
@@ -1564,9 +2127,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/NetworkInstance'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Gateway not found
       tags:
@@ -1590,9 +2153,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/AsyncOperationStatus'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Status not found
       tags:
@@ -1600,8 +2163,8 @@ paths:
   /v3/networks/standard/harmony-sase-regions:
     get:
       operationId: Standard_NetworksControllerV2_getRegions
-      summary: List of available Harmony SASE regions that support standard networks
-      description: 'Required permissions: `["addon:read"]`<br><br>List of regions.'
+      summary: List available Check Point SASE regions that support standard networks
+      description: 'Required permissions: `["network:read"]`<br><br>List of regions.'
       responses:
         '200':
           description: Completed successfully
@@ -1610,9 +2173,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/RegionsList'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
       tags:
       - Standard Regions
   /v3/networks/standard/{networkId}/regions:
@@ -1644,9 +2207,9 @@ paths:
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbbiden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
         '409':
@@ -1679,9 +2242,9 @@ paths:
         '429':
           $ref: '#/components/responses/429_TooManyRequests'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbbiden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: 'Region            etwork not found'
       tags:
@@ -1710,9 +2273,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/NetworkRegion'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Region not found
       tags:
@@ -1776,8 +2339,8 @@ paths:
           $ref: '#/components/responses/429_TooManyRequests'
   /v3/networks/standard/{networkId}/tunnels/wireguard:
     post:
-      operationId: Standard_createWireguardTunnel
-      summary: Create a new Wireguard tunnel
+      operationId: Standard_createWireGuardTunnel
+      summary: Create a new WireGuard tunnel
       description: 'Required permissions: `["network:create"]`'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
@@ -1786,7 +2349,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateWireguardTunnelPayload'
+              $ref: '#/components/schemas/CreateWireGuardTunnelPayload'
       responses:
         '202':
           $ref: '#/components/responses/202'
@@ -1794,20 +2357,16 @@ paths:
           $ref: '#/components/responses/429_TooManyRequests'
         '401':
           $ref: '#/components/responses/401'
-        '402':
-          $ref: '#/components/responses/402'
         '403':
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
   /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId}:
     get:
-      operationId: Standard_getWireguardTunnel
-      summary: Get a Wireguard tunnel
+      operationId: Standard_getWireGuardTunnel
+      summary: Get a WireGuard tunnel
       description: 'Required permissions: `["network:read"]`'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
@@ -1818,7 +2377,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WireguardTunnel'
+                $ref: '#/components/schemas/WireGuardTunnel'
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -1828,8 +2387,8 @@ paths:
       tags:
       - Standard Tunnels
     put:
-      operationId: Standard_updateWireguardTunnel
-      summary: Update a Wireguard tunnel
+      operationId: Standard_updateWireGuardTunnel
+      summary: Update a WireGuard tunnel
       description: 'Required permissions: `["network:create"]`'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
@@ -1839,7 +2398,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WireGuradDetails'
+              $ref: '#/components/schemas/WireGuardDetails'
       responses:
         '202':
           $ref: '#/components/responses/202'
@@ -1851,13 +2410,11 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
     delete:
-      operationId: Standard_deleteWireguardTunnel
-      summary: Delete Wireguard tunnel
+      operationId: Standard_deleteWireGuardTunnel
+      summary: Delete WireGuard tunnel
       description: 'Required permissions: `["network:delete"]`'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
@@ -1873,14 +2430,12 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
   /v3/networks/standard/{networkId}/tunnels/wireguard/{tunnelId}/config-token:
     get:
-      operationId: Standard_getWireguardConfigUrl
-      summary: Get Wireguard config download URL
+      operationId: Standard_getWireGuardConfigUrl
+      summary: Get WireGuard config download URL
       description: 'Required permissions: `["network:read"]`<br><br>Get the full WireGuard tunnel config download URL with a short-lived access token.'
       parameters:
       - $ref: '#/components/parameters/networkIdParam'
@@ -1891,7 +2446,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WireguardConfigUrl'
+                $ref: '#/components/schemas/WireGuardConfigUrl'
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -1926,14 +2481,10 @@ paths:
           $ref: '#/components/responses/429_TooManyRequests'
         '401':
           $ref: '#/components/responses/401'
-        '402':
-          $ref: '#/components/responses/402'
         '403':
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
   /v3/networks/standard/{networkId}/tunnels/openvpn/{tunnelId}:
@@ -2001,8 +2552,6 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
   /v3/networks/standard/{networkId}/tunnels/ipsec/single:
@@ -2025,14 +2574,10 @@ paths:
           $ref: '#/components/responses/429_TooManyRequests'
         '401':
           $ref: '#/components/responses/401'
-        '402':
-          $ref: '#/components/responses/402'
         '403':
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
   /v3/networks/standard/{networkId}/tunnels/ipsec/single/{tunnelId}:
@@ -2102,8 +2647,6 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
   /v3/networks/standard/{networkId}/tunnels/ipsec/redundant:
@@ -2126,14 +2669,10 @@ paths:
           $ref: '#/components/responses/429_TooManyRequests'
         '401':
           $ref: '#/components/responses/401'
-        '402':
-          $ref: '#/components/responses/402'
         '403':
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
   /v3/networks/standard/{networkId}/tunnels/ipsec/redundant/{haTunnelId}:
@@ -2203,8 +2742,6 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
-        '422':
-          $ref: '#/components/responses/422'
       tags:
       - Standard Tunnels
   /v3/networks/standard/{networkId}/route-table:
@@ -2287,9 +2824,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GranularFirewallPolicy'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
         '409':
@@ -2324,9 +2861,9 @@ paths:
         '400':
           description: Bad request
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Network not found
         '409':
@@ -2346,9 +2883,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/ObjectsServicesResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
       tags:
       - Objects
     post:
@@ -2376,9 +2913,9 @@ paths:
                 - $ref: '#/components/schemas/ObjectsServicesResponseObj'
                 additionalProperties: true
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
       tags:
       - Objects
   /v3/objects/services/{objectId}:
@@ -2409,11 +2946,11 @@ paths:
                 - description: The updated service.
                 additionalProperties: true
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '409':
-          description: Conflict - You cannot update a service that is associated with one or more policies
+          description: Conflict. You cannot update a service that is associated with one or more policies
       tags:
       - Objects
     delete:
@@ -2430,11 +2967,11 @@ paths:
         '204':
           description: No Content
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '409':
-          description: Conflict - You cannot delete a service that is associated with one or more policies
+          description: Conflict. You cannot delete a service that is associated with one or more policies
       tags:
       - Objects
   /v3/applications:
@@ -2499,9 +3036,9 @@ paths:
         '400':
           description: Bad Request
         '401':
-          description: Not Authorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '500':
           description: Internal Server Error
     post:
@@ -2531,9 +3068,9 @@ paths:
         '400':
           description: Bad Request
         '401':
-          description: Not Authorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '500':
           description: Internal Server Error
   /v3/applications/{applicationId}:
@@ -2555,26 +3092,13 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                - $ref: '#/components/schemas/HttpApplication'
-                - $ref: '#/components/schemas/HttpsApplication'
-                - $ref: '#/components/schemas/RdpApplication'
-                - $ref: '#/components/schemas/SshApplication'
-                - $ref: '#/components/schemas/VncApplication'
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    http: '#/components/schemas/HttpApplication'
-                    https: '#/components/schemas/HttpsApplication'
-                    rdp: '#/components/schemas/RdpApplication'
-                    ssh: '#/components/schemas/SshApplication'
-                    vnc: '#/components/schemas/VncApplication'
+                $ref: '#/components/schemas/ApplicationResponse'
         '400':
           description: Bad Request
         '401':
-          description: Not Authorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Application Not Found
         '500':
@@ -2602,9 +3126,9 @@ paths:
         '400':
           description: Bad Request
         '401':
-          description: Not Authorized
+          $ref: '#/components/responses/401_Unauthorized'
         '403':
-          description: Forbidden
+          $ref: '#/components/responses/403_Forbidden'
         '404':
           description: Application Not Found
         '500':
@@ -2629,6 +3153,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                status: 400
+                message: Bad Request Exception
+                messageCode: BAD_REQUEST
+                data:
+                  errors:
+                  - Name should be no longer than 64 characters
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
     get:
       summary: Returns paginated list of groups
       description: Returns paginated list of groups.
@@ -2666,6 +3213,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GroupList'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
   /v3/groups/{id}:
     delete:
       summary: Delete group by ID
@@ -2686,6 +3243,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
   /v3/groups/{groupId}/member/{userId}:
     post:
       summary: Add member to group
@@ -2711,6 +3278,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
     delete:
       summary: Remove member from group
       description: Remove a member from a group.
@@ -2735,6 +3312,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
   /v3/users:
     post:
       summary: Create new user
@@ -2757,6 +3344,16 @@ paths:
                 $ref: '#/components/schemas/User'
         '400':
           description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
     get:
       summary: Returns paginated list of users
       description: Returns paginated list of users.
@@ -2807,6 +3404,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserList'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
   /v3/users/{id}:
     delete:
       summary: Delete user
@@ -2829,6 +3436,16 @@ paths:
                 $ref: '#/components/schemas/User'
         '404':
           description: User not found
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
   /v3/objects/addresses:
     get:
       summary: Get list of addresses
@@ -2863,6 +3480,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AddressList'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
     post:
       summary: Create address
       operationId: createAddress
@@ -2881,6 +3508,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DBAddress'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
   /v3/objects/addresses/{id}:
     put:
       summary: Update address
@@ -2906,6 +3543,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DBAddress'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
   /v3/objects/addresses/{addressId}:
     delete:
       summary: Delete address
@@ -2921,6 +3568,16 @@ paths:
       responses:
         '204':
           description: Address deleted
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
   /v3/objects/updatable-objects:
     get:
       operationId: getUpdatableObjects
@@ -3088,6 +3745,340 @@ paths:
                 $ref: '#/components/schemas/gumErrorResponse'
       x-amazon-apigateway-auth:
         type: NONE
+  /v3/objects/custom-urls:
+    get:
+      operationId: listCustomUrls
+      tags:
+      - Objects
+      parameters:
+      - name: page
+        in: query
+        description: the page number to retrieve from the paginated results. Default is 1.
+        schema:
+          type: integer
+          minimum: 1
+      - name: limit
+        in: query
+        description: number of items per page. Default is 500.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+      - name: search
+        in: query
+        description: free-text filter matched literally against name, description and the object's entries (urls or urlPatterns). A pattern is matched as text and never run.
+        schema:
+          type: string
+          maxLength: 255
+      - name: sort
+        in: query
+        description: sort order, passed as sort[name]=asc and/or sort[createdAt]=desc; name sorts first when both are given. Default is newest first.
+        style: deepObject
+        explode: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              enum:
+              - asc
+              - desc
+            createdAt:
+              type: string
+              enum:
+              - asc
+              - desc
+          additionalProperties: false
+      responses:
+        '200':
+          description: Successful response with a paginated list of custom URLs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUrlList'
+        '400':
+          description: Bad request - invalid or unknown query parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+      x-amazon-apigateway-auth:
+        type: NONE
+    post:
+      operationId: createCustomUrl
+      description: 'Creates a custom URL object. `controlledBy` is assigned by the server and is rejected if
+
+        supplied. `entryType` is `url` unless given: a url object sends `urls`, a regex object
+
+        sends `urlPatterns`. A regex object, or a url entry with a port or a query, is created only
+
+        when advanced matching is enabled for the tenant.
+
+        '
+      tags:
+      - Objects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUrlWriteRequest'
+      responses:
+        '201':
+          description: The created custom URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUrl'
+        '400':
+          description: Bad request - unparseable body or a field outside the contract
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '403':
+          description: Forbidden - insufficient permissions, or a regex object or a port or query entry while advanced matching is not enabled for the tenant (CUSTOM_URL_ADVANCED_MATCHING_NOT_ENABLED)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '409':
+          description: Conflict - an object with this name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '422':
+          description: Unprocessable entity - a field violates a constraint; an invalid entry is named by its position and reason
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+      x-amazon-apigateway-auth:
+        type: NONE
+  /v3/objects/custom-urls/{customUrlId}:
+    get:
+      operationId: getCustomUrl
+      tags:
+      - Objects
+      parameters:
+      - name: customUrlId
+        in: path
+        required: true
+        description: custom URL object identifier
+        schema:
+          type: string
+          minLength: 10
+          maxLength: 10
+      responses:
+        '200':
+          description: Successful response with a single custom URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUrl'
+        '400':
+          description: Bad request - missing or invalid identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '404':
+          description: Not found - no custom URL with this identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+      x-amazon-apigateway-auth:
+        type: NONE
+    put:
+      operationId: updateCustomUrl
+      description: 'Replaces the attributes of a custom URL object. Rejected when the object is not controlled
+
+        by Harmony SASE, is a platform default, or is referenced by a policy. The type of an object
+
+        cannot be changed, so `type` must be the one it was created with (`url` when omitted).
+
+        '
+      tags:
+      - Objects
+      parameters:
+      - name: customUrlId
+        in: path
+        required: true
+        description: custom URL object identifier
+        schema:
+          type: string
+          minLength: 10
+          maxLength: 10
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomUrlWriteRequest'
+      responses:
+        '200':
+          description: The updated custom URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUrl'
+        '400':
+          description: Bad request - unparseable body or a field outside the contract
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '403':
+          description: Forbidden - insufficient permissions, the object is not controlled by Harmony SASE, or the update edits a regex object or adds a port or query entry while advanced matching is not enabled for the tenant (CUSTOM_URL_ADVANCED_MATCHING_NOT_ENABLED)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '409':
+          description: Conflict - duplicate name, default object, or object in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '422':
+          description: Unprocessable entity - a field violates a constraint; an invalid entry is named by its position and reason
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+      x-amazon-apigateway-auth:
+        type: NONE
+    delete:
+      operationId: deleteCustomUrl
+      description: 'Deletes a custom URL object, subject to the same guards as the update.
+
+        '
+      tags:
+      - Objects
+      parameters:
+      - name: customUrlId
+        in: path
+        required: true
+        description: custom URL object identifier
+        schema:
+          type: string
+          minLength: 10
+          maxLength: 10
+      responses:
+        '204':
+          description: No content - deleted
+        '400':
+          description: Bad request - an unsupported query parameter such as force
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '403':
+          description: Forbidden - insufficient permissions, or the object is not controlled by Harmony SASE
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '409':
+          description: Conflict - duplicate name, default object, or object in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '422':
+          description: Unprocessable entity - a field violates a constraint; an invalid entry is named by its position and reason
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+      x-amazon-apigateway-auth:
+        type: NONE
   /v3/account/customize/support-options:
     get:
       summary: Get end users support information settings
@@ -3151,7 +4142,7 @@ paths:
     post:
       tags:
       - Authentication
-      summary: Get Access Token
+      summary: Get access token
       description: Retrieve an access token using an API key
       operationId: authorizeToken
       requestBody:
@@ -3167,6 +4158,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthorizeResponse'
+              example:
+                data:
+                  tokenType: bearer
+                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example-access-token-payload.signature
+                  accessTokenExpire: 1893456000
+                  tenantId: 5f9b2c8e1a2b3c4d5e6f7a8b
+                  sessionId: enc-a1b2c3d4e5f6g7h8i9j0
         '401':
           description: Unauthorized - Invalid credentials
           content:
@@ -3179,6 +4177,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumErrorResponse'
+      security: []
   /v3/gum/custom-roles:
     get:
       summary: List all custom roles for tenant
@@ -3189,6 +4188,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumCustomRolesListResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumUnauthorizedResponse'
         '403':
           description: Forbidden (missing permission or feature flag disabled)
           content:
@@ -3219,12 +4224,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumCustomRoleResponse'
-        '400':
-          description: Bad request (validation error)
+        '401':
+          description: Unauthorized - authentication required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/gumErrorResponse'
+                $ref: '#/components/schemas/gumUnauthorizedResponse'
         '403':
           description: Forbidden (missing permission or feature flag disabled)
           content:
@@ -3233,6 +4238,12 @@ paths:
                 $ref: '#/components/schemas/gumErrorResponse'
         '409':
           description: Conflict (role name already exists within the tenant)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '422':
+          description: Validation error
           content:
             application/json:
               schema:
@@ -3283,6 +4294,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumCustomRoleResponse'
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumUnauthorizedResponse'
         '403':
           description: Forbidden (missing permission or feature flag disabled)
           content:
@@ -3321,12 +4338,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumCustomRoleResponse'
-        '400':
-          description: Bad request (validation error)
+        '401':
+          description: Unauthorized - authentication required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/gumErrorResponse'
+                $ref: '#/components/schemas/gumUnauthorizedResponse'
         '403':
           description: Forbidden (missing permission or feature flag disabled)
           content:
@@ -3341,6 +4358,12 @@ paths:
                 $ref: '#/components/schemas/gumErrorResponse'
         '409':
           description: Conflict (role name already exists within the tenant)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumErrorResponse'
+        '422':
+          description: Validation error
           content:
             application/json:
               schema:
@@ -3361,6 +4384,12 @@ paths:
       responses:
         '204':
           description: Custom role deleted successfully
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gumUnauthorizedResponse'
         '403':
           description: Forbidden (missing permission or feature flag disabled)
           content:
@@ -3373,12 +4402,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gumErrorResponse'
-        '409':
-          description: Role has assigned users and cannot be deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/gumRoleAssignedUsersErrorResponse'
         '500':
           description: Internal server error
           content:
@@ -3389,6 +4412,11 @@ paths:
       tags:
       - Custom Roles
 components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     ASN:
       type: integer
@@ -3446,7 +4474,25 @@ components:
           - allow
           - block
           - warning
-          description: Rule action
+          - redirect
+          description: Rule action. 'redirect' requires the Redirect feature; when the feature is not enabled for the tenant, adding or changing a rule that redirects is rejected with 422 VALIDATION_REDIRECT_NOT_ENABLED.
+        redirectUrl:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          pattern: ^https?://[^\s/$.?#].[^\s]*$
+          description: 'Absolute http or https URL the user is redirected to, up to 2048 characters and without a username or password. Required for ''redirect'' rules and for ''block'' rules with redirectAction ''afterBlockPage'', otherwise the request is rejected with 422 VALIDATION_INVALID_REDIRECT_URL. On any other rule a valid URL is stored without taking effect, and applies again if the rule is switched back to redirecting.
+
+            '
+        redirectAction:
+          type: string
+          enum:
+          - immediate
+          - afterBlockPage
+          - none
+          description: 'Optional. Send ''afterBlockPage'', with redirectUrl, to make a ''block'' rule show the block page and then redirect; ''none'' (the default) means it does not redirect. Leave it out on ''redirect'' rules — the service always sets ''immediate''. Any other combination is rejected with 422 VALIDATION_INVALID_REDIRECT_ACTION, or VALIDATION_REDIRECT_NOT_ALLOWED_FOR_ACTION on ''allow'' and ''warning'' rules.
+
+            '
         conditions:
           type: array
           items:
@@ -3467,7 +4513,7 @@ components:
           enum:
           - disabled
           - summaryWithUrls
-          description: 'Logging mode (optional) – If not specified, the service automatically sets the logging mode based on the rule action: Disabled for Allow actions, and SummaryWithUrls for Block and Warning actions'
+          description: 'Logging mode (optional) – If not specified, the service automatically sets the logging mode based on the rule action: Disabled for Allow actions, and SummaryWithUrls for Block, Warning and Redirect actions'
         status:
           type: string
           enum:
@@ -3552,18 +4598,6 @@ components:
           type: integer
         itemsTotal:
           type: integer
-      additionalProperties: true
-    Addresses:
-      type: object
-      properties:
-        addresses:
-          items:
-            $ref: '#/components/schemas/AlphanumericWithSpace'
-          type: array
-          minItems: 1
-          description: List of IDs of address objects.
-      required:
-      - addresses
       additionalProperties: true
     Alphanumeric:
       type: string
@@ -3664,6 +4698,21 @@ components:
       - value
       - source
       additionalProperties: true
+    ApplicationResponse:
+      oneOf:
+      - $ref: '#/components/schemas/HttpApplication'
+      - $ref: '#/components/schemas/HttpsApplication'
+      - $ref: '#/components/schemas/RdpApplication'
+      - $ref: '#/components/schemas/SshApplication'
+      - $ref: '#/components/schemas/VncApplication'
+      discriminator:
+        propertyName: type
+        mapping:
+          http: '#/components/schemas/HttpApplication'
+          https: '#/components/schemas/HttpsApplication'
+          rdp: '#/components/schemas/RdpApplication'
+          ssh: '#/components/schemas/SshApplication'
+          vnc: '#/components/schemas/VncApplication'
     ApplicationStatusResponse:
       type: object
       properties:
@@ -3744,11 +4793,24 @@ components:
         $ref: '#/components/schemas/ApplicationsListObject'
     AsyncOperationResponse:
       type: object
+      description: 'Returned with 202 Accepted. The operation has been queued, not completed. Poll `statusUrl` until the returned `completed` field is true, then read `result` for the outcome.
+
+        '
       properties:
         statusUrl:
           type: string
+          format: url
+          description: 'Absolute URL to poll for the outcome of this operation. Responds with an `AsyncOperationStatus` body.
+
+            '
+          example: https://api.perimeter81.com/api/rest/v2.3/networks/status/ZPoGeHZaRi
         samplingTime:
           type: integer
+          description: 'Recommended interval, in seconds, to wait between polls of `statusUrl`. Polling faster than this may be rate limited.
+
+            '
+          example: 120
+      required: []
       additionalProperties: true
     AsyncOperationResult:
       type: object
@@ -3854,11 +4916,11 @@ components:
     BaseDates:
       type: object
       properties:
-        createdAt: &id008
+        createdAt: &id016
           format: date-time
           type: string
           description: The date when this record was created.
-        updatedAt: &id009
+        updatedAt: &id017
           format: date-time
           type: string
           description: The date of last update of the record.
@@ -4053,6 +5115,31 @@ components:
       - categoryId
       - access
       additionalProperties: true
+    CertificateRule:
+      type: object
+      required:
+      - certificateError
+      - action
+      - log
+      properties:
+        certificateError:
+          type: string
+          enum:
+          - expired
+          - untrusted
+          - revoked
+          - revocationCheckFailed
+          - hostnameMismatch
+          - other
+        action:
+          type: string
+          enum:
+          - block
+          - inspect
+          - bypass
+        log:
+          type: boolean
+      additionalProperties: true
     CommonApplication:
       type: object
       properties:
@@ -4114,10 +5201,11 @@ components:
           - https
           - rdp
         network:
+          description: Application network ID. To get the ID use endpoint '/networks' with [network:read] permission.
+          example: ZwAeo5wqiF
           allOf:
           - $ref: '#/components/schemas/Alphanumeric'
-          - description: Application network ID. To get the ID use endpoint '/networks' with [network:read] permission.
-          - example: ZwAeo5wqiF
+          additionalProperties: true
         host:
           oneOf:
           - $ref: '#/components/schemas/FixedHost'
@@ -4317,11 +5405,19 @@ components:
     CreatePassphrase:
       type: string
       pattern: ^[a-zA-Z1-9._][a-zA-Z0-9._]{7,63}$
+      minLength: 8
+      maxLength: 64
+      example: Str0ng.Shared_Key01
+      description: 'Pre-shared key for tunnel authentication. 8-64 characters, using letters, digits, "." and "_" only; the first character cannot be "0".
+
+        '
     CreateRegionInNetworkPayload:
       properties:
         harmonySaseRegionId:
           type: string
-          description: Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions).
+          description: 'ID of the Check Point SASE region to deploy in.
+
+            '
         idle:
           type: boolean
           description: Create the gateway as disabled if true.
@@ -4368,9 +5464,9 @@ components:
       - email
       - inviteMessage
       additionalProperties: true
-    CreateWireguardTunnelPayload:
+    CreateWireGuardTunnelPayload:
       allOf:
-      - $ref: '#/components/schemas/WireGuradDetails'
+      - $ref: '#/components/schemas/WireGuardDetails'
       - $ref: '#/components/schemas/BaseTunnelValues'
       additionalProperties: true
     CustomDns:
@@ -4447,15 +5543,13 @@ components:
 
         always send the complete desired configuration. Any field omitted from
 
-        `attributes` is cleared, not preserved — to keep current values, resend the
+        `attributes` is cleared, not preserved. To keep current values, resend the
 
         full object returned by the corresponding GET endpoint. `attributes` is
 
         required. When `enabled` is `true`, `attributes.servers` must contain at
 
-        least one entry. Requests that violate these rules are rejected with
-
-        422 Unprocessable Entity.
+        least one entry.
 
         '
       required:
@@ -4497,7 +5591,7 @@ components:
           items:
             type: string
             format: hostname
-          description: DNS search domains. Required — send an empty array if you have none. Omitting it on update is rejected with 400; a non-empty value fully replaces any existing search domains.
+          description: DNS search domains. Required, so send an empty array if you have none. A non-empty value fully replaces any existing search domains.
         dnsPolicy:
           $ref: '#/components/schemas/DnsPolicy'
       additionalProperties: true
@@ -4528,6 +5622,183 @@ components:
       - name
       - categories
       additionalProperties: true
+    CustomUrl:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 100
+          description: Unique identifier of the custom URL object
+        name:
+          type: string
+          maxLength: 100
+          description: Display name
+        description:
+          type: string
+          maxLength: 255
+          description: Optional free-text description
+        entryType:
+          type: string
+          enum:
+          - url
+          - regex
+          description: Kind of entries this object holds. Objects created before the type existed are url objects
+        urls:
+          type: array
+          maxItems: 10000
+          items:
+            type: string
+            maxLength: 2048
+          description: Entries of a url object; empty on a regex object
+        urlPatterns:
+          type: array
+          maxItems: 100
+          items:
+            type: string
+            maxLength: 1024
+          description: Entries of a regex object; empty on a url object
+        controlledBy:
+          type: string
+          enum:
+          - hsase
+          - quantum
+          description: Read-only. Determines mutability via this API
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - entryType
+      - urls
+      - urlPatterns
+      - controlledBy
+      - createdAt
+      - updatedAt
+      additionalProperties: true
+    CustomUrlList:
+      type: object
+      properties:
+        data:
+          type: array
+          maxItems: 1000
+          items:
+            $ref: '#/components/schemas/CustomUrl'
+        page:
+          type: integer
+          minimum: 1
+          maximum: 999999999
+          description: Current page number
+        totalPage:
+          type: integer
+          minimum: 0
+          maximum: 999999999
+          description: Total number of pages
+        itemsTotal:
+          type: integer
+          minimum: 0
+          maximum: 999999999
+          description: Total number of items across all pages
+      required:
+      - data
+      - page
+      - totalPage
+      - itemsTotal
+      additionalProperties: true
+    CustomUrlWriteRequest:
+      type: object
+      description: controlledBy is assigned by the server. A url object sends urls and no urlPatterns; a regex object sends urlPatterns and no urls.
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+          pattern: ^[^<>]+$
+          description: Display name, unique per tenant, compared case-insensitively
+        description:
+          type: string
+          maxLength: 255
+          pattern: ^[^<>]*$
+          description: Defaults to an empty string
+        entryType:
+          type: string
+          enum:
+          - url
+          - regex
+          default: url
+          description: Kind of entries this object holds. Fixed after creation. regex requires advanced matching to be enabled for the tenant.
+        urls:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 2048
+            pattern: ^[^<>]+$
+          description: 'Entries of a url object, at least one and at most 5000: a host without a protocol, optionally with a port, a path and a query (host[:port][/path][?name=value&...]), and a leading *. wildcard. A query parameter name, compared without regard to case, is not repeated within an entry. A port or a query requires advanced matching to be enabled for the tenant.'
+        urlPatterns:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1024
+            pattern: ^[^<>]+$
+          description: 'Entries of a regex object, at least one and at most 100: RE2 regular expressions, kept exactly as written.'
+      required:
+      - name
+      oneOf:
+      - title: url object
+        properties:
+          entryType:
+            enum:
+            - url
+          urls:
+            type: array
+            minItems: 1
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2048
+              pattern: ^[^<>]+$
+          urlPatterns:
+            type: array
+            maxItems: 0
+            items:
+              type: string
+              minLength: 1
+              maxLength: 1024
+              pattern: ^[^<>]+$
+        required:
+        - urls
+        additionalProperties: true
+      - title: regex object
+        properties:
+          entryType:
+            enum:
+            - regex
+          urls:
+            type: array
+            maxItems: 0
+            items:
+              type: string
+              minLength: 1
+              maxLength: 2048
+              pattern: ^[^<>]+$
+          urlPatterns:
+            type: array
+            minItems: 1
+            items:
+              type: string
+              minLength: 1
+              maxLength: 1024
+              pattern: ^[^<>]+$
+        required:
+        - entryType
+        - urlPatterns
+        additionalProperties: true
+      additionalProperties: false
     DBAddress:
       type: object
       properties:
@@ -4539,6 +5810,15 @@ components:
     DPDTime:
       type: string
       pattern: ^([5-9]|[1-5][0-9]|60)s$
+    DeleteHostFirewallPolicyRequest:
+      type: object
+      properties:
+        protocolRules:
+          type: array
+          maxItems: 0
+          description: Must be empty if present.
+          items: {}
+      additionalProperties: true
     DeployEnhancedNetwork:
       type: object
       properties:
@@ -4585,6 +5865,29 @@ components:
       required:
       - network
       - regions
+      additionalProperties: true
+    DlpFailType:
+      type: string
+      enum:
+      - open
+      - close
+      description: 'Behavior when DLP inspection cannot be completed.
+
+        open - traffic is allowed (default). close - traffic is blocked.
+
+        '
+    DlpSettingsResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            failType:
+              $ref: '#/components/schemas/DlpFailType'
+          additionalProperties: true
       additionalProperties: true
     DnsPolicy:
       type: object
@@ -4647,16 +5950,21 @@ components:
       additionalProperties: true
     DynamicTunnelCreate:
       type: object
+      description: 'Creates a dynamic (BGP-routed) tunnel group. A group holds 1-8 member tunnels that share one set of traffic selectors and one ASN; add more than one member to get an HA/redundant tunnel. Settings that apply to the whole group live in `sharedSettings` and `advancedSettings`; per-peer settings live in each entry of `tunnels`.
+
+        '
       properties:
         tunnelName:
-          type: string
-          description: Name of the tunnel
+          $ref: '#/components/schemas/DynamicTunnelName'
         description:
           type: string
-          description: Optional description for the tunnel
+          description: Free-text description of the tunnel group.
+          example: Primary link to the London data center
         tunnels:
           type: array
-          description: List of tunnels
+          description: 'The member tunnels of this group. One entry creates a single tunnel; two or more create an HA group. Each entry must use a distinct set of IP addresses.
+
+            '
           items:
             $ref: '#/components/schemas/DynamicTunnelDetails'
           minItems: 1
@@ -4672,30 +5980,54 @@ components:
       - advancedSettings
       additionalProperties: true
     DynamicTunnelDetails:
+      description: 'One member tunnel of a dynamic (BGP-routed) tunnel group. The three IP addresses below must all be different from each other, and must not collide with those of any other tunnel on the network.
+
+        '
       allOf:
       - $ref: '#/components/schemas/TunnelAuthConfig'
       - type: object
         properties:
           regionID:
             type: string
-            description: Dynamic tunnel enhanced region ID
+            description: 'ID of the enhanced region to deploy this tunnel in. Must be a region that already exists *on this network*.
+
+              '
+            example: sXUeWwM8DM
           p81GWInternalIP:
             type: string
             format: ipv4
-            description: Harmony Sase gateway internal IP address
+            description: 'Address of the Check Point SASE end of the BGP peering link, inside the tunnel. Must be unique within the region.
+
+              '
+            example: 169.254.10.1
           remoteGWInternalIP:
             type: string
             format: ipv4
-            description: Remote gateway internal IP address
+            description: 'Address of the remote end of the BGP peering link, inside the tunnel. Usually the neighboring address in the same /30 as `p81GWInternalIP`, and must differ from it.
+
+              '
+            example: 169.254.10.2
           remotePublicIP:
             type: string
             format: ipv4
-            description: Remote gateway public IP address
+            description: 'Public, internet-routable address of the remote gateway, the IKE peer this tunnel dials. Must be unique within the region.
+
+              '
+            example: 203.0.113.10
           remoteASN:
-            $ref: '#/components/schemas/ASN'
+            description: 'BGP ASN of the remote gateway. Must differ from the network ASN (`leftASN` in `sharedSettings`).
+
+              '
+            example: 65001
+            allOf:
+            - $ref: '#/components/schemas/RemoteASN'
+            additionalProperties: true
           remoteID:
             type: string
-            description: Remote gateway ID
+            description: 'IKE identity presented by the remote gateway, typically an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.
+
+              '
+            example: remotegw01
           routingType:
             $ref: '#/components/schemas/RoutingType'
         required:
@@ -4706,10 +6038,12 @@ components:
         - remotePublicIP
         - remoteASN
         - remoteID
-        - routingType
         additionalProperties: true
       additionalProperties: true
     DynamicTunnelDetailsUpdate:
+      description: 'Fields that can be changed on an existing member tunnel. Send it inside `updateTunnels` together with the tunnel `id`. The region cannot be changed after creation.
+
+        '
       allOf:
       - $ref: '#/components/schemas/TunnelAuthConfig'
       - type: object
@@ -4717,33 +6051,59 @@ components:
           remotePublicIP:
             type: string
             format: ipv4
-            description: Remote gateway public IP address
+            description: 'Public, internet-routable address of the remote gateway. Must be unique within the region.
+
+              '
+            example: 203.0.113.10
           remoteASN:
-            $ref: '#/components/schemas/ASN'
+            description: BGP ASN of the remote gateway. Must differ from the network ASN.
+            example: 65001
+            allOf:
+            - $ref: '#/components/schemas/RemoteASN'
+            additionalProperties: true
           remoteID:
             type: string
-            description: Remote gateway ID
+            description: 'IKE identity presented by the remote gateway, typically an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.
+
+              '
+            example: remotegw01
           routingType:
             $ref: '#/components/schemas/RoutingTypeUpdate'
         additionalProperties: true
       additionalProperties: true
+    DynamicTunnelName:
+      type: string
+      pattern: ^[a-zA-Z0-9]+$
+      minLength: 1
+      maxLength: 13
+      example: londonlink
+      description: 'Name of the dynamic tunnel group. 1-13 characters, letters and digits only.
+
+        '
     DynamicTunnelUpdate:
       type: object
+      description: 'Updates a dynamic tunnel group. `removeTunnels` is applied first, then `updateTunnels`, then `addTunnels`, so `updateTunnels` can only reference members that already exist and not ones added by the same request. A single request may add members or remove members, but never both. The group may hold at most 8 members afterwards.
+
+        '
       properties:
         tunnelName:
-          type: string
-          description: Name of the tunnel
+          $ref: '#/components/schemas/DynamicTunnelName'
         description:
           type: string
-          description: Optional description for the tunnel
+          description: Free-text description of the tunnel group.
+          example: Primary link to the London data center
         addTunnels:
           type: array
+          description: New member tunnels to add to the group.
           minItems: 0
           maxItems: 8
           items:
             $ref: '#/components/schemas/DynamicTunnelDetails'
         updateTunnels:
           type: array
+          description: 'Existing member tunnels to modify. Each entry is the tunnel `id` plus the fields to change.
+
+            '
           minItems: 0
           maxItems: 8
           items:
@@ -4752,6 +6112,8 @@ components:
               properties:
                 id:
                   type: string
+                  description: ID of the member tunnel to update.
+                  example: P8a38hEkwt
               required:
               - id
               additionalProperties: true
@@ -4759,16 +6121,14 @@ components:
             additionalProperties: true
         removeTunnels:
           type: array
+          description: 'IDs of the member tunnels to remove from the group, as plain strings. An ID that does not belong to this group is ignored.
+
+            '
           minItems: 0
           maxItems: 8
           items:
-            type: object
-            properties:
-              id:
-                type: string
-            required:
-            - id
-            additionalProperties: true
+            type: string
+            example: P8a38hEkwt
         sharedSettings:
           $ref: '#/components/schemas/EnhancedIPSecSharedSettingsUpdate'
         advancedSettings:
@@ -4829,29 +6189,42 @@ components:
       - data
       additionalProperties: true
     EnhancedIPSecSharedSettingsCreate:
+      description: 'Settings shared by every member tunnel of a dynamic tunnel group.
+
+        '
       allOf:
-      - $ref: '#/components/schemas/IPSecSharedSettings'
+      - $ref: '#/components/schemas/IPSecSubnetsBase'
       - type: object
         properties:
           features:
             $ref: '#/components/schemas/NetworkFeaturesCreate'
-        additionalProperties: true
-      - type: object
-        properties:
           leftASN:
-            $ref: '#/components/schemas/RemoteASN'
+            description: 'BGP ASN of the Check Point SASE side of the tunnel. The first dynamic tunnel created on a network fixes the network''s ASN; every later dynamic tunnel on that network must send the same value. The ASN can never be changed once set.
+
+              '
+            example: 64512
+            allOf:
+            - $ref: '#/components/schemas/ASN'
+            additionalProperties: true
+          peakBandwidthMbps:
+            $ref: '#/components/schemas/PeakBandwidthMbps'
         additionalProperties: true
       required:
       - features
       - leftASN
       additionalProperties: true
     EnhancedIPSecSharedSettingsUpdate:
+      description: 'Settings shared by every member tunnel of a dynamic tunnel group, when updating the group.
+
+        '
       allOf:
-      - $ref: '#/components/schemas/IPSecSharedSettings'
+      - $ref: '#/components/schemas/IPSecSubnetsBase'
       - type: object
         properties:
           features:
             $ref: '#/components/schemas/NetworkFeaturesCreate'
+          peakBandwidthMbps:
+            $ref: '#/components/schemas/PeakBandwidthMbps'
         additionalProperties: true
       additionalProperties: true
     EnhancedNetwork:
@@ -4950,7 +6323,9 @@ components:
       properties:
         harmonySaseRegionId:
           type: string
-          description: Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions).
+          description: 'ID of the Check Point SASE region to deploy in.
+
+            '
         scaleUnits:
           allOf:
           - $ref: '#/components/schemas/ScaleUnitsCount'
@@ -4999,7 +6374,9 @@ components:
             type: string
           minItems: 1
           uniqueItems: true
-          description: All IDs of dynamic tunnels
+          description: 'IDs of the member tunnels of one dynamic tunnel group. Must list every member of the group, since the route table is created for the group as a whole. Take the values from the `id` field of the tunnels returned for that group.
+
+            '
         subnets:
           type: array
           items:
@@ -5035,17 +6412,36 @@ components:
         properties:
           id:
             type: string
-            description: Enhanced tunnel ID
+            description: 'Unique ID of this tunnel, and the value to use in the route table payloads. For a static tunnel it is also the `tunnelId` path parameter. For a member of a dynamic tunnel group it identifies that single member, so it is the value to use in `removeTunnels` and `updateTunnels`, not the `dynamicTunnelId` path parameter.
+
+              '
+            example: P8a38hEkwt
           haTunnelID:
             type: string
-            description: Enhanced dynamic tunnel group ID (or tunnel ID for static tunnel)
+            description: 'ID of the tunnel group this tunnel belongs to. For a dynamic tunnel this is the ID of the group shared by all of its member tunnels, and it is the value to use as the `dynamicTunnelId` path parameter. For a static tunnel it is the tunnel''s own ID.
+
+              '
+            example: dWkVMVLteY
           dpdAction:
             type: string
-            description: Enhanced tunnel DPDTime actions.
+            description: 'Action taken when dead peer detection declares the peer unreachable. Always "restart"; the value is fixed and is not accepted on create or update.
+
+              '
+            enum:
+            - restart
+            example: restart
+          description:
+            type: string
+            description: Free-text description of the tunnel.
+            example: Backup link to the Frankfurt data center
+          isHA:
+            type: boolean
+            description: Indicates if it's a redundant tunnel.
         required:
         - id
         - haTunnelID
         - dpdAction
+        - isHA
         additionalProperties: true
       additionalProperties: true
     EnhancedTunnelBase:
@@ -5072,7 +6468,7 @@ components:
             minItems: 1
             description: Remote gateway subnets
           peakBandwidthMbps:
-            $ref: '#/components/schemas/PeakBandwidth'
+            $ref: '#/components/schemas/PeakBandwidthMbps'
           keyExchange:
             type: string
             description: IKE version for key exchange
@@ -5118,15 +6514,155 @@ components:
       additionalProperties: true
     Error:
       type: object
+      description: 'Standard error envelope.
+
+        '
       properties:
-        id:
-          type: string
+        status:
+          type: integer
+          description: HTTP status code, repeated in the body.
         message:
           type: string
+          description: Human-readable explanation of what went wrong.
+        messageCode:
+          type: string
+          description: Machine-readable name of the HTTP status, for example `BAD_REQUEST`.
+        data:
+          type: object
+          description: 'Additional context about the failure, present only for some errors.
+
+            '
+          additionalProperties: true
+      required:
+      - status
+      - message
+      - messageCode
       additionalProperties: true
     FQDN:
       type: string
       pattern: (?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)
+    FileAccessConstraint:
+      type: object
+      required:
+      - type
+      - value
+      description: File type constraint — either a predefined family or custom extensions
+      properties:
+        type:
+          type: string
+          enum:
+          - family
+          - customExtension
+        value:
+          type: array
+          minItems: 1
+          items:
+            type: string
+          description: 'For type "family": one or more of executable, archive, document, spreadsheet, script, image, video, audio, pdf. For type "customExtension": one or more file extensions (e.g. "docx", "xlsx").
+
+            '
+      additionalProperties: true
+    FileAccessDestination:
+      type: object
+      description: Destination definition for file access rules
+      properties:
+        customUrls:
+          type: array
+          items:
+            type: string
+          description: Array of custom URL IDs
+        categories:
+          type: array
+          items:
+            type: string
+          description: Array of web category IDs
+        applicationControlApplications:
+          type: array
+          items:
+            type: string
+          description: Array of application control application IDs
+        updatableObjects:
+          type: array
+          items:
+            type: string
+          description: Array of updatable object IDs
+      additionalProperties: true
+    FileAccessPolicyGetResponse:
+      type: object
+      properties:
+        fileAccessRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileAccessRule'
+      additionalProperties: true
+    FileAccessRule:
+      type: object
+      required:
+      - name
+      - action
+      - status
+      - priority
+      - activity
+      - sources
+      - destinations
+      - fileConstraints
+      properties:
+        id:
+          type: string
+          description: Rule ID (optional in requests, auto-generated for new rules)
+        name:
+          type: string
+          maxLength: 100
+          description: Rule name
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+          description: Rule status
+        priority:
+          type: integer
+          description: Rule priority. Updated automatically when rules are created/updated
+        action:
+          type: string
+          enum:
+          - allow
+          - block
+          description: Rule action
+        activity:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum:
+            - download
+            - upload
+          description: Activities this rule applies to (at least one required)
+        sources:
+          $ref: '#/components/schemas/FileAccessSource'
+        destinations:
+          $ref: '#/components/schemas/FileAccessDestination'
+        fileConstraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileAccessConstraint'
+          description: File constraints (empty array means any file)
+      additionalProperties: true
+    FileAccessSource:
+      type: object
+      description: Source definition for file access rules
+      properties:
+        users:
+          type: array
+          items:
+            type: string
+          description: Array of user IDs
+        groups:
+          type: array
+          items:
+            type: string
+          description: Array of group IDs
+      additionalProperties: true
     FirewallPolicyBase:
       type: object
       properties:
@@ -5195,16 +6731,16 @@ components:
           - fixed
         value:
           oneOf:
-          - allOf:
+          - description: Application host FQDN
+            example: example.com
+            allOf:
             - $ref: '#/components/schemas/FQDN'
-            - description: Application host FQDN
-            - example: example.com
-          - allOf:
+          - description: Application host IP, but not localhost
+            example: 10.0.0.1
+            allOf:
             - $ref: '#/components/schemas/IP'
             - type: string
               pattern: ^(?!0\.0\.0\.0$)(?!127\.)(?!localhost$)
-            - description: Application host IP, but not localhost
-            - example: 10.0.0.1
       required:
       - source
       - value
@@ -5219,13 +6755,24 @@ components:
           enum:
           - fixed
         value:
+          description: Application port value
+          example: 443
           allOf:
           - $ref: '#/components/schemas/PortNumber'
-          - description: Application port value
-          - example: 443
+          additionalProperties: true
       required:
       - source
       - value
+      additionalProperties: true
+    ForbiddenError:
+      type: object
+      description: Error envelope returned for 403 Forbidden responses.
+      properties:
+        Message:
+          type: string
+          description: Explanation of why access was denied.
+      required:
+      - Message
       additionalProperties: true
     GranularFirewallPolicy:
       allOf:
@@ -5320,7 +6867,7 @@ components:
       properties:
         id:
           type: string
-          description: ID for the Harmony SASE region.
+          description: ID of the Check Point SASE region. Use this value when creating a region on a network.
         objectId:
           type: string
           description: Alias of id
@@ -5328,7 +6875,7 @@ components:
           type: string
         name:
           type: string
-          description: Name of the Harmony SASE region.
+          description: Machine-readable name of the Check Point SASE region.
         countryCode:
           type: string
           description: ISO 3166-1 alpha-2 country code for the region.
@@ -5345,9 +6892,9 @@ components:
     HarmonySaseRegionsList:
       type: array
       items:
+        description: List of Check Point SASE regions available for deployment.
         allOf:
         - $ref: '#/components/schemas/HarmonySaseRegion'
-        - description: List of Harmony SASE regions.
     HealthStatus:
       type: string
       enum:
@@ -5355,11 +6902,202 @@ components:
       - critical
       - unknown
       description: Health status of the component
+    HostFirewallDestination:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - addresses
+        value:
+          type: array
+          items:
+            type: string
+    HostFirewallPolicyResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          required:
+          - protocolRules
+          properties:
+            protocolRules:
+              type: array
+              items:
+                $ref: '#/components/schemas/HostFirewallRule'
+            warnings:
+              type: array
+              description: Non-blocking warnings returned on save (POST only)
+              items:
+                $ref: '#/components/schemas/HostFirewallWarning'
+          additionalProperties: true
+      additionalProperties: true
+    HostFirewallRule:
+      type: object
+      required:
+      - id
+      - name
+      - priority
+      - status
+      - action
+      - sources
+      - services
+      - destinations
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        priority:
+          type: integer
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+        action:
+          type: string
+          enum:
+          - allow
+          - block
+        log:
+          type: string
+          enum:
+          - enabled
+          - disabled
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/HostFirewallSource'
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/HostFirewallService'
+        destinations:
+          type: array
+          items:
+            $ref: '#/components/schemas/HostFirewallDestination'
+      additionalProperties: true
+    HostFirewallRuleInput:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - action
+      - sources
+      - services
+      - destinations
+      properties:
+        id:
+          type: string
+          description: Rule ID (optional in requests, auto-generated for new rules)
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        priority:
+          type: integer
+          description: Ignored in requests. Priority is assigned from the order of the array (first = highest) and returned in responses.
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+        action:
+          type: string
+          enum:
+          - allow
+          - block
+        log:
+          type: string
+          enum:
+          - enabled
+          - disabled
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/HostFirewallSource'
+        services:
+          type: array
+          description: Must contain at least one service; an empty array returns 422 (VALIDATION_HOST_FIREWALL_SERVICE_REQUIRED).
+          items:
+            $ref: '#/components/schemas/HostFirewallService'
+        destinations:
+          type: array
+          items:
+            $ref: '#/components/schemas/HostFirewallDestination'
+    HostFirewallService:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - services
+        value:
+          type: array
+          items:
+            type: string
+    HostFirewallSource:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - users
+          - groups
+        value:
+          type: array
+          items:
+            type: string
+    HostFirewallWarning:
+      type: object
+      required:
+      - field
+      - message
+      - tier
+      - ports
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+        tier:
+          type: integer
+          enum:
+          - 2
+        ports:
+          type: array
+          items:
+            type: integer
+        ruleName:
+          type: string
+        ruleIndex:
+          type: integer
+      additionalProperties: true
     HttpApplication:
       allOf:
       - $ref: '#/components/schemas/WebApplication'
       - type: object
         properties:
+          type:
+            type: string
+            enum:
+            - http
           attributes:
             $ref: '#/components/schemas/HttpAttributes'
         additionalProperties: true
@@ -5397,6 +7135,10 @@ components:
       - $ref: '#/components/schemas/WebApplication'
       - type: object
         properties:
+          type:
+            type: string
+            enum:
+            - https
           attributes:
             $ref: '#/components/schemas/HttpsAttributes'
         additionalProperties: true
@@ -5439,7 +7181,7 @@ components:
           - updatableObjects
           - applicationControlApplications
         value:
-          description: Array of IDs (strings)
+          description: 'Array of string values. For categories, addresses, updatableObjects, and applicationControlApplications: object IDs. For domains: domain patterns (e.g. "*.example.com", "example.com").'
           type: array
           items:
             type: string
@@ -5447,15 +7189,12 @@ components:
     HttpsInspectionPolicyGetResponse:
       type: object
       properties:
+        status:
+          type: integer
+          example: 200
         data:
           type: object
           properties:
-            controlledBy:
-              type: string
-              enum:
-              - quantum
-              - hsase
-              description: Indicates whether the policy is controlled by Quantum or Hsase
             bypassRules:
               type: array
               items:
@@ -5469,6 +7208,12 @@ components:
               description: 'Default action for traffic not matched by any explicit bypass rule (the cleanup rule). Included in the response only when the tenant has the Inspection Policy feature enabled; when the feature is off the field is omitted entirely. Defaults to "inspect" when the tenant has the feature enabled but hasn''t configured a specific value.
 
                 '
+            controlledBy:
+              type: string
+              enum:
+              - quantum
+              - hsase
+              description: Indicates whether the policy is controlled by Quantum or Hsase
           additionalProperties: true
       additionalProperties: true
     HttpsInspectionPolicyResponse:
@@ -5484,12 +7229,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/HttpsInspectionRule'
-            controlledBy:
-              type: string
-              enum:
-              - quantum
-              - hsase
-              description: Indicates whether the policy is controlled by Quantum or Hsase
             cleanupBypassRuleDefaultAction:
               type: string
               enum:
@@ -5546,7 +7285,6 @@ components:
               value:
               - app-id-001
             log: disabled
-          controlledBy: hsase
       additionalProperties: true
     HttpsInspectionRule:
       type: object
@@ -5706,6 +7444,22 @@ components:
     IP:
       type: string
       format: ipv4
+    IPSecAdvancedFieldsV2_3:
+      type: object
+      properties:
+        ikeLifeTime:
+          $ref: '#/components/schemas/Lifetime'
+        lifetime:
+          $ref: '#/components/schemas/Lifetime'
+        dpdDelay:
+          $ref: '#/components/schemas/DPDTime'
+        dpdTimeout:
+          $ref: '#/components/schemas/DPDTime'
+        phase1:
+          $ref: '#/components/schemas/IPSecPhaseConfigV2_3'
+        phase2:
+          $ref: '#/components/schemas/IPSecPhaseConfigV2_3'
+      additionalProperties: true
     IPSecAdvancedSettings:
       type: object
       properties:
@@ -5736,39 +7490,31 @@ components:
       - phase2
       additionalProperties: true
     IPSecAdvancedSettingsV2_3:
-      type: object
-      properties:
-        keyExchange:
-          type: string
-          enum:
-          - ikev1
-          - ikev2
-        ikeLifeTime:
-          $ref: '#/components/schemas/Lifetime'
-        lifetime:
-          $ref: '#/components/schemas/Lifetime'
-        dpdDelay:
-          $ref: '#/components/schemas/DPDTime'
-        dpdTimeout:
-          $ref: '#/components/schemas/DPDTime'
-        phase1:
-          $ref: '#/components/schemas/IPSecPhaseConfigV2_3'
-        phase2:
-          $ref: '#/components/schemas/IPSecPhaseConfigV2_3'
-      required:
-      - keyExchange
-      - ikeLifeTime
-      - lifetime
-      - dpdDelay
-      - dpdTimeout
-      - phase1
-      - phase2
+      allOf:
+      - $ref: '#/components/schemas/IPSecAdvancedFieldsV2_3'
+      - type: object
+        properties:
+          keyExchange:
+            type: string
+            enum:
+            - ikev1
+            - ikev2
+        additionalProperties: true
+      - required:
+        - keyExchange
+        - ikeLifeTime
+        - lifetime
+        - dpdDelay
+        - dpdTimeout
+        - phase1
+        - phase2
+        additionalProperties: true
       additionalProperties: true
     IPSecAlgorithms:
       type: object
       properties:
         auth:
-          minLength: 1
+          minItems: 1
           uniqueItems: true
           type: array
           items:
@@ -5789,7 +7535,7 @@ components:
             - prfsha384
             - prfsha512
         encryption:
-          minLength: 1
+          minItems: 1
           uniqueItems: true
           type: array
           items:
@@ -5833,7 +7579,7 @@ components:
       properties:
         dh:
           description: Diffie Helman encryption
-          minLength: 0
+          minItems: 0
           uniqueItems: true
           type: array
           items:
@@ -5846,17 +7592,15 @@ components:
             - 20
             - 21
             - 31
-      required:
-      - auth
-      - encryption
-      - dh
       additionalProperties: true
     IPSecPhaseCommonV2_3:
       type: object
       properties:
         keyExchangeMethod:
-          description: Key exchange method encryption
-          minLength: 0
+          description: 'Key exchange algorithms offered for this phase. If provided, must contain at least one algorithm, and the remote gateway must support one of the values listed.
+
+            '
+          minItems: 1
           uniqueItems: true
           type: array
           items:
@@ -5869,20 +7613,26 @@ components:
             - ecp384
             - ecp521
             - curve25519
-      required:
-      - auth
-      - encryption
-      - keyExchangeMethod
       additionalProperties: true
     IPSecPhaseConfig:
       allOf:
       - $ref: '#/components/schemas/IPSecAlgorithms'
       - $ref: '#/components/schemas/IPSecPhaseCommon'
+      - required:
+        - auth
+        - encryption
+        - dh
+        additionalProperties: true
       additionalProperties: true
     IPSecPhaseConfigV2_3:
       allOf:
       - $ref: '#/components/schemas/IPSecAlgorithms'
       - $ref: '#/components/schemas/IPSecPhaseCommonV2_3'
+      - required:
+        - auth
+        - encryption
+        - keyExchangeMethod
+        additionalProperties: true
       additionalProperties: true
     IPSecRedundantTunnel:
       type: object
@@ -5896,7 +7646,13 @@ components:
         remotePublicIP: &id004
           $ref: '#/components/schemas/IP'
         remoteASN: &id005
-          $ref: '#/components/schemas/RemoteASN'
+          description: 'BGP ASN of the remote gateway. Must differ from the ASN of the Check Point SASE side (`p81ASN` in `sharedSettings`).
+
+            '
+          example: 65001
+          allOf:
+          - $ref: '#/components/schemas/RemoteASN'
+          additionalProperties: true
         remoteID: &id006
           $ref: '#/components/schemas/remoteID'
         gatewayID: &id007
@@ -5968,36 +7724,30 @@ components:
         additionalProperties: true
       additionalProperties: true
     IPSecSharedSettings:
-      type: object
-      properties:
-        p81GatewaySubnets:
-          minLength: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        remoteGatewaySubnets:
-          minLength: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        p81ASN:
-          $ref: '#/components/schemas/RemoteASN'
-        features:
-          type: object
-          properties:
-            symmetricInnerMesh:
-              type: object
-              properties:
-                enabled:
-                  type: boolean
-                  default: false
-              additionalProperties: true
-          additionalProperties: true
-      required:
-      - p81GatewaySubnets
-      - remoteGatewaySubnets
+      allOf:
+      - $ref: '#/components/schemas/IPSecSubnetsBase'
+      - type: object
+        properties:
+          p81ASN:
+            description: 'BGP ASN of the Check Point SASE side of the tunnel. Must differ from the ASN of the remote gateway.
+
+              '
+            example: 64512
+            allOf:
+            - $ref: '#/components/schemas/ASN'
+            additionalProperties: true
+          features:
+            type: object
+            properties:
+              symmetricInnerMesh:
+                type: object
+                properties:
+                  enabled:
+                    type: boolean
+                    default: false
+                additionalProperties: true
+            additionalProperties: true
+        additionalProperties: true
       additionalProperties: true
     IPSecSharedSettingsCreate:
       allOf:
@@ -6005,7 +7755,13 @@ components:
       - type: object
         properties:
           p81ASN:
-            $ref: '#/components/schemas/RemoteASN'
+            description: 'BGP ASN of the Check Point SASE side of the tunnel. Must differ from the ASN of the remote gateway.
+
+              '
+            example: 64512
+            allOf:
+            - $ref: '#/components/schemas/ASN'
+            additionalProperties: true
         additionalProperties: true
       required: []
       additionalProperties: true
@@ -6043,6 +7799,20 @@ components:
             type: string
             default: ipsec
         additionalProperties: true
+      additionalProperties: true
+    IPSecSubnetsBase:
+      type: object
+      description: 'The traffic selectors of an IPSec tunnel, meaning which subnets are reachable on each side. Together these two lists decide what traffic actually enters the tunnel.
+
+        '
+      properties:
+        p81GatewaySubnets:
+          $ref: '#/components/schemas/P81GatewaySubnets'
+        remoteGatewaySubnets:
+          $ref: '#/components/schemas/RemoteGatewaySubnets'
+      required:
+      - p81GatewaySubnets
+      - remoteGatewaySubnets
       additionalProperties: true
     IdProvider:
       type: object
@@ -6110,6 +7880,63 @@ components:
       required:
       - source
       - value
+      additionalProperties: true
+    InspectionPort:
+      type: object
+      required:
+      - protocol
+      - port
+      properties:
+        protocol:
+          type: string
+          enum:
+          - tcp
+        port:
+          type: integer
+          minimum: 1
+          maximum: 65535
+        description:
+          type: string
+          maxLength: 255
+      additionalProperties: true
+    InspectionSettingsResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: object
+          properties:
+            ports:
+              type: array
+              items:
+                $ref: '#/components/schemas/InspectionPort'
+            invalidCertificatesSettings:
+              type: array
+              items:
+                $ref: '#/components/schemas/CertificateRule'
+            revocationCheckTimeoutMs:
+              type: integer
+              minimum: 500
+              maximum: 15000
+              description: 'Maximum time in milliseconds to wait for a certificate revocation check (OCSP/CRL).
+
+                Returns the tenant''s value, or the default (2000) when none is set.
+
+                Omitted when certificate validation is not enabled for the tenant.
+
+                '
+            crliteEnabled:
+              type: boolean
+              description: 'Whether CRLite is used for server certificate revocation checks.
+
+                Returns the tenant''s value, or true (default) when none is set.
+
+                Omitted when certificate validation is not enabled for the tenant.
+
+                '
+          additionalProperties: true
       additionalProperties: true
     Lifetime:
       type: string
@@ -6194,35 +8021,6 @@ components:
         - DNSServices
         additionalProperties: true
       additionalProperties: true
-    NetworkHaTunnelID:
-      allOf:
-      - $ref: '#/components/schemas/BaseDates'
-      - type: object
-        properties:
-          network:
-            type: string
-            description: ID of the network.
-          tunnels:
-            type: array
-            items:
-              type: string
-          type:
-            type: string
-            pattern: ipsec
-          tenantId:
-            type: string
-            description: tenantId.
-          id:
-            type: string
-            description: id.
-        required:
-        - network
-        - tunnels
-        - type
-        - tenantId
-        - id
-        additionalProperties: true
-      additionalProperties: true
     NetworkInstance:
       allOf:
       - $ref: '#/components/schemas/BaseDates'
@@ -6240,6 +8038,10 @@ components:
             type: string
           imageVersion:
             type: string
+          idle:
+            type: boolean
+            readOnly: true
+            description: Whether this gateway instance is idle (disabled for user traffic). Available in v3; omitted if its running mode is unavailable.
           dns:
             type: string
           ip:
@@ -6285,26 +8087,31 @@ components:
             allOf:
             - $ref: '#/components/schemas/Passphrase'
             additionalProperties: true
-          dpdAction: &id028
+          leftSubnets: &id028
+            minItems: 1
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+          rightSubnets: &id029
+            minItems: 1
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+          dpdAction: &id030
             type: string
-            description: dpdAction.
-          leftSubnets: &id029
-            minLength: 1
-            uniqueItems: true
-            type: array
-            items:
-              type: string
-          rightSubnets: &id030
-            minLength: 1
-            uniqueItems: true
-            type: array
-            items:
-              type: string
+            description: 'Action taken when dead peer detection declares the peer unreachable. Always "restart"; the value is fixed and is not accepted on create or update.
+
+              '
+            enum:
+            - restart
+            example: restart
         required:
         - right
         - rightID
-        - passphrase
         - dpdAction
+        - passphrase
         - leftSubnets
         - rightSubnets
         additionalProperties: true
@@ -6344,118 +8151,71 @@ components:
         additionalProperties: true
       additionalProperties: true
     NetworkTunnel:
-      anyOf:
+      oneOf:
       - $ref: '#/components/schemas/NetworkTunnelOpenvpn'
-      - $ref: '#/components/schemas/NetworkTunnelWireguard'
+      - $ref: '#/components/schemas/NetworkTunnelWireGuard'
       - $ref: '#/components/schemas/NetworkTunnelIpsecSingle'
-      - $ref: '#/components/schemas/NetworkTunnelIpsecRedundant'
-      - $ref: '#/components/schemas/NetworkTunnelBase'
+      discriminator:
+        propertyName: type
+        mapping:
+          openvpn: '#/components/schemas/NetworkTunnelOpenvpn'
+          connector: '#/components/schemas/NetworkTunnelWireGuard'
+          ipsec: '#/components/schemas/NetworkTunnelIpsecSingle'
     NetworkTunnelBase:
-      type: object
-      properties:
-        id: &id010
-          type: string
-          description: Unique ID.
-        network: &id011
-          type: string
-          description: ID of the network.
-        region: &id012
-          type: string
-          description: ID of the network region.
-        instance: &id013
-          type: string
-          description: ID of the network instance.
-        interfaceName: &id014
-          type: string
-        type: &id015
-          enum:
-          - connector
-          - ipsec
-          - openvpn
-          type: string
-        isHA: &id016
-          type: boolean
-          description: Indicates if it's a redundant tunnel.
-        tenantId: &id017
-          type: string
-          description: ID of the tenant.
-        createdAt: *id008
-        updatedAt: *id009
-      required:
-      - id
-      additionalProperties: true
-    NetworkTunnelIpsecRedundant:
-      type: object
-      properties:
-        id: *id010
-        network: *id011
-        region: *id012
-        instance: *id013
-        interfaceName: *id014
-        type: *id015
-        isHA: *id016
-        tenantId: *id017
-        createdAt: *id008
-        updatedAt: *id009
-        keyExchange: *id018
-        ikeLifeTime: *id019
-        lifetime: *id020
-        dpdDelay: *id021
-        dpdTimeout: *id022
-        phase1: *id023
-        phase2: *id024
-        right: *id025
-        rightID: *id026
-        passphrase: *id027
-        dpdAction: *id028
-        leftSubnets: *id029
-        rightSubnets: *id030
-        haTunnelID:
-          $ref: '#/components/schemas/NetworkHaTunnelID'
-        rightASN:
-          $ref: '#/components/schemas/ASN'
-        rightPrivateIP:
-          $ref: '#/components/schemas/IP'
-        leftPrivateIP:
-          $ref: '#/components/schemas/IP'
-      required:
-      - id
-      - network
-      - region
-      - instance
-      - interfaceName
-      - type
-      - isHA
-      - tenantId
-      - createdAt
-      - keyExchange
-      - ikeLifeTime
-      - lifetime
-      - dpdDelay
-      - dpdTimeout
-      - phase1
-      - phase2
-      - right
-      - rightID
-      - passphrase
-      - dpdAction
-      - leftSubnets
-      - rightSubnets
-      - haTunnelID
+      allOf:
+      - type: object
+        properties:
+          id: &id008
+            type: string
+            description: Unique ID.
+          network: &id009
+            type: string
+            description: ID of the network.
+          region: &id010
+            type: string
+            description: ID of the network region.
+          instance: &id011
+            type: string
+            description: ID of the network instance.
+          interfaceName: &id012
+            type: string
+          type: &id013
+            enum:
+            - connector
+            - ipsec
+            - openvpn
+            type: string
+          isHA: &id014
+            type: boolean
+            description: Indicates if it's a redundant tunnel.
+          tenantId: &id015
+            type: string
+            description: ID of the tenant.
+        required:
+        - id
+        - network
+        - region
+        - instance
+        - interfaceName
+        - type
+        - isHA
+        - tenantId
+        additionalProperties: true
+      - $ref: '#/components/schemas/BaseDates'
       additionalProperties: true
     NetworkTunnelIpsecSingle:
       type: object
       properties:
-        id: *id010
-        network: *id011
-        region: *id012
-        instance: *id013
-        interfaceName: *id014
-        type: *id015
-        isHA: *id016
-        tenantId: *id017
-        createdAt: *id008
-        updatedAt: *id009
+        id: *id008
+        network: *id009
+        region: *id010
+        instance: *id011
+        interfaceName: *id012
+        type: *id013
+        isHA: *id014
+        tenantId: *id015
+        createdAt: *id016
+        updatedAt: *id017
         keyExchange: *id018
         ikeLifeTime: *id019
         lifetime: *id020
@@ -6466,9 +8226,9 @@ components:
         right: *id025
         rightID: *id026
         passphrase: *id027
-        dpdAction: *id028
-        leftSubnets: *id029
-        rightSubnets: *id030
+        leftSubnets: *id028
+        rightSubnets: *id029
+        dpdAction: *id030
       required:
       - id
       - network
@@ -6478,7 +8238,6 @@ components:
       - type
       - isHA
       - tenantId
-      - createdAt
       - keyExchange
       - ikeLifeTime
       - lifetime
@@ -6496,16 +8255,16 @@ components:
     NetworkTunnelOpenvpn:
       type: object
       properties:
-        id: *id010
-        network: *id011
-        region: *id012
-        instance: *id013
-        interfaceName: *id014
-        type: *id015
-        isHA: *id016
-        tenantId: *id017
-        createdAt: *id008
-        updatedAt: *id009
+        id: *id008
+        network: *id009
+        region: *id010
+        instance: *id011
+        interfaceName: *id012
+        type: *id013
+        isHA: *id014
+        tenantId: *id015
+        createdAt: *id016
+        updatedAt: *id017
         passphrase:
           $ref: '#/components/schemas/Passphrase'
         username:
@@ -6520,25 +8279,24 @@ components:
       - type
       - isHA
       - tenantId
-      - createdAt
       - passphrase
       - username
       additionalProperties: true
-    NetworkTunnelWireguard:
+    NetworkTunnelWireGuard:
       type: object
       properties:
-        id: *id010
-        network: *id011
-        region: *id012
-        instance: *id013
-        interfaceName: *id014
-        type: *id015
-        isHA: *id016
-        tenantId: *id017
-        createdAt: *id008
-        updatedAt: *id009
+        id: *id008
+        network: *id009
+        region: *id010
+        instance: *id011
+        interfaceName: *id012
+        type: *id013
+        isHA: *id014
+        tenantId: *id015
+        createdAt: *id016
+        updatedAt: *id017
         leftAllowedIP:
-          minLength: 1
+          minItems: 1
           uniqueItems: true
           type: array
           items:
@@ -6560,11 +8318,68 @@ components:
       - type
       - isHA
       - tenantId
-      - createdAt
       - leftAllowedIP
       - leftEndpoint
       - vault
       - requestConfigToken
+      additionalProperties: true
+    NotificationPagesGetResponse:
+      type: object
+      required:
+      - status
+      - data
+      properties:
+        status:
+          type: integer
+          enum:
+          - 200
+        data:
+          type: object
+          required:
+          - blockPageMessage
+          - logoUrl
+          - tenantId
+          additionalProperties: false
+          properties:
+            blockPageMessage:
+              type: string
+            logoUrl:
+              type: string
+            tenantId:
+              type: string
+            blockPageIncludeUrl:
+              type: boolean
+            blockPageIncludeRuleName:
+              type: boolean
+            blockPageIncludeInternalDeviceIp:
+              type: boolean
+            blockPageIncludeUserId:
+              type: boolean
+            blockPageIncludeDeviceId:
+              type: boolean
+            blockPageIncludeWebCategory:
+              type: boolean
+            blockPageIncludeRestrictedResource:
+              type: boolean
+      additionalProperties: true
+    NotificationPagesMessageResponse:
+      type: object
+      required:
+      - status
+      - data
+      properties:
+        status:
+          type: integer
+          enum:
+          - 200
+        data:
+          type: object
+          required:
+          - message
+          properties:
+            message:
+              type: string
+          additionalProperties: true
       additionalProperties: true
     NumberPositive500:
       type: number
@@ -6707,6 +8522,12 @@ components:
       - $ref: '#/components/schemas/ObjectServiceProtocolSingle'
       - $ref: '#/components/schemas/ObjectServiceProtocolRange'
       - $ref: '#/components/schemas/ObjectServiceProtocolList'
+      discriminator:
+        propertyName: valueType
+        mapping:
+          single: '#/components/schemas/ObjectServiceProtocolSingle'
+          range: '#/components/schemas/ObjectServiceProtocolRange'
+          list: '#/components/schemas/ObjectServiceProtocolList'
       type: object
       required:
       - protocol
@@ -6859,15 +8680,36 @@ components:
           type: string
           description: Secret access key for the OpenVPN tunnel. This is only the hashed value. The original value will not be retrievable after creation.
       additionalProperties: true
+    P81GatewaySubnets:
+      type: array
+      minItems: 1
+      uniqueItems: true
+      description: 'Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either "0.0.0.0/0", to route all traffic through the tunnel, or the network''s own subnet.
+
+        '
+      items:
+        type: string
+        format: cidr
+        example: 10.255.0.0/16
     Passphrase:
       type: string
       pattern: ^[$a-zA-Z1-9_\/\.][$a-zA-Z0-9_\/\.]{7,101}$
-    PeakBandwidth:
+      minLength: 8
+      maxLength: 102
+      example: Str0ng.Shared_Key01
+      description: 'Passphrase as stored for a tunnel on a standard network.
+
+        '
+    PeakBandwidthMbps:
       type: integer
-      description: Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps.
+      deprecated: true
+      description: 'Deprecated: ignored for non-China regions. China regions still use this field. Expected peak throughput of the tunnel in Mbps. A typical connection is 1000. Consumes bandwidth licenses, so set it no higher than the tunnel needs.
+
+        '
       minimum: 10
       maximum: 8000
       default: 1000
+      example: 1000
     PermissionCategory:
       type: object
       properties:
@@ -6913,6 +8755,10 @@ components:
       - $ref: '#/components/schemas/BasicApplication'
       - type: object
         properties:
+          type:
+            type: string
+            enum:
+            - rdp
           attributes:
             $ref: '#/components/schemas/RdpAttributes'
         additionalProperties: true
@@ -7014,6 +8860,21 @@ components:
       description: description of regions dto object.
     RemoteASN:
       type: integer
+      description: 'Autonomous System Number (ASN) of a remote BGP peer. Excludes 23456, which is reserved as the 2-byte placeholder for 4-byte ASNs, and excludes the last ASN of the 16-bit and 32-bit private ranges.
+
+        '
+      example: 65001
+    RemoteGatewaySubnets:
+      type: array
+      minItems: 1
+      uniqueItems: true
+      description: 'Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation.
+
+        '
+      items:
+        type: string
+        format: cidr
+        example: 192.168.10.0/24
     RemoveInstancePayload:
       properties:
         id:
@@ -7104,9 +8965,27 @@ components:
       additionalProperties: true
     SourcesAndDestinations:
       type: object
-      oneOf:
-      - $ref: '#/components/schemas/UsersAndGroups'
-      - $ref: '#/components/schemas/Addresses'
+      description: Resources a policy rule matches on. Any combination of users, groups and address objects may be present.
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/AlphanumericWithSpace'
+          type: array
+          minItems: 1
+          maxItems: 10
+          description: List of IDs of users.
+        groups:
+          items:
+            $ref: '#/components/schemas/AlphanumericWithSpace'
+          type: array
+          minItems: 1
+          description: List of IDs of groups.
+        addresses:
+          items:
+            $ref: '#/components/schemas/AlphanumericWithSpace'
+          type: array
+          minItems: 1
+          description: List of IDs of address objects.
       additionalProperties: true
     SplitTunnelingBase:
       type: object
@@ -7149,11 +9028,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SplitTunnelingException'
-          description: "Subnet exceptions within included ranges that bypass the tunnel.\n\n**Important:** Exceptions are only supported in 'out_of_tunnel' mode. If provided when defaultTunnelingMode is 'via_tunnel', \nthe request will be rejected with a 400 Bad Request error.\n\nBehavior in 'out_of_tunnel' mode:\n- New exceptions are validated against allowed ranges (from included destinations)\n- Saved exceptions are filtered according to actual allowed ranges\n- Results are merged and deduplicated\n- Empty array will be merged with existing exceptions and will not remove saved exceptions by itself\n- If included destinations are removed from the payload and there are saved exceptions related to those subnets, \n  these exceptions will also be removed from the saved data\n- If omitted, exceptions value remains unchanged\n"
+          description: "Subnet exceptions within included ranges that bypass the tunnel.\n\n**Important:** Exceptions are only supported in 'out_of_tunnel' mode. Do not provide\nthem when defaultTunnelingMode is 'via_tunnel'.\n\nBehavior in 'out_of_tunnel' mode:\n- New exceptions are validated against allowed ranges (from included destinations)\n- Saved exceptions are filtered according to actual allowed ranges\n- Results are merged and deduplicated\n- Empty array will be merged with existing exceptions and will not remove saved exceptions by itself\n- If included destinations are removed from the payload and there are saved exceptions related to those subnets, \n  these exceptions will also be removed from the saved data\n- If omitted, exceptions value remains unchanged\n"
       additionalProperties: true
     SplitTunnelingException:
       type: object
-      description: "Subnet exception entry that can override the default tunnel behavior\nfor specific IPs or CIDR ranges inside the encryption domain.\n\n**Important:** Exceptions are only supported in 'out_of_tunnel' mode. If provided when defaultTunnelingMode is 'via_tunnel',\nthe request will be rejected with a 400 Bad Request error.\n\nThe destination must be in CIDR notation (e.g. 10.1.2.0/24 for a subnet,\n10.1.2.3/32 for a single IP).\n\nValidation Rules (out_of_tunnel mode only):\n- Exception destination must be within at least one of the allowed included destinations\n- Exception destination cannot be equal to any allowed included destination\n- Exception destination cannot be bigger (more general) than any allowed included destination\n- Exceptions in the request payload that violate these rules cause a 400 Bad Request; only stored exceptions are automatically filtered during processing\n\nException Lifecycle (out_of_tunnel mode only):\n- When included destinations are removed from the configuration, any saved exceptions that fall\n  outside the remaining allowed ranges are automatically removed\n- Exceptions are merged with existing saved exceptions and deduplicated by destination\n"
+      description: "Subnet exception entry that can override the default tunnel behavior\nfor specific IPs or CIDR ranges inside the encryption domain.\n\n**Important:** Exceptions are only supported in 'out_of_tunnel' mode. Do not provide them\nwhen defaultTunnelingMode is 'via_tunnel'.\n\nThe destination must be in CIDR notation (e.g. 10.1.2.0/24 for a subnet,\n10.1.2.3/32 for a single IP).\n\nValidation Rules (out_of_tunnel mode only):\n- Exception destination must be within at least one of the allowed included destinations\n- Exception destination cannot be equal to any allowed included destination\n- Exception destination cannot be bigger (more general) than any allowed included destination\n- Exceptions in the request payload must satisfy these rules; only stored exceptions are automatically filtered during processing\n\nException Lifecycle (out_of_tunnel mode only):\n- When included destinations are removed from the configuration, any saved exceptions that fall\n  outside the remaining allowed ranges are automatically removed\n- Exceptions are merged with existing saved exceptions and deduplicated by destination\n"
       properties:
         type:
           type: string
@@ -7177,6 +9056,10 @@ components:
       - $ref: '#/components/schemas/BasicApplication'
       - type: object
         properties:
+          type:
+            type: string
+            enum:
+            - ssh
           attributes:
             $ref: '#/components/schemas/SshAttributes'
         additionalProperties: true
@@ -7238,35 +9121,35 @@ components:
       - data
       additionalProperties: true
     StaticTunnelCreate:
+      description: 'Creates a static (policy-routed) IPSec tunnel in an enhanced network. There is no BGP peering and no ASN: reachable subnets are stated explicitly in `p81GatewaySubnets` and `remoteGatewaySubnets`.
+
+        '
       allOf:
       - $ref: '#/components/schemas/TunnelAuthConfig'
       - type: object
         properties:
           regionID:
             type: string
-            description: Target region ID
+            description: 'ID of the enhanced region to deploy the tunnel in. Must be a region that already exists *on this network*.
+
+              '
+            example: sXUeWwM8DM
           tunnelName:
-            type: string
-            description: Name of the static tunnel
+            $ref: '#/components/schemas/StaticTunnelName'
           p81GatewaySubnets:
-            type: array
-            items:
-              type: string
-            minItems: 1
-            description: Harmony Sase gateway subnets
+            $ref: '#/components/schemas/P81GatewaySubnets'
           remoteGatewaySubnets:
-            type: array
-            items:
-              type: string
-            minItems: 1
-            description: Remote gateway subnets
+            $ref: '#/components/schemas/RemoteGatewaySubnets'
+          peakBandwidthMbps:
+            $ref: '#/components/schemas/PeakBandwidthMbps'
           keyExchange:
             type: string
-            description: IKE version for key exchange
+            description: IKE version used for key exchange. Must match the remote gateway.
             enum:
             - ikev1
             - ikev2
             default: ikev2
+            example: ikev2
           ikeLifeTime:
             $ref: '#/components/schemas/Lifetime'
           lifetime:
@@ -7282,19 +9165,25 @@ components:
           remotePublicIP:
             type: string
             format: ipv4
-            description: Remote gateway public IP address
+            description: 'Public, internet-routable address of the remote gateway, the IKE peer this tunnel dials. Must be unique within the region.
+
+              '
+            example: 203.0.113.10
           remoteID:
-            type: string
-            description: Remote gateway ID
+            description: 'IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters, and it must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. Optional: if omitted, defaults to `remotePublicIP`.
+
+              '
+            allOf:
+            - $ref: '#/components/schemas/remoteID'
+            additionalProperties: true
           description:
             type: string
-            description: Optional tunnel description
+            description: Free-text description of the tunnel.
+            example: Backup link to the Frankfurt data center
           features:
             $ref: '#/components/schemas/NetworkFeaturesCreate'
           routingType:
             $ref: '#/components/schemas/RoutingType'
-          peakBandwidthMbps:
-            $ref: '#/components/schemas/PeakBandwidth'
         required:
         - regionID
         - tunnelName
@@ -7305,41 +9194,43 @@ components:
         - phase2
         - authType
         - remotePublicIP
-        - remoteID
         - ikeLifeTime
         - lifetime
         - dpdDelay
         - dpdTimeout
         - features
-        - routingType
         additionalProperties: true
       additionalProperties: true
+    StaticTunnelName:
+      type: string
+      pattern: ^[a-zA-Z0-9]+$
+      minLength: 3
+      maxLength: 15
+      example: londonlink01
+      description: 'Name of the static tunnel. 3-15 characters, letters and digits only.
+
+        '
     StaticTunnelUpdate:
+      description: 'Updates a static IPSec tunnel. Every field is optional, so send only what you want to change. The region cannot be changed after creation.
+
+        '
       allOf:
       - $ref: '#/components/schemas/TunnelAuthConfig'
       - type: object
         properties:
           tunnelName:
-            type: string
-            description: Name of the static tunnel
+            $ref: '#/components/schemas/StaticTunnelName'
           p81GatewaySubnets:
-            type: array
-            items:
-              type: string
-            minItems: 1
-            description: Harmony Sase gateway subnets
+            $ref: '#/components/schemas/P81GatewaySubnets'
           remoteGatewaySubnets:
-            type: array
-            items:
-              type: string
-            minItems: 1
-            description: Remote gateway subnets
+            $ref: '#/components/schemas/RemoteGatewaySubnets'
           keyExchange:
             type: string
-            description: IKE version for key exchange
+            description: IKE version used for key exchange. Must match the remote gateway.
             enum:
             - ikev1
             - ikev2
+            example: ikev2
           ikeLifeTime:
             $ref: '#/components/schemas/Lifetime'
           lifetime:
@@ -7355,13 +9246,21 @@ components:
           remotePublicIP:
             type: string
             format: ipv4
-            description: Remote gateway public IP address
+            description: 'Public, internet-routable address of the remote gateway. Must be unique within the region.
+
+              '
+            example: 203.0.113.10
           remoteID:
-            type: string
-            description: Remote gateway ID
+            description: 'IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters, and it must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.
+
+              '
+            allOf:
+            - $ref: '#/components/schemas/remoteID'
+            additionalProperties: true
           description:
             type: string
-            description: Optional tunnel description
+            description: Free-text description of the tunnel.
+            example: Backup link to the Frankfurt data center
           features:
             $ref: '#/components/schemas/NetworkFeaturesCreate'
           routingType:
@@ -7498,28 +9397,54 @@ components:
       additionalProperties: true
     TunnelAuthConfig:
       type: object
+      description: 'How the tunnel authenticates. `authType` selects the method, and exactly one of `passphrase` / `customerRootCA` must accompany it. Send only the one that matches `authType`, never both.
+
+        '
       properties:
         authType:
           type: string
           enum:
           - psk
           - cert
-          description: Authentication type for tunnel (psk for pre-shared key, cert for certificate)
+          example: psk
+          description: 'Authentication method for the tunnel. "psk" (pre-shared key) requires `passphrase` and forbids `customerRootCA`; "cert" (certificate) requires `customerRootCA` and forbids `passphrase`.
+
+            '
         passphrase:
           type: string
+          pattern: ^[a-zA-Z1-9._][a-zA-Z0-9._]{7,63}$
           minLength: 8
           maxLength: 64
-          description: Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk.
+          example: Str0ng.Shared_Key01
+          description: 'Pre-shared key for tunnel authentication. Required when `authType` is "psk", and must be omitted when `authType` is "cert". 8-64 characters, using letters, digits, "." and "_" only; the first character cannot be "0".
+
+            '
         customerRootCA:
           type: string
-          description: Customer root certificate authority. Required when authType is cert.
+          minLength: 10
+          maxLength: 10
+          example: GCt8HauIPH
+          description: 'ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when `authType` is "cert", and must be omitted when `authType` is "psk".
+
+            '
       additionalProperties: true
     TunnelName:
       type: string
-      pattern: ^[a-zA-Z0-9]*$
+      pattern: ^[a-zA-Z0-9]+$
       description: The name of the tunnel
       minLength: 3
       maxLength: 15
+      example: londonlink01
+    UnauthorizedError:
+      type: object
+      description: Error envelope returned for 401 Unauthorized responses.
+      properties:
+        message:
+          type: string
+          description: Always "Unauthorized".
+      required:
+      - message
+      additionalProperties: true
     UpdateAccessPolicyRulesRequest:
       type: object
       required:
@@ -7544,12 +9469,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/AccessPolicyRule'
-            controlledBy:
-              type: string
-              enum:
-              - quantum
-              - hsase
-              description: Indicates whether the policy is controlled by Quantum or Hsase
           additionalProperties: true
       example:
         status: 200
@@ -7613,8 +9532,73 @@ components:
               value:
               - user-id-789
             log: summaryWithUrls
-          controlledBy: hsase
+          - id: rule-ghi789
+            name: Redirect Legacy Intranet
+            status: active
+            priority: 2
+            appliedOn: both
+            action: redirect
+            redirectAction: immediate
+            redirectUrl: https://intranet.example.com/home
+            conditions: []
+            destinations:
+            - type: customUrls
+              value:
+              - custom-url-id-999
+            sources:
+            - type: groups
+              value:
+              - group-id-123
+            log: summaryWithUrls
+          - id: rule-jkl012
+            name: Block Gambling And Explain Why
+            status: active
+            priority: 3
+            appliedOn: both
+            action: block
+            redirectAction: afterBlockPage
+            redirectUrl: https://intranet.example.com/acceptable-use-policy
+            conditions: []
+            destinations:
+            - type: categories
+              value:
+              - '100000020'
+            sources:
+            - type: groups
+              value:
+              - group-id-123
+            log: summaryWithUrls
       additionalProperties: true
+    UpdateDlpSettingsRequest:
+      type: object
+      required:
+      - failType
+      properties:
+        failType:
+          $ref: '#/components/schemas/DlpFailType'
+      additionalProperties: true
+    UpdateFileAccessPolicyRequest:
+      type: object
+      required:
+      - fileAccessRules
+      properties:
+        fileAccessRules:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/FileAccessRule'
+      additionalProperties: true
+    UpdateHostFirewallPolicyRequest:
+      type: object
+      required:
+      - protocolRules
+      additionalProperties: false
+      properties:
+        protocolRules:
+          type: array
+          description: Full list of rules. An empty array deletes all rules.
+          items:
+            $ref: '#/components/schemas/HostFirewallRuleInput'
     UpdateIPSecRedundantPayload:
       type: object
       properties:
@@ -7626,10 +9610,42 @@ components:
           $ref: '#/components/schemas/IPSecSharedSettings'
         advancedSettings:
           $ref: '#/components/schemas/IPSecAdvancedSettings'
-      required:
-      - tunnels
-      - sharedSettings
-      - advancedSettings
+      minProperties: 1
+      additionalProperties: true
+    UpdateInspectionSettingsRequest:
+      type: object
+      properties:
+        ports:
+          type: array
+          maxItems: 30
+          items:
+            $ref: '#/components/schemas/InspectionPort'
+        invalidCertificatesSettings:
+          type: array
+          minItems: 1
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/CertificateRule'
+        revocationCheckTimeoutMs:
+          type: integer
+          minimum: 500
+          maximum: 15000
+          description: 'Maximum time in milliseconds to wait for a certificate revocation check (OCSP/CRL).
+
+            A check that does not finish in time is treated as revocationCheckFailed.
+
+            Rejected with 403 when certificate validation is not enabled for the tenant.
+
+            '
+        crliteEnabled:
+          type: boolean
+          description: 'Whether CRLite is used for server certificate revocation checks.
+
+            Omitting it keeps the stored value. A non-boolean value is rejected with 422.
+
+            Rejected with 403 when certificate validation is not enabled for the tenant.
+
+            '
       additionalProperties: true
     UpdateNetworkDto:
       type: object
@@ -7638,6 +9654,59 @@ components:
           $ref: '#/components/schemas/BaseNetworkDto'
       required:
       - network
+      additionalProperties: true
+    UpdateNotificationPagesRequest:
+      type: object
+      properties:
+        blockPageMessage:
+          type: string
+          maxLength: 512
+        logoFile:
+          type: string
+          format: byte
+          maxLength: 682668
+        blockPageIncludeUrl:
+          type: boolean
+        blockPageIncludeRuleName:
+          type: boolean
+        blockPageIncludeInternalDeviceIp:
+          type: boolean
+        blockPageIncludeUserId:
+          type: boolean
+        blockPageIncludeDeviceId:
+          type: boolean
+        blockPageIncludeWebCategory:
+          type: boolean
+        blockPageIncludeRestrictedResource:
+          type: boolean
+      anyOf:
+      - required:
+        - blockPageMessage
+        additionalProperties: true
+      - required:
+        - logoFile
+        additionalProperties: true
+      - required:
+        - blockPageIncludeUrl
+        additionalProperties: true
+      - required:
+        - blockPageIncludeRuleName
+        additionalProperties: true
+      - required:
+        - blockPageIncludeInternalDeviceIp
+        additionalProperties: true
+      - required:
+        - blockPageIncludeUserId
+        additionalProperties: true
+      - required:
+        - blockPageIncludeDeviceId
+        additionalProperties: true
+      - required:
+        - blockPageIncludeWebCategory
+        additionalProperties: true
+      - required:
+        - blockPageIncludeRestrictedResource
+        additionalProperties: true
       additionalProperties: true
     UpdatedNetwork:
       allOf:
@@ -7773,28 +9842,15 @@ components:
           maxLength: 30
           pattern: ^\+?[0-9]{9,15}$
       additionalProperties: true
-    UsersAndGroups:
-      type: object
-      properties:
-        users:
-          items:
-            $ref: '#/components/schemas/AlphanumericWithSpace'
-          type: array
-          minItems: 1
-          maxItems: 10
-          description: List of IDs of users.
-        groups:
-          items:
-            $ref: '#/components/schemas/AlphanumericWithSpace'
-          type: array
-          minItems: 1
-          description: List of IDs of groups.
-      additionalProperties: true
     VncApplication:
       allOf:
       - $ref: '#/components/schemas/BasicApplication'
       - type: object
         properties:
+          type:
+            type: string
+            enum:
+            - vnc
           attributes:
             $ref: '#/components/schemas/VncAttributes'
         additionalProperties: true
@@ -7866,22 +9922,7 @@ components:
         - headers
         additionalProperties: true
       additionalProperties: true
-    WireGuradDetails:
-      type: object
-      properties:
-        remoteEndpoint:
-          $ref: '#/components/schemas/IP'
-        remoteSubnets:
-          minLength: 1
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-      required:
-      - remoteEndpoint
-      - remoteSubnets
-      additionalProperties: true
-    WireguardConfigUrl:
+    WireGuardConfigUrl:
       type: object
       properties:
         wireguardConfigUrl:
@@ -7891,9 +9932,24 @@ components:
       required:
       - wireguardConfigUrl
       additionalProperties: true
-    WireguardTunnel:
+    WireGuardDetails:
+      type: object
+      properties:
+        remoteEndpoint:
+          $ref: '#/components/schemas/IP'
+        remoteSubnets:
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+      required:
+      - remoteEndpoint
+      - remoteSubnets
+      additionalProperties: true
+    WireGuardTunnel:
       allOf:
-      - $ref: '#/components/schemas/WireGuradDetails'
+      - $ref: '#/components/schemas/WireGuardDetails'
       - $ref: '#/components/schemas/BaseTunnelValues'
       - $ref: '#/components/schemas/BaseDates'
       - type: object
@@ -7911,6 +9967,8 @@ components:
         name:
           type: string
           maxLength: 100
+          pattern: ^[^!#$%^&*]*$
+          description: 'Must not contain the characters ! # $ % ^ & *'
         description:
           type: string
           maxLength: 250
@@ -7919,6 +9977,7 @@ components:
           items:
             $ref: '#/components/schemas/CategoryEntry'
           minItems: 1
+          uniqueItems: true
       required:
       - name
       - categories
@@ -7956,13 +10015,14 @@ components:
       additionalProperties: true
     gumErrorResponse:
       type: object
+      description: Error envelope actually emitted by the lambda (common/src/libs/utils/httpResponse.ts toErrorResponse) — the HTTP status lives on the response itself, not in the body.
       properties:
-        body:
+        message:
           type: string
-          description: Error message.
-        statusCode:
-          type: integer
-          description: HTTP status code.
+          description: Human-readable error message.
+        messageCode:
+          type: string
+          description: Stable machine-readable error code — one of INTERNAL_SERVER_ERROR, BAD_REQUEST, NOT_IMPLEMENTED_ERROR, NOT_FOUND, VALIDATION_SCHEMA_ERROR, PRECONDITION_FAILED, CONFLICT, UNAUTHORIZED. Mirrors common/src/libs/exceptions/ErrorCodes.ts, which is the source of truth; these values are a caller-visible contract.
       additionalProperties: true
     gumInternalErrorResponse:
       type: object
@@ -7975,17 +10035,14 @@ components:
       - success
       - message
       additionalProperties: true
-    gumRoleAssignedUsersErrorResponse:
+    gumUnauthorizedResponse:
       type: object
       properties:
-        error:
-          type: string
-          example: ROLE_HAS_ASSIGNED_USERS
         message:
           type: string
-          example: Role has 5 assigned user(s)
+          example: Unauthorized
+          description: Error message returned by the API Gateway authorizer.
       required:
-      - error
       - message
       additionalProperties: true
     gumUpdateCustomRoleRequest:
@@ -7994,6 +10051,8 @@ components:
         name:
           type: string
           maxLength: 100
+          pattern: ^[^!#$%^&*]*$
+          description: 'Must not contain the characters ! # $ % ^ & *'
         description:
           type: string
           maxLength: 250
@@ -8002,12 +10061,14 @@ components:
           items:
             $ref: '#/components/schemas/CategoryEntry'
           minItems: 1
+          uniqueItems: true
       additionalProperties: true
     remoteID:
-      oneOf:
-      - $ref: '#/components/schemas/IP'
-      - type: string
-        pattern: ^[a-zA-Z0-9]{3,25}$
+      type: string
+      description: 'IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.
+
+        '
+      example: remotegw01
   responses:
     Unauthorized:
       description: Unauthorized
@@ -8094,43 +10155,43 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    '402':
-      description: Insufficient licenses
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/UnauthorizedError'
+          example:
+            message: Unauthorized
     '403':
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/ForbiddenError'
+          example:
+            Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
     '404':
       description: Resource not found
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    '422':
-      description: Unprocessable entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+          example:
+            status: 404
+            message: network doesn't exist
+            messageCode: NOT_FOUND
     401_Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/UnauthorizedError'
+          example:
+            message: Unauthorized
     403_Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/ForbiddenError'
+          example:
+            Message: User is not authorized to access this resource with an explicit deny in an identity-based policy
     202_Accepted:
       description: Request accepted
       content:
@@ -8149,7 +10210,7 @@ components:
                 example: 429
               message:
                 type: string
-                example: 'Rate limit exceeded for network abc123. Active operations: 5, Limit: 5. Please try again later.'
+                example: 'Rate limit exceeded for network xtNxTAZVky. Active operations: 5, Limit: 5. Please try again later.'
               error:
                 type: string
                 example: Too Many Requests
@@ -8158,7 +10219,7 @@ components:
                 example: 5
               networkId:
                 type: string
-                example: abc123
+                example: xtNxTAZVky
             additionalProperties: true
     400_BadRequest:
       description: Bad Request
@@ -8166,26 +10227,39 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    402_Insufficient_licenses:
-      description: Insufficient licenses
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+          example:
+            status: 400
+            message: Bad Request Exception
+            messageCode: BAD_REQUEST
+            data:
+              errors:
+              - Invalid characters
     404_NotFound:
       description: Resource not found
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          example:
+            status: 404
+            message: network doesn't exist
+            messageCode: NOT_FOUND
     409_Conflict:
       description: Conflict
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          example:
+            status: 409
+            message: 'The update includes changes to fields that are not editable while the object is in use: valueType, protocol.'
+            messageCode: CONFLICT
+            data:
+              blockedFields:
+              - valueType
+              - protocol
     409_SplitTunnelingConflict:
-      description: Conflict - Issues with updatable objects in split tunneling configuration
+      description: Conflict. Issues with updatable objects in split tunneling configuration
       content:
         application/json:
           schema:
@@ -8226,12 +10300,6 @@ components:
                 data:
                   notExistingCpIds:
                   - foobar
-    422_UnprocessableEntity:
-      description: Unprocessable entity
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
     networkId:
       name: networkId
@@ -8255,8 +10323,12 @@ components:
       name: dynamicTunnelId
       in: path
       required: true
+      description: 'ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the `haTunnelID` field of any tunnel in the group.
+
+        '
       schema:
         type: string
+        example: dWkVMVLteY
     routeId:
       name: routeId
       in: path
@@ -8287,10 +10359,3 @@ components:
       required: true
       schema:
         type: string
-  securitySchemes:
-    bearer:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-security:
-- bearer: []

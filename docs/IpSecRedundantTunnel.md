@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Passphrase** | Pointer to **string** |  | [optional] 
+**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication. 8-64 characters, using letters, digits, \&quot;.\&quot; and \&quot;_\&quot; only; the first character cannot be \&quot;0\&quot;.  | [optional] 
 **P81GWInternalIP** | **string** |  | 
 **RemoteGWInternalIP** | **string** |  | 
 **RemotePublicIP** | **string** |  | 
-**RemoteASN** | **int32** |  | 
-**RemoteID** | Pointer to [**RemoteID**](RemoteID.md) |  | [optional] 
+**RemoteASN** | **int32** | BGP ASN of the remote gateway. Must differ from the ASN of the Check Point SASE side (&#x60;p81ASN&#x60; in &#x60;sharedSettings&#x60;).  | 
+**RemoteID** | Pointer to **string** | IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.  | [optional] 
 **GatewayID** | **string** |  | 
 **TunnelID** | Pointer to **string** |  | [optional] 
 
@@ -139,20 +139,20 @@ SetRemoteASN sets RemoteASN field to given value.
 
 ### GetRemoteID
 
-`func (o *IPSecRedundantTunnel) GetRemoteID() RemoteID`
+`func (o *IPSecRedundantTunnel) GetRemoteID() string`
 
 GetRemoteID returns the RemoteID field if non-nil, zero value otherwise.
 
 ### GetRemoteIDOk
 
-`func (o *IPSecRedundantTunnel) GetRemoteIDOk() (*RemoteID, bool)`
+`func (o *IPSecRedundantTunnel) GetRemoteIDOk() (*string, bool)`
 
 GetRemoteIDOk returns a tuple with the RemoteID field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteID
 
-`func (o *IPSecRedundantTunnel) SetRemoteID(v RemoteID)`
+`func (o *IPSecRedundantTunnel) SetRemoteID(v string)`
 
 SetRemoteID sets RemoteID field to given value.
 

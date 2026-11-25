@@ -20,12 +20,12 @@ var _ MappedNullable = &HarmonySaseRegion{}
 
 // HarmonySaseRegion struct for HarmonySaseRegion
 type HarmonySaseRegion struct {
-	// ID for the Harmony SASE region.
+	// ID of the Check Point SASE region. Use this value when creating a region on a network.
 	Id string `json:"id"`
 	// Alias of id
 	ObjectId *string `json:"objectId,omitempty"`
 	DisplayName string `json:"displayName"`
-	// Name of the Harmony SASE region.
+	// Machine-readable name of the Check Point SASE region.
 	Name string `json:"name"`
 	// ISO 3166-1 alpha-2 country code for the region.
 	CountryCode string `json:"countryCode"`

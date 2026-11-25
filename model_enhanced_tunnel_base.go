@@ -20,11 +20,11 @@ var _ MappedNullable = &EnhancedTunnelBase{}
 
 // EnhancedTunnelBase struct for EnhancedTunnelBase
 type EnhancedTunnelBase struct {
-	// Authentication type for tunnel (psk for pre-shared key, cert for certificate)
+	// Authentication method for the tunnel. \"psk\" (pre-shared key) requires `passphrase` and forbids `customerRootCA`; \"cert\" (certificate) requires `customerRootCA` and forbids `passphrase`. 
 	AuthType string `json:"authType"`
-	// Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk.
-	Passphrase *string `json:"passphrase,omitempty"`
-	// Customer root certificate authority. Required when authType is cert.
+	// Pre-shared key for tunnel authentication. Required when `authType` is \"psk\", and must be omitted when `authType` is \"cert\". 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
+	Passphrase *string `json:"passphrase,omitempty" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
+	// ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when `authType` is \"cert\", and must be omitted when `authType` is \"psk\". 
 	CustomerRootCA *string `json:"customerRootCA,omitempty"`
 	// Target region ID
 	RegionID string `json:"regionID"`
@@ -34,7 +34,8 @@ type EnhancedTunnelBase struct {
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
 	// Remote gateway subnets
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
-	// Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps.
+	// Deprecated: ignored for non-China regions. China regions still use this field. Expected peak throughput of the tunnel in Mbps. A typical connection is 1000. Consumes bandwidth licenses, so set it no higher than the tunnel needs. 
+	// Deprecated
 	PeakBandwidthMbps *int32 `json:"peakBandwidthMbps,omitempty"`
 	// IKE version for key exchange
 	KeyExchange string `json:"keyExchange"`
@@ -276,6 +277,7 @@ func (o *EnhancedTunnelBase) SetRemoteGatewaySubnets(v []string) {
 }
 
 // GetPeakBandwidthMbps returns the PeakBandwidthMbps field value if set, zero value otherwise.
+// Deprecated
 func (o *EnhancedTunnelBase) GetPeakBandwidthMbps() int32 {
 	if o == nil || IsNil(o.PeakBandwidthMbps) {
 		var ret int32
@@ -286,6 +288,7 @@ func (o *EnhancedTunnelBase) GetPeakBandwidthMbps() int32 {
 
 // GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// Deprecated
 func (o *EnhancedTunnelBase) GetPeakBandwidthMbpsOk() (*int32, bool) {
 	if o == nil || IsNil(o.PeakBandwidthMbps) {
 		return nil, false
@@ -303,6 +306,7 @@ func (o *EnhancedTunnelBase) HasPeakBandwidthMbps() bool {
 }
 
 // SetPeakBandwidthMbps gets a reference to the given int32 and assigns it to the PeakBandwidthMbps field.
+// Deprecated
 func (o *EnhancedTunnelBase) SetPeakBandwidthMbps(v int32) {
 	o.PeakBandwidthMbps = &v
 }

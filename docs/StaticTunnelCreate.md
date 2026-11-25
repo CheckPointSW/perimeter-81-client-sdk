@@ -4,32 +4,32 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AuthType** | **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | 
-**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk. | [optional] 
-**CustomerRootCA** | Pointer to **string** | Customer root certificate authority. Required when authType is cert. | [optional] 
-**RegionID** | **string** | Target region ID | 
-**TunnelName** | **string** | Name of the static tunnel | 
-**P81GatewaySubnets** | **[]string** | Harmony Sase gateway subnets | 
-**RemoteGatewaySubnets** | **[]string** | Remote gateway subnets | 
-**KeyExchange** | **string** | IKE version for key exchange | [default to "ikev2"]
+**AuthType** | **string** | Authentication method for the tunnel. \&quot;psk\&quot; (pre-shared key) requires &#x60;passphrase&#x60; and forbids &#x60;customerRootCA&#x60;; \&quot;cert\&quot; (certificate) requires &#x60;customerRootCA&#x60; and forbids &#x60;passphrase&#x60;.  | 
+**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication. Required when &#x60;authType&#x60; is \&quot;psk\&quot;, and must be omitted when &#x60;authType&#x60; is \&quot;cert\&quot;. 8-64 characters, using letters, digits, \&quot;.\&quot; and \&quot;_\&quot; only; the first character cannot be \&quot;0\&quot;.  | [optional] 
+**CustomerRootCA** | Pointer to **string** | ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when &#x60;authType&#x60; is \&quot;cert\&quot;, and must be omitted when &#x60;authType&#x60; is \&quot;psk\&quot;.  | [optional] 
+**RegionID** | **string** | ID of the enhanced region to deploy the tunnel in. Must be a region that already exists *on this network*.  | 
+**TunnelName** | **string** | Name of the static tunnel. 3-15 characters, letters and digits only.  | 
+**P81GatewaySubnets** | **[]string** | Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \&quot;0.0.0.0/0\&quot;, to route all traffic through the tunnel, or the network&#39;s own subnet.  | 
+**RemoteGatewaySubnets** | **[]string** | Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation.  | 
+**PeakBandwidthMbps** | Pointer to **int32** | Deprecated: ignored for non-China regions. China regions still use this field. Expected peak throughput of the tunnel in Mbps. A typical connection is 1000. Consumes bandwidth licenses, so set it no higher than the tunnel needs.  | [optional] [default to 1000]
+**KeyExchange** | **string** | IKE version used for key exchange. Must match the remote gateway. | [default to "ikev2"]
 **IkeLifeTime** | **string** |  | 
 **Lifetime** | **string** |  | 
 **DpdDelay** | **string** |  | 
 **DpdTimeout** | **string** |  | 
 **Phase1** | [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | 
 **Phase2** | [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | 
-**RemotePublicIP** | **string** | Remote gateway public IP address | 
-**RemoteID** | **string** | Remote gateway ID | 
-**Description** | Pointer to **string** | Optional tunnel description | [optional] 
+**RemotePublicIP** | **string** | Public, internet-routable address of the remote gateway, the IKE peer this tunnel dials. Must be unique within the region.  | 
+**RemoteID** | Pointer to **string** | IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters, and it must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. Optional: if omitted, defaults to &#x60;remotePublicIP&#x60;.  | [optional] 
+**Description** | Pointer to **string** | Free-text description of the tunnel. | [optional] 
 **Features** | [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | 
-**RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTINGTYPE_ROUTE]
-**PeakBandwidthMbps** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
+**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
 
 ## Methods
 
 ### NewStaticTunnelCreate
 
-`func NewStaticTunnelCreate(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, remotePublicIP string, remoteID string, features NetworkFeaturesCreate, routingType RoutingType, ) *StaticTunnelCreate`
+`func NewStaticTunnelCreate(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, remotePublicIP string, features NetworkFeaturesCreate, ) *StaticTunnelCreate`
 
 NewStaticTunnelCreate instantiates a new StaticTunnelCreate object
 This constructor will assign default values to properties that have it defined,
@@ -193,6 +193,31 @@ and a boolean to check if the value has been set.
 
 SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
+
+### GetPeakBandwidthMbps
+
+`func (o *StaticTunnelCreate) GetPeakBandwidthMbps() int32`
+
+GetPeakBandwidthMbps returns the PeakBandwidthMbps field if non-nil, zero value otherwise.
+
+### GetPeakBandwidthMbpsOk
+
+`func (o *StaticTunnelCreate) GetPeakBandwidthMbpsOk() (*int32, bool)`
+
+GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPeakBandwidthMbps
+
+`func (o *StaticTunnelCreate) SetPeakBandwidthMbps(v int32)`
+
+SetPeakBandwidthMbps sets PeakBandwidthMbps field to given value.
+
+### HasPeakBandwidthMbps
+
+`func (o *StaticTunnelCreate) HasPeakBandwidthMbps() bool`
+
+HasPeakBandwidthMbps returns a boolean if a field has been set.
 
 ### GetKeyExchange
 
@@ -373,6 +398,11 @@ and a boolean to check if the value has been set.
 
 SetRemoteID sets RemoteID field to given value.
 
+### HasRemoteID
+
+`func (o *StaticTunnelCreate) HasRemoteID() bool`
+
+HasRemoteID returns a boolean if a field has been set.
 
 ### GetDescription
 
@@ -438,31 +468,11 @@ and a boolean to check if the value has been set.
 
 SetRoutingType sets RoutingType field to given value.
 
+### HasRoutingType
 
-### GetPeakBandwidthMbps
+`func (o *StaticTunnelCreate) HasRoutingType() bool`
 
-`func (o *StaticTunnelCreate) GetPeakBandwidthMbps() int32`
-
-GetPeakBandwidthMbps returns the PeakBandwidthMbps field if non-nil, zero value otherwise.
-
-### GetPeakBandwidthMbpsOk
-
-`func (o *StaticTunnelCreate) GetPeakBandwidthMbpsOk() (*int32, bool)`
-
-GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetPeakBandwidthMbps
-
-`func (o *StaticTunnelCreate) SetPeakBandwidthMbps(v int32)`
-
-SetPeakBandwidthMbps sets PeakBandwidthMbps field to given value.
-
-### HasPeakBandwidthMbps
-
-`func (o *StaticTunnelCreate) HasPeakBandwidthMbps() bool`
-
-HasPeakBandwidthMbps returns a boolean if a field has been set.
+HasRoutingType returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

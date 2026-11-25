@@ -7,11 +7,13 @@ Name | Type | Description | Notes
 **Id** | Pointer to **string** | Rule ID (optional in requests, auto-generated for new rules) | [optional] 
 **Name** | **string** | Rule name (cannot contain &lt; or &gt; characters) | 
 **AppliedOn** | **string** | Where the rule is applied: Agents, Sites, or Both | 
-**Action** | **string** | Rule action | 
+**Action** | **string** | Rule action. &#39;redirect&#39; requires the Redirect feature; when the feature is not enabled for the tenant, adding or changing a rule that redirects is rejected with 422 VALIDATION_REDIRECT_NOT_ENABLED. | 
+**RedirectUrl** | Pointer to **string** | Absolute http or https URL the user is redirected to, up to 2048 characters and without a username or password. Required for &#39;redirect&#39; rules and for &#39;block&#39; rules with redirectAction &#39;afterBlockPage&#39;, otherwise the request is rejected with 422 VALIDATION_INVALID_REDIRECT_URL. On any other rule a valid URL is stored without taking effect, and applies again if the rule is switched back to redirecting.  | [optional] 
+**RedirectAction** | Pointer to **string** | Optional. Send &#39;afterBlockPage&#39;, with redirectUrl, to make a &#39;block&#39; rule show the block page and then redirect; &#39;none&#39; (the default) means it does not redirect. Leave it out on &#39;redirect&#39; rules — the service always sets &#39;immediate&#39;. Any other combination is rejected with 422 VALIDATION_INVALID_REDIRECT_ACTION, or VALIDATION_REDIRECT_NOT_ALLOWED_FOR_ACTION on &#39;allow&#39; and &#39;warning&#39; rules.  | [optional] 
 **Conditions** | [**[]Condition**](Condition.md) | Optional time-based conditions, default is an empty array (no time constraints) | 
 **Destinations** | [**[]AccessPolicyDestination**](AccessPolicyDestination.md) | List of destination objects | 
 **Sources** | [**[]AccessPolicySource**](AccessPolicySource.md) | List of source objects | 
-**Log** | Pointer to **string** | Logging mode (optional) – If not specified, the service automatically sets the logging mode based on the rule action: Disabled for Allow actions, and SummaryWithUrls for Block and Warning actions | [optional] 
+**Log** | Pointer to **string** | Logging mode (optional) – If not specified, the service automatically sets the logging mode based on the rule action: Disabled for Allow actions, and SummaryWithUrls for Block, Warning and Redirect actions | [optional] 
 **Status** | **string** | Rule status | 
 **Priority** | **int32** | Rule priority. Updated automatically when rules are created/updated | 
 
@@ -118,6 +120,56 @@ and a boolean to check if the value has been set.
 
 SetAction sets Action field to given value.
 
+
+### GetRedirectUrl
+
+`func (o *AccessPolicyRule) GetRedirectUrl() string`
+
+GetRedirectUrl returns the RedirectUrl field if non-nil, zero value otherwise.
+
+### GetRedirectUrlOk
+
+`func (o *AccessPolicyRule) GetRedirectUrlOk() (*string, bool)`
+
+GetRedirectUrlOk returns a tuple with the RedirectUrl field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRedirectUrl
+
+`func (o *AccessPolicyRule) SetRedirectUrl(v string)`
+
+SetRedirectUrl sets RedirectUrl field to given value.
+
+### HasRedirectUrl
+
+`func (o *AccessPolicyRule) HasRedirectUrl() bool`
+
+HasRedirectUrl returns a boolean if a field has been set.
+
+### GetRedirectAction
+
+`func (o *AccessPolicyRule) GetRedirectAction() string`
+
+GetRedirectAction returns the RedirectAction field if non-nil, zero value otherwise.
+
+### GetRedirectActionOk
+
+`func (o *AccessPolicyRule) GetRedirectActionOk() (*string, bool)`
+
+GetRedirectActionOk returns a tuple with the RedirectAction field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRedirectAction
+
+`func (o *AccessPolicyRule) SetRedirectAction(v string)`
+
+SetRedirectAction sets RedirectAction field to given value.
+
+### HasRedirectAction
+
+`func (o *AccessPolicyRule) HasRedirectAction() bool`
+
+HasRedirectAction returns a boolean if a field has been set.
 
 ### GetConditions
 

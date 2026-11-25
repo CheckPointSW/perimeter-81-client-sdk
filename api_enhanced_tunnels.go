@@ -40,9 +40,9 @@ func (r ApiCreateDynamicTunnelRequest) Execute() (*AsyncOperationResponse, *http
 }
 
 /*
-CreateDynamicTunnel Create dynamic IPSec tunnel
+CreateDynamicTunnel Create dynamic IPSec tunnel group
 
-Required permissions: `["network:create"]`<br><br>Create a new dynamic IPSec tunnel in an enhanced network
+Required permissions: `["network:create"]`<br><br>Create a new dynamic IPSec tunnel group in an enhanced network. The group holds 1-8 member tunnels that are configured and managed together.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
@@ -145,7 +145,7 @@ func (a *EnhancedTunnelsAPIService) CreateDynamicTunnelExecute(r ApiCreateDynami
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -156,7 +156,7 @@ func (a *EnhancedTunnelsAPIService) CreateDynamicTunnelExecute(r ApiCreateDynami
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -167,17 +167,6 @@ func (a *EnhancedTunnelsAPIService) CreateDynamicTunnelExecute(r ApiCreateDynami
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -324,7 +313,7 @@ func (a *EnhancedTunnelsAPIService) CreateStaticTunnelExecute(r ApiCreateStaticT
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -335,7 +324,7 @@ func (a *EnhancedTunnelsAPIService) CreateStaticTunnelExecute(r ApiCreateStaticT
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -346,17 +335,6 @@ func (a *EnhancedTunnelsAPIService) CreateStaticTunnelExecute(r ApiCreateStaticT
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -393,13 +371,13 @@ func (r ApiDeleteDynamicTunnelRequest) Execute() (*AsyncOperationResponse, *http
 }
 
 /*
-DeleteDynamicTunnel Delete dynamic IPSec tunnel
+DeleteDynamicTunnel Delete dynamic IPSec tunnel group
 
-Required permissions: `["network:delete"]`<br><br>Delete a dynamic IPSec tunnel
+Required permissions: `["network:delete"]`<br><br>Delete a dynamic IPSec tunnel group, including every member tunnel in it. To remove a single member and keep the group, use the update operation with `removeTunnels`.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
- @param dynamicTunnelId
+ @param dynamicTunnelId ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the `haTunnelID` field of any tunnel in the group. 
  @return ApiDeleteDynamicTunnelRequest
 */
 func (a *EnhancedTunnelsAPIService) DeleteDynamicTunnel(ctx context.Context, networkId string, dynamicTunnelId string) ApiDeleteDynamicTunnelRequest {
@@ -485,7 +463,7 @@ func (a *EnhancedTunnelsAPIService) DeleteDynamicTunnelExecute(r ApiDeleteDynami
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -496,7 +474,7 @@ func (a *EnhancedTunnelsAPIService) DeleteDynamicTunnelExecute(r ApiDeleteDynami
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -507,17 +485,6 @@ func (a *EnhancedTunnelsAPIService) DeleteDynamicTunnelExecute(r ApiDeleteDynami
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -646,7 +613,7 @@ func (a *EnhancedTunnelsAPIService) DeleteStaticTunnelExecute(r ApiDeleteStaticT
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -657,7 +624,7 @@ func (a *EnhancedTunnelsAPIService) DeleteStaticTunnelExecute(r ApiDeleteStaticT
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -668,17 +635,6 @@ func (a *EnhancedTunnelsAPIService) DeleteStaticTunnelExecute(r ApiDeleteStaticT
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -715,13 +671,13 @@ func (r ApiGetDynamicTunnelRequest) Execute() ([]EnhancedTunnel, *http.Response,
 }
 
 /*
-GetDynamicTunnel Get dynamic IPSec tunnel
+GetDynamicTunnel Get dynamic IPSec tunnel group
 
-Required permissions: `["network:read"]`<br><br>Get details of a dynamic IPSec tunnel
+Required permissions: `["network:read"]`<br><br>Get details of a dynamic IPSec tunnel group. Returns one entry per member tunnel in the group.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
- @param dynamicTunnelId
+ @param dynamicTunnelId ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the `haTunnelID` field of any tunnel in the group. 
  @return ApiGetDynamicTunnelRequest
 */
 func (a *EnhancedTunnelsAPIService) GetDynamicTunnel(ctx context.Context, networkId string, dynamicTunnelId string) ApiGetDynamicTunnelRequest {
@@ -796,7 +752,7 @@ func (a *EnhancedTunnelsAPIService) GetDynamicTunnelExecute(r ApiGetDynamicTunne
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -807,7 +763,7 @@ func (a *EnhancedTunnelsAPIService) GetDynamicTunnelExecute(r ApiGetDynamicTunne
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -951,7 +907,7 @@ func (a *EnhancedTunnelsAPIService) GetEnhancedRegionTunnelsPerNetworkExecute(r 
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -962,7 +918,7 @@ func (a *EnhancedTunnelsAPIService) GetEnhancedRegionTunnelsPerNetworkExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1110,7 +1066,7 @@ func (a *EnhancedTunnelsAPIService) GetEnhancedRegionTunnelsPerRegionExecute(r A
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1121,7 +1077,7 @@ func (a *EnhancedTunnelsAPIService) GetEnhancedRegionTunnelsPerRegionExecute(r A
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1249,7 +1205,7 @@ func (a *EnhancedTunnelsAPIService) GetStaticTunnelExecute(r ApiGetStaticTunnelR
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1260,7 +1216,7 @@ func (a *EnhancedTunnelsAPIService) GetStaticTunnelExecute(r ApiGetStaticTunnelR
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1313,13 +1269,13 @@ func (r ApiUpdateDynamicTunnelRequest) Execute() (*AsyncOperationResponse, *http
 }
 
 /*
-UpdateDynamicTunnel Update dynamic IPSec tunnel
+UpdateDynamicTunnel Update dynamic IPSec tunnel group
 
-Required permissions: `["network:update"]`<br><br>Update a dynamic IPSec tunnel configuration
+Required permissions: `["network:update"]`<br><br>Update a dynamic IPSec tunnel group. Settings sent at the top level apply to every member tunnel. A single request may add members or remove members, but never both, so use separate requests for an addition and a removal.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
- @param dynamicTunnelId
+ @param dynamicTunnelId ID of a dynamic tunnel group, which is a set of member tunnels configured and managed together. Operations on this ID apply to every member of the group. Take the value from the `haTunnelID` field of any tunnel in the group. 
  @return ApiUpdateDynamicTunnelRequest
 */
 func (a *EnhancedTunnelsAPIService) UpdateDynamicTunnel(ctx context.Context, networkId string, dynamicTunnelId string) ApiUpdateDynamicTunnelRequest {
@@ -1410,7 +1366,7 @@ func (a *EnhancedTunnelsAPIService) UpdateDynamicTunnelExecute(r ApiUpdateDynami
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1421,7 +1377,7 @@ func (a *EnhancedTunnelsAPIService) UpdateDynamicTunnelExecute(r ApiUpdateDynami
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1571,7 +1527,7 @@ func (a *EnhancedTunnelsAPIService) UpdateStaticTunnelExecute(r ApiUpdateStaticT
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1582,7 +1538,7 @@ func (a *EnhancedTunnelsAPIService) UpdateStaticTunnelExecute(r ApiUpdateStaticT
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

@@ -12,7 +12,6 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the IPSecPhaseCommon type satisfies the MappedNullable interface at compile time
@@ -21,7 +20,7 @@ var _ MappedNullable = &IPSecPhaseCommon{}
 // IPSecPhaseCommon struct for IPSecPhaseCommon
 type IPSecPhaseCommon struct {
 	// Diffie Helman encryption
-	Dh []int32 `json:"dh"`
+	Dh []int32 `json:"dh,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -31,9 +30,8 @@ type _IPSecPhaseCommon IPSecPhaseCommon
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIPSecPhaseCommon(dh []int32) *IPSecPhaseCommon {
+func NewIPSecPhaseCommon() *IPSecPhaseCommon {
 	this := IPSecPhaseCommon{}
-	this.Dh = dh
 	return &this
 }
 
@@ -45,26 +43,34 @@ func NewIPSecPhaseCommonWithDefaults() *IPSecPhaseCommon {
 	return &this
 }
 
-// GetDh returns the Dh field value
+// GetDh returns the Dh field value if set, zero value otherwise.
 func (o *IPSecPhaseCommon) GetDh() []int32 {
-	if o == nil {
+	if o == nil || IsNil(o.Dh) {
 		var ret []int32
 		return ret
 	}
-
 	return o.Dh
 }
 
-// GetDhOk returns a tuple with the Dh field value
+// GetDhOk returns a tuple with the Dh field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *IPSecPhaseCommon) GetDhOk() ([]int32, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.Dh) {
 		return nil, false
 	}
 	return o.Dh, true
 }
 
-// SetDh sets field value
+// HasDh returns a boolean if a field has been set.
+func (o *IPSecPhaseCommon) HasDh() bool {
+	if o != nil && !IsNil(o.Dh) {
+		return true
+	}
+
+	return false
+}
+
+// SetDh gets a reference to the given []int32 and assigns it to the Dh field.
 func (o *IPSecPhaseCommon) SetDh(v []int32) {
 	o.Dh = v
 }
@@ -79,7 +85,9 @@ func (o IPSecPhaseCommon) MarshalJSON() ([]byte, error) {
 
 func (o IPSecPhaseCommon) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["dh"] = o.Dh
+	if !IsNil(o.Dh) {
+		toSerialize["dh"] = o.Dh
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -89,27 +97,6 @@ func (o IPSecPhaseCommon) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *IPSecPhaseCommon) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"dh",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
 	varIPSecPhaseCommon := _IPSecPhaseCommon{}
 
 	err = json.Unmarshal(data, &varIPSecPhaseCommon)

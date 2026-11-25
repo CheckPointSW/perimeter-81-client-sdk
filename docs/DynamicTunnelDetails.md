@@ -4,22 +4,22 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AuthType** | **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | 
-**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk. | [optional] 
-**CustomerRootCA** | Pointer to **string** | Customer root certificate authority. Required when authType is cert. | [optional] 
-**RegionID** | **string** | Dynamic tunnel enhanced region ID | 
-**P81GWInternalIP** | **string** | Harmony Sase gateway internal IP address | 
-**RemoteGWInternalIP** | **string** | Remote gateway internal IP address | 
-**RemotePublicIP** | **string** | Remote gateway public IP address | 
-**RemoteASN** | **int32** | Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set. | 
-**RemoteID** | **string** | Remote gateway ID | 
-**RoutingType** | [**RoutingType**](RoutingType.md) |  | [default to ROUTINGTYPE_ROUTE]
+**AuthType** | **string** | Authentication method for the tunnel. \&quot;psk\&quot; (pre-shared key) requires &#x60;passphrase&#x60; and forbids &#x60;customerRootCA&#x60;; \&quot;cert\&quot; (certificate) requires &#x60;customerRootCA&#x60; and forbids &#x60;passphrase&#x60;.  | 
+**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication. Required when &#x60;authType&#x60; is \&quot;psk\&quot;, and must be omitted when &#x60;authType&#x60; is \&quot;cert\&quot;. 8-64 characters, using letters, digits, \&quot;.\&quot; and \&quot;_\&quot; only; the first character cannot be \&quot;0\&quot;.  | [optional] 
+**CustomerRootCA** | Pointer to **string** | ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when &#x60;authType&#x60; is \&quot;cert\&quot;, and must be omitted when &#x60;authType&#x60; is \&quot;psk\&quot;.  | [optional] 
+**RegionID** | **string** | ID of the enhanced region to deploy this tunnel in. Must be a region that already exists *on this network*.  | 
+**P81GWInternalIP** | **string** | Address of the Check Point SASE end of the BGP peering link, inside the tunnel. Must be unique within the region.  | 
+**RemoteGWInternalIP** | **string** | Address of the remote end of the BGP peering link, inside the tunnel. Usually the neighboring address in the same /30 as &#x60;p81GWInternalIP&#x60;, and must differ from it.  | 
+**RemotePublicIP** | **string** | Public, internet-routable address of the remote gateway, the IKE peer this tunnel dials. Must be unique within the region.  | 
+**RemoteASN** | **int32** | BGP ASN of the remote gateway. Must differ from the network ASN (&#x60;leftASN&#x60; in &#x60;sharedSettings&#x60;).  | 
+**RemoteID** | **string** | IKE identity presented by the remote gateway, typically an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails.  | 
+**RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
 
 ## Methods
 
 ### NewDynamicTunnelDetails
 
-`func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string, routingType RoutingType, ) *DynamicTunnelDetails`
+`func NewDynamicTunnelDetails(authType string, regionID string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string, ) *DynamicTunnelDetails`
 
 NewDynamicTunnelDetails instantiates a new DynamicTunnelDetails object
 This constructor will assign default values to properties that have it defined,
@@ -243,6 +243,11 @@ and a boolean to check if the value has been set.
 
 SetRoutingType sets RoutingType field to given value.
 
+### HasRoutingType
+
+`func (o *DynamicTunnelDetails) HasRoutingType() bool`
+
+HasRoutingType returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

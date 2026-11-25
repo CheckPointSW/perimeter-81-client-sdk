@@ -6,14 +6,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Tunnel1** | Pointer to [**IPSecRedundantTunnelUpdatePayload**](IPSecRedundantTunnelUpdatePayload.md) |  | [optional] 
 **Tunnel2** | Pointer to [**IPSecRedundantTunnelUpdatePayload**](IPSecRedundantTunnelUpdatePayload.md) |  | [optional] 
-**SharedSettings** | [**IPSecSharedSettings**](IPSecSharedSettings.md) |  | 
-**AdvancedSettings** | [**IPSecAdvancedSettings**](IPSecAdvancedSettings.md) |  | 
+**SharedSettings** | Pointer to [**IPSecSharedSettings**](IPSecSharedSettings.md) |  | [optional] 
+**AdvancedSettings** | Pointer to [**IPSecAdvancedSettings**](IPSecAdvancedSettings.md) |  | [optional] 
 
 ## Methods
 
 ### NewUpdateIPSecRedundantPayload
 
-`func NewUpdateIPSecRedundantPayload(sharedSettings IPSecSharedSettings, advancedSettings IPSecAdvancedSettings, ) *UpdateIPSecRedundantPayload`
+`func NewUpdateIPSecRedundantPayload() *UpdateIPSecRedundantPayload`
 
 NewUpdateIPSecRedundantPayload instantiates a new UpdateIPSecRedundantPayload object
 This constructor will assign default values to properties that have it defined,
@@ -97,6 +97,11 @@ and a boolean to check if the value has been set.
 
 SetSharedSettings sets SharedSettings field to given value.
 
+### HasSharedSettings
+
+`func (o *UpdateIPSecRedundantPayload) HasSharedSettings() bool`
+
+HasSharedSettings returns a boolean if a field has been set.
 
 ### GetAdvancedSettings
 
@@ -117,6 +122,11 @@ and a boolean to check if the value has been set.
 
 SetAdvancedSettings sets AdvancedSettings field to given value.
 
+### HasAdvancedSettings
+
+`func (o *UpdateIPSecRedundantPayload) HasAdvancedSettings() bool`
+
+HasAdvancedSettings returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

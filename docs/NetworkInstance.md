@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **InstanceType** | **string** |  | 
 **ImageType** | **string** |  | 
 **ImageVersion** | **string** |  | 
+**Idle** | Pointer to **bool** | Whether this gateway instance is idle (disabled for user traffic). Available in v3; omitted if its running mode is unavailable. | [optional] [readonly] 
 **Dns** | **string** |  | 
 **Ip** | **string** |  | 
 **Tunnels** | [**[]NetworkTunnel**](NetworkTunnel.md) | List of network tunnels. | 
@@ -180,6 +181,31 @@ and a boolean to check if the value has been set.
 
 SetImageVersion sets ImageVersion field to given value.
 
+
+### GetIdle
+
+`func (o *NetworkInstance) GetIdle() bool`
+
+GetIdle returns the Idle field if non-nil, zero value otherwise.
+
+### GetIdleOk
+
+`func (o *NetworkInstance) GetIdleOk() (*bool, bool)`
+
+GetIdleOk returns a tuple with the Idle field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetIdle
+
+`func (o *NetworkInstance) SetIdle(v bool)`
+
+SetIdle sets Idle field to given value.
+
+### HasIdle
+
+`func (o *NetworkInstance) HasIdle() bool`
+
+HasIdle returns a boolean if a field has been set.
 
 ### GetDns
 
