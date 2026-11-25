@@ -269,7 +269,6 @@ docs/RdpApplication.md
 docs/RdpAttributes.md
 docs/RdpAttributesMaxConnections.md
 docs/RdpCreateApplication.md
-docs/RegexObject.md
 docs/Region.md
 docs/RemoveInstancePayload.md
 docs/RemoveRegionDTO.md
@@ -319,7 +318,6 @@ docs/UpdateNotificationPagesRequest.md
 docs/UpdateSplitTunnelingConfigurationAsync409Response.md
 docs/UpdatedNetwork.md
 docs/UpsertHttpsInspectionPolicy.md
-docs/UrlObject.md
 docs/User.md
 docs/UserList.md
 docs/UserProfileDto.md
@@ -569,7 +567,6 @@ model_rdp_application.go
 model_rdp_attributes.go
 model_rdp_attributes_max_connections.go
 model_rdp_create_application.go
-model_regex_object.go
 model_region.go
 model_remove_instance_payload.go
 model_remove_region_dto.go
@@ -612,7 +609,6 @@ model_update_notification_pages_request.go
 model_update_split_tunneling_configuration_async_409_response.go
 model_updated_network.go
 model_upsert_https_inspection_policy.go
-model_url_object.go
 model_user.go
 model_user_list.go
 model_user_profile_dto.go

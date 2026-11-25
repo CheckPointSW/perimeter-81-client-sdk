@@ -108,7 +108,7 @@ import (
 )
 
 func main() {
-	customUrlWriteRequest := openapiclient.CustomUrlWriteRequest{RegexObject: openapiclient.NewRegexObject("EntryType_example", []string{"UrlPatterns_example"})} // CustomUrlWriteRequest | 
+	customUrlWriteRequest := *openapiclient.NewCustomUrlWriteRequest("Name_example") // CustomUrlWriteRequest | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -1048,7 +1048,7 @@ import (
 
 func main() {
 	customUrlId := "customUrlId_example" // string | custom URL object identifier
-	customUrlWriteRequest := openapiclient.CustomUrlWriteRequest{RegexObject: openapiclient.NewRegexObject("EntryType_example", []string{"UrlPatterns_example"})} // CustomUrlWriteRequest | 
+	customUrlWriteRequest := *openapiclient.NewCustomUrlWriteRequest("Name_example") // CustomUrlWriteRequest | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

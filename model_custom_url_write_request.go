@@ -12,124 +12,264 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
+	"bytes"
 	"fmt"
 )
 
-// CustomUrlWriteRequest - controlledBy is assigned by the server. A url object sends urls and no urlPatterns; a regex object sends urlPatterns and no urls.
+// checks if the CustomUrlWriteRequest type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &CustomUrlWriteRequest{}
+
+// CustomUrlWriteRequest controlledBy is assigned by the server. A url object sends urls and no urlPatterns; a regex object sends urlPatterns and no urls.
 type CustomUrlWriteRequest struct {
-	RegexObject *RegexObject
-	UrlObject *UrlObject
+	// Display name, unique per tenant, compared case-insensitively
+	Name string `json:"name" validate:"regexp=^[^<>]+$"`
+	// Defaults to an empty string
+	Description *string `json:"description,omitempty" validate:"regexp=^[^<>]*$"`
+	// Kind of entries this object holds. Fixed after creation. regex requires advanced matching to be enabled for the tenant.
+	EntryType *string `json:"entryType,omitempty"`
+	// Entries of a url object, at least one and at most 5000: a host without a protocol, optionally with a port, a path and a query (host[:port][/path][?name=value&...]), and a leading *. wildcard. A query parameter name, compared without regard to case, is not repeated within an entry. A port or a query requires advanced matching to be enabled for the tenant.
+	Urls []string `json:"urls,omitempty"`
+	// Entries of a regex object, at least one and at most 100: RE2 regular expressions, kept exactly as written.
+	UrlPatterns []string `json:"urlPatterns,omitempty"`
 }
 
-// RegexObjectAsCustomUrlWriteRequest is a convenience function that returns RegexObject wrapped in CustomUrlWriteRequest
-func RegexObjectAsCustomUrlWriteRequest(v *RegexObject) CustomUrlWriteRequest {
-	return CustomUrlWriteRequest{
-		RegexObject: v,
+type _CustomUrlWriteRequest CustomUrlWriteRequest
+
+// NewCustomUrlWriteRequest instantiates a new CustomUrlWriteRequest object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewCustomUrlWriteRequest(name string) *CustomUrlWriteRequest {
+	this := CustomUrlWriteRequest{}
+	this.Name = name
+	var entryType string = "url"
+	this.EntryType = &entryType
+	return &this
+}
+
+// NewCustomUrlWriteRequestWithDefaults instantiates a new CustomUrlWriteRequest object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewCustomUrlWriteRequestWithDefaults() *CustomUrlWriteRequest {
+	this := CustomUrlWriteRequest{}
+	var entryType string = "url"
+	this.EntryType = &entryType
+	return &this
+}
+
+// GetName returns the Name field value
+func (o *CustomUrlWriteRequest) GetName() string {
+	if o == nil {
+		var ret string
+		return ret
 	}
+
+	return o.Name
 }
 
-// UrlObjectAsCustomUrlWriteRequest is a convenience function that returns UrlObject wrapped in CustomUrlWriteRequest
-func UrlObjectAsCustomUrlWriteRequest(v *UrlObject) CustomUrlWriteRequest {
-	return CustomUrlWriteRequest{
-		UrlObject: v,
+// GetNameOk returns a tuple with the Name field value
+// and a boolean to check if the value has been set.
+func (o *CustomUrlWriteRequest) GetNameOk() (*string, bool) {
+	if o == nil {
+		return nil, false
 	}
+	return &o.Name, true
 }
 
+// SetName sets field value
+func (o *CustomUrlWriteRequest) SetName(v string) {
+	o.Name = v
+}
 
-// Unmarshal JSON data into one of the pointers in the struct
-func (dst *CustomUrlWriteRequest) UnmarshalJSON(data []byte) error {
-	var err error
-	match := 0
-	// try to unmarshal data into RegexObject
-	err = json.Unmarshal(data, &dst.RegexObject)
-	if err == nil {
-		jsonRegexObject, _ := json.Marshal(dst.RegexObject)
-		if string(jsonRegexObject) == "{}" { // empty struct
-			dst.RegexObject = nil
-		} else {
-			match++
+// GetDescription returns the Description field value if set, zero value otherwise.
+func (o *CustomUrlWriteRequest) GetDescription() string {
+	if o == nil || IsNil(o.Description) {
+		var ret string
+		return ret
+	}
+	return *o.Description
+}
+
+// GetDescriptionOk returns a tuple with the Description field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CustomUrlWriteRequest) GetDescriptionOk() (*string, bool) {
+	if o == nil || IsNil(o.Description) {
+		return nil, false
+	}
+	return o.Description, true
+}
+
+// HasDescription returns a boolean if a field has been set.
+func (o *CustomUrlWriteRequest) HasDescription() bool {
+	if o != nil && !IsNil(o.Description) {
+		return true
+	}
+
+	return false
+}
+
+// SetDescription gets a reference to the given string and assigns it to the Description field.
+func (o *CustomUrlWriteRequest) SetDescription(v string) {
+	o.Description = &v
+}
+
+// GetEntryType returns the EntryType field value if set, zero value otherwise.
+func (o *CustomUrlWriteRequest) GetEntryType() string {
+	if o == nil || IsNil(o.EntryType) {
+		var ret string
+		return ret
+	}
+	return *o.EntryType
+}
+
+// GetEntryTypeOk returns a tuple with the EntryType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CustomUrlWriteRequest) GetEntryTypeOk() (*string, bool) {
+	if o == nil || IsNil(o.EntryType) {
+		return nil, false
+	}
+	return o.EntryType, true
+}
+
+// HasEntryType returns a boolean if a field has been set.
+func (o *CustomUrlWriteRequest) HasEntryType() bool {
+	if o != nil && !IsNil(o.EntryType) {
+		return true
+	}
+
+	return false
+}
+
+// SetEntryType gets a reference to the given string and assigns it to the EntryType field.
+func (o *CustomUrlWriteRequest) SetEntryType(v string) {
+	o.EntryType = &v
+}
+
+// GetUrls returns the Urls field value if set, zero value otherwise.
+func (o *CustomUrlWriteRequest) GetUrls() []string {
+	if o == nil || IsNil(o.Urls) {
+		var ret []string
+		return ret
+	}
+	return o.Urls
+}
+
+// GetUrlsOk returns a tuple with the Urls field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CustomUrlWriteRequest) GetUrlsOk() ([]string, bool) {
+	if o == nil || IsNil(o.Urls) {
+		return nil, false
+	}
+	return o.Urls, true
+}
+
+// HasUrls returns a boolean if a field has been set.
+func (o *CustomUrlWriteRequest) HasUrls() bool {
+	if o != nil && !IsNil(o.Urls) {
+		return true
+	}
+
+	return false
+}
+
+// SetUrls gets a reference to the given []string and assigns it to the Urls field.
+func (o *CustomUrlWriteRequest) SetUrls(v []string) {
+	o.Urls = v
+}
+
+// GetUrlPatterns returns the UrlPatterns field value if set, zero value otherwise.
+func (o *CustomUrlWriteRequest) GetUrlPatterns() []string {
+	if o == nil || IsNil(o.UrlPatterns) {
+		var ret []string
+		return ret
+	}
+	return o.UrlPatterns
+}
+
+// GetUrlPatternsOk returns a tuple with the UrlPatterns field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *CustomUrlWriteRequest) GetUrlPatternsOk() ([]string, bool) {
+	if o == nil || IsNil(o.UrlPatterns) {
+		return nil, false
+	}
+	return o.UrlPatterns, true
+}
+
+// HasUrlPatterns returns a boolean if a field has been set.
+func (o *CustomUrlWriteRequest) HasUrlPatterns() bool {
+	if o != nil && !IsNil(o.UrlPatterns) {
+		return true
+	}
+
+	return false
+}
+
+// SetUrlPatterns gets a reference to the given []string and assigns it to the UrlPatterns field.
+func (o *CustomUrlWriteRequest) SetUrlPatterns(v []string) {
+	o.UrlPatterns = v
+}
+
+func (o CustomUrlWriteRequest) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o CustomUrlWriteRequest) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	toSerialize["name"] = o.Name
+	if !IsNil(o.Description) {
+		toSerialize["description"] = o.Description
+	}
+	if !IsNil(o.EntryType) {
+		toSerialize["entryType"] = o.EntryType
+	}
+	if !IsNil(o.Urls) {
+		toSerialize["urls"] = o.Urls
+	}
+	if !IsNil(o.UrlPatterns) {
+		toSerialize["urlPatterns"] = o.UrlPatterns
+	}
+	return toSerialize, nil
+}
+
+func (o *CustomUrlWriteRequest) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"name",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
 		}
-	} else {
-		dst.RegexObject = nil
 	}
 
-	// try to unmarshal data into UrlObject
-	err = json.Unmarshal(data, &dst.UrlObject)
-	if err == nil {
-		jsonUrlObject, _ := json.Marshal(dst.UrlObject)
-		if string(jsonUrlObject) == "{}" { // empty struct
-			dst.UrlObject = nil
-		} else {
-			match++
-		}
-	} else {
-		dst.UrlObject = nil
+	varCustomUrlWriteRequest := _CustomUrlWriteRequest{}
+
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	err = decoder.Decode(&varCustomUrlWriteRequest)
+
+	if err != nil {
+		return err
 	}
 
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.RegexObject = nil
-		dst.UrlObject = nil
+	*o = CustomUrlWriteRequest(varCustomUrlWriteRequest)
 
-		return fmt.Errorf("data matches more than one schema in oneOf(CustomUrlWriteRequest)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-        if err != nil {
-		   return fmt.Errorf("data failed to match schemas in oneOf(CustomUrlWriteRequest): %v", err)
-        } else {
-           return fmt.Errorf("data failed to match schemas in oneOf(CustomUrlWriteRequest)")
-        }
-        if err != nil {
-		   return fmt.Errorf("data failed to match schemas in oneOf(CustomUrlWriteRequest): %v", err)
-        } else {
-           return fmt.Errorf("data failed to match schemas in oneOf(CustomUrlWriteRequest)")
-        }
-	}
-}
-
-// Marshal data from the first non-nil pointers in the struct to JSON
-func (src CustomUrlWriteRequest) MarshalJSON() ([]byte, error) {
-	if src.RegexObject != nil {
-		return json.Marshal(&src.RegexObject)
-	}
-
-	if src.UrlObject != nil {
-		return json.Marshal(&src.UrlObject)
-	}
-
-	return nil, nil // no data in oneOf schemas
-}
-
-// Get the actual instance
-func (obj *CustomUrlWriteRequest) GetActualInstance() (interface{}) {
-	if obj == nil {
-		return nil
-	}
-	if obj.RegexObject != nil {
-		return obj.RegexObject
-	}
-
-	if obj.UrlObject != nil {
-		return obj.UrlObject
-	}
-
-	// all schemas are nil
-	return nil
-}
-
-// Get the actual instance value
-func (obj CustomUrlWriteRequest) GetActualInstanceValue() (interface{}) {
-	if obj.RegexObject != nil {
-		return *obj.RegexObject
-	}
-
-	if obj.UrlObject != nil {
-		return *obj.UrlObject
-	}
-
-	// all schemas are nil
-	return nil
+	return err
 }
 
 type NullableCustomUrlWriteRequest struct {

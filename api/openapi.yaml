@@ -9451,9 +9451,6 @@ components:
         urlPatterns:
         - urlPatterns
         - urlPatterns
-      oneOf:
-      - $ref: "#/components/schemas/url_object"
-      - $ref: "#/components/schemas/regex_object"
       properties:
         name:
           description: "Display name, unique per tenant, compared case-insensitively"
@@ -15803,43 +15800,6 @@ components:
       type: object
     UpdateNotificationPagesRequest:
       additionalProperties: true
-      anyOf:
-      - additionalProperties: true
-        required:
-        - blockPageMessage
-        type: object
-      - additionalProperties: true
-        required:
-        - logoFile
-        type: object
-      - additionalProperties: true
-        required:
-        - blockPageIncludeUrl
-        type: object
-      - additionalProperties: true
-        required:
-        - blockPageIncludeRuleName
-        type: object
-      - additionalProperties: true
-        required:
-        - blockPageIncludeInternalDeviceIp
-        type: object
-      - additionalProperties: true
-        required:
-        - blockPageIncludeUserId
-        type: object
-      - additionalProperties: true
-        required:
-        - blockPageIncludeDeviceId
-        type: object
-      - additionalProperties: true
-        required:
-        - blockPageIncludeWebCategory
-        type: object
-      - additionalProperties: true
-        required:
-        - blockPageIncludeRestrictedResource
-        type: object
       example:
         blockPageMessage: blockPageMessage
         logoFile: logoFile
@@ -17559,61 +17519,6 @@ components:
       - endTime
       - startTime
       - weekdays
-      type: object
-    url_object:
-      additionalProperties: true
-      properties:
-        entryType:
-          enum:
-          - url
-          type: string
-        urls:
-          items:
-            maxLength: 2048
-            minLength: 1
-            pattern: "^[^<>]+$"
-            type: string
-          minItems: 1
-          type: array
-        urlPatterns:
-          items:
-            maxLength: 1024
-            minLength: 1
-            pattern: "^[^<>]+$"
-            type: string
-          maxItems: 0
-          type: array
-      required:
-      - urls
-      title: url object
-      type: object
-    regex_object:
-      additionalProperties: true
-      properties:
-        entryType:
-          enum:
-          - regex
-          type: string
-        urls:
-          items:
-            maxLength: 2048
-            minLength: 1
-            pattern: "^[^<>]+$"
-            type: string
-          maxItems: 0
-          type: array
-        urlPatterns:
-          items:
-            maxLength: 1024
-            minLength: 1
-            pattern: "^[^<>]+$"
-            type: string
-          minItems: 1
-          type: array
-      required:
-      - entryType
-      - urlPatterns
-      title: regex object
       type: object
     DeployEnhancedNetwork_network:
       additionalProperties: true

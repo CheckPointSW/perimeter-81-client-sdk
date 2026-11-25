@@ -652,83 +652,52 @@ entries:
           - groups
         additionalProperties: true
 
-  - id: A23-custom-url-write-request-oneof-items
+  - id: A23-custom-url-write-request-drop-oneof
     reason: >
-      Same defect class as A18, in a schema the 2026-11 spec refresh
-      introduced. CustomUrlWriteRequest's `oneOf` branches redeclare
-      properties.urls/properties.urlPatterns as bare `type: array` with no
-      `items`, even though the schema's own top-level urls/urlPatterns
-      declare them correctly. That produces 8 "Undefined array inner type
-      for `null`. Default to String." log lines and the schema-level
-      "attribute components.schemas.CustomUrlWriteRequest.items is missing"
-      validation error, which aborts generation outright (generate.sh
-      deliberately carries no --skip-validate-spec — see Task 27's
-      reasoning in scripts/generate.sh).
+      CustomUrlWriteRequest declares all of its fields (`name` [required],
+      `description`, `entryType`, `urls`, `urlPatterns`) at the top level with
+      complete array `items`, and also carries a `oneOf` (`url object` /
+      `regex object`) intended as a JSON Schema mutual-exclusivity check
+      between `urls` and `urlPatterns`.
 
-      The branches are reproduced here with their discriminating
-      constraints intact — the enum pin on entryType, the minItems: 1 on
-      the branch's own array, and the maxItems: 0 on the other one, which
-      together are what make the two branches mutually exclusive — and with
-      the missing `items` added from the top-level declarations. Dropping
-      the oneOf instead (the other way to clear the error) would lose that
-      exclusivity, which is the only place the spec states that a url
-      object carries no urlPatterns and a regex object carries no urls.
+      Keeping that `oneOf` caused two defects:
+      1. Both `oneOf` branches redeclare `urls`/`urlPatterns` as bare
+         `type: array` without `items`, which fails OpenAPI validation and
+         aborts generation.
+      2. OpenAPI Generator ignores sibling `properties` and `required` when
+         `oneOf` is present, so the generated `CustomUrlWriteRequest` wrapper
+         delegated to `UrlObject` and `RegexObject` structs that omitted the
+         required `name` and optional `description` fields entirely (while
+         still exposing both `Urls` and `UrlPatterns` slices, providing no
+         Go type-level exclusivity).
+
+      Removing `oneOf` clears the validation error and generates a flat
+      `CustomUrlWriteRequest` struct with `Name` (required), `Description`,
+      `EntryType`, `Urls`, and `UrlPatterns`.
     remove_when: >
-      upstream adds items to both oneOf branches itself, or expresses the
-      url/regex split some other way (e.g. a discriminator on entryType
-      across two named schemas).
-    op: set
+      upstream drops the sibling `oneOf` or expresses the url/regex split as
+      complete discriminated schemas that include `name` and `description`.
+    op: remove
     path: [components, schemas, CustomUrlWriteRequest, oneOf]
-    value:
-      - title: url object
-        properties:
-          entryType:
-            enum:
-              - url
-          urls:
-            type: array
-            minItems: 1
-            items:
-              type: string
-              minLength: 1
-              maxLength: 2048
-              pattern: '^[^<>]+$'
-          urlPatterns:
-            type: array
-            maxItems: 0
-            items:
-              type: string
-              minLength: 1
-              maxLength: 1024
-              pattern: '^[^<>]+$'
-        required:
-          - urls
-        additionalProperties: true
-      - title: regex object
-        properties:
-          entryType:
-            enum:
-              - regex
-          urls:
-            type: array
-            maxItems: 0
-            items:
-              type: string
-              minLength: 1
-              maxLength: 2048
-              pattern: '^[^<>]+$'
-          urlPatterns:
-            type: array
-            minItems: 1
-            items:
-              type: string
-              minLength: 1
-              maxLength: 1024
-              pattern: '^[^<>]+$'
-        required:
-          - entryType
-          - urlPatterns
-        additionalProperties: true
+
+  - id: A29-update-notification-pages-request-drop-anyof
+    reason: >
+      UpdateNotificationPagesRequest declares all nine request fields as
+      top-level `properties` and adds a nine-branch `anyOf` where each branch
+      only says `required: [<one field>]` (expressing "at least one field must
+      be set"). Because OpenAPI Generator ignores sibling `properties` when
+      `anyOf` is present, the generated `UpdateNotificationPagesRequest`
+      collapsed into a single `MapmapOfStringAny *map[string]interface{}`
+      wrapper, losing all typed fields (`BlockPageMessage`, `LogoFile`,
+      `BlockPageIncludeUrl`, etc.).
+
+      Removing `anyOf` generates a flat struct with all nine typed optional
+      fields intact.
+    remove_when: >
+      upstream drops the sibling `anyOf` from UpdateNotificationPagesRequest
+      (or openapi-generator preserves sibling properties alongside anyOf).
+    op: remove
+    path: [components, schemas, UpdateNotificationPagesRequest, anyOf]
 
   - id: A26-fixed-host-value-oneof-drop-additional-properties
     reason: >

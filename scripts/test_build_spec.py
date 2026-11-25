@@ -426,6 +426,40 @@ def test_a24_profile_name_patterns_allow_uppercase():
         )
 
 
+def test_a23_custom_url_write_request_is_flat_with_name_and_description():
+    """A23 removes the sibling oneOf from CustomUrlWriteRequest so Go codegen
+    emits a flat struct keeping required `name` and optional `description`
+    alongside `entryType`, `urls`, and `urlPatterns`."""
+    doc = build()
+    schema = doc["components"]["schemas"]["CustomUrlWriteRequest"]
+    assert "oneOf" not in schema, schema
+    assert schema["required"] == ["name"], schema
+    assert set(schema["properties"]) == {
+        "name", "description", "entryType", "urls", "urlPatterns",
+    }
+    assert schema["properties"]["urls"]["items"]["type"] == "string"
+    assert schema["properties"]["urlPatterns"]["items"]["type"] == "string"
+
+
+def test_a29_update_notification_pages_request_is_flat_with_typed_fields():
+    """A29 removes the sibling anyOf from UpdateNotificationPagesRequest so Go
+    codegen emits typed fields instead of collapsing to MapmapOfStringAny."""
+    doc = build()
+    schema = doc["components"]["schemas"]["UpdateNotificationPagesRequest"]
+    assert "anyOf" not in schema, schema
+    assert set(schema["properties"]) == {
+        "blockPageMessage",
+        "logoFile",
+        "blockPageIncludeUrl",
+        "blockPageIncludeRuleName",
+        "blockPageIncludeInternalDeviceIp",
+        "blockPageIncludeUserId",
+        "blockPageIncludeDeviceId",
+        "blockPageIncludeWebCategory",
+        "blockPageIncludeRestrictedResource",
+    }
+
+
 def test_upstream_still_has_the_defects_a21_a22_a24_correct():
     """Guards against the entries outliving their reason: if upstream fixes any
     of these, this test fails and the corresponding entry should be deleted

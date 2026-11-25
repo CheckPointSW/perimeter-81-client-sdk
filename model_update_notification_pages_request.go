@@ -12,43 +12,405 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
+// checks if the UpdateNotificationPagesRequest type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &UpdateNotificationPagesRequest{}
 
 // UpdateNotificationPagesRequest struct for UpdateNotificationPagesRequest
 type UpdateNotificationPagesRequest struct {
-	MapmapOfStringAny *map[string]interface{}
+	BlockPageMessage *string `json:"blockPageMessage,omitempty"`
+	LogoFile *string `json:"logoFile,omitempty"`
+	BlockPageIncludeUrl *bool `json:"blockPageIncludeUrl,omitempty"`
+	BlockPageIncludeRuleName *bool `json:"blockPageIncludeRuleName,omitempty"`
+	BlockPageIncludeInternalDeviceIp *bool `json:"blockPageIncludeInternalDeviceIp,omitempty"`
+	BlockPageIncludeUserId *bool `json:"blockPageIncludeUserId,omitempty"`
+	BlockPageIncludeDeviceId *bool `json:"blockPageIncludeDeviceId,omitempty"`
+	BlockPageIncludeWebCategory *bool `json:"blockPageIncludeWebCategory,omitempty"`
+	BlockPageIncludeRestrictedResource *bool `json:"blockPageIncludeRestrictedResource,omitempty"`
+	AdditionalProperties map[string]interface{}
 }
 
-// Unmarshal JSON data into any of the pointers in the struct
-func (dst *UpdateNotificationPagesRequest) UnmarshalJSON(data []byte) error {
-	var err error
-	// try to unmarshal JSON data into MapmapOfStringAny
-	err = json.Unmarshal(data, &dst.MapmapOfStringAny);
-	if err == nil {
-		jsonMapmapOfStringAny, _ := json.Marshal(dst.MapmapOfStringAny)
-		if string(jsonMapmapOfStringAny) == "{}" { // empty struct
-			dst.MapmapOfStringAny = nil
-		} else {
-			return nil // data stored in dst.MapmapOfStringAny, return on the first match
-		}
-	} else {
-		dst.MapmapOfStringAny = nil
+type _UpdateNotificationPagesRequest UpdateNotificationPagesRequest
+
+// NewUpdateNotificationPagesRequest instantiates a new UpdateNotificationPagesRequest object
+// This constructor will assign default values to properties that have it defined,
+// and makes sure properties required by API are set, but the set of arguments
+// will change when the set of required properties is changed
+func NewUpdateNotificationPagesRequest() *UpdateNotificationPagesRequest {
+	this := UpdateNotificationPagesRequest{}
+	return &this
+}
+
+// NewUpdateNotificationPagesRequestWithDefaults instantiates a new UpdateNotificationPagesRequest object
+// This constructor will only assign default values to properties that have it defined,
+// but it doesn't guarantee that properties required by API are set
+func NewUpdateNotificationPagesRequestWithDefaults() *UpdateNotificationPagesRequest {
+	this := UpdateNotificationPagesRequest{}
+	return &this
+}
+
+// GetBlockPageMessage returns the BlockPageMessage field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetBlockPageMessage() string {
+	if o == nil || IsNil(o.BlockPageMessage) {
+		var ret string
+		return ret
+	}
+	return *o.BlockPageMessage
+}
+
+// GetBlockPageMessageOk returns a tuple with the BlockPageMessage field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetBlockPageMessageOk() (*string, bool) {
+	if o == nil || IsNil(o.BlockPageMessage) {
+		return nil, false
+	}
+	return o.BlockPageMessage, true
+}
+
+// HasBlockPageMessage returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasBlockPageMessage() bool {
+	if o != nil && !IsNil(o.BlockPageMessage) {
+		return true
 	}
 
-	return fmt.Errorf("data failed to match schemas in anyOf(UpdateNotificationPagesRequest)")
+	return false
 }
 
-// Marshal data from the first non-nil pointers in the struct to JSON
-func (src UpdateNotificationPagesRequest) MarshalJSON() ([]byte, error) {
-	if src.MapmapOfStringAny != nil {
-		return json.Marshal(&src.MapmapOfStringAny)
+// SetBlockPageMessage gets a reference to the given string and assigns it to the BlockPageMessage field.
+func (o *UpdateNotificationPagesRequest) SetBlockPageMessage(v string) {
+	o.BlockPageMessage = &v
+}
+
+// GetLogoFile returns the LogoFile field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetLogoFile() string {
+	if o == nil || IsNil(o.LogoFile) {
+		var ret string
+		return ret
+	}
+	return *o.LogoFile
+}
+
+// GetLogoFileOk returns a tuple with the LogoFile field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetLogoFileOk() (*string, bool) {
+	if o == nil || IsNil(o.LogoFile) {
+		return nil, false
+	}
+	return o.LogoFile, true
+}
+
+// HasLogoFile returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasLogoFile() bool {
+	if o != nil && !IsNil(o.LogoFile) {
+		return true
 	}
 
-	return nil, nil // no data in anyOf schemas
+	return false
 }
 
+// SetLogoFile gets a reference to the given string and assigns it to the LogoFile field.
+func (o *UpdateNotificationPagesRequest) SetLogoFile(v string) {
+	o.LogoFile = &v
+}
+
+// GetBlockPageIncludeUrl returns the BlockPageIncludeUrl field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeUrl() bool {
+	if o == nil || IsNil(o.BlockPageIncludeUrl) {
+		var ret bool
+		return ret
+	}
+	return *o.BlockPageIncludeUrl
+}
+
+// GetBlockPageIncludeUrlOk returns a tuple with the BlockPageIncludeUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeUrlOk() (*bool, bool) {
+	if o == nil || IsNil(o.BlockPageIncludeUrl) {
+		return nil, false
+	}
+	return o.BlockPageIncludeUrl, true
+}
+
+// HasBlockPageIncludeUrl returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasBlockPageIncludeUrl() bool {
+	if o != nil && !IsNil(o.BlockPageIncludeUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetBlockPageIncludeUrl gets a reference to the given bool and assigns it to the BlockPageIncludeUrl field.
+func (o *UpdateNotificationPagesRequest) SetBlockPageIncludeUrl(v bool) {
+	o.BlockPageIncludeUrl = &v
+}
+
+// GetBlockPageIncludeRuleName returns the BlockPageIncludeRuleName field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeRuleName() bool {
+	if o == nil || IsNil(o.BlockPageIncludeRuleName) {
+		var ret bool
+		return ret
+	}
+	return *o.BlockPageIncludeRuleName
+}
+
+// GetBlockPageIncludeRuleNameOk returns a tuple with the BlockPageIncludeRuleName field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeRuleNameOk() (*bool, bool) {
+	if o == nil || IsNil(o.BlockPageIncludeRuleName) {
+		return nil, false
+	}
+	return o.BlockPageIncludeRuleName, true
+}
+
+// HasBlockPageIncludeRuleName returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasBlockPageIncludeRuleName() bool {
+	if o != nil && !IsNil(o.BlockPageIncludeRuleName) {
+		return true
+	}
+
+	return false
+}
+
+// SetBlockPageIncludeRuleName gets a reference to the given bool and assigns it to the BlockPageIncludeRuleName field.
+func (o *UpdateNotificationPagesRequest) SetBlockPageIncludeRuleName(v bool) {
+	o.BlockPageIncludeRuleName = &v
+}
+
+// GetBlockPageIncludeInternalDeviceIp returns the BlockPageIncludeInternalDeviceIp field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeInternalDeviceIp() bool {
+	if o == nil || IsNil(o.BlockPageIncludeInternalDeviceIp) {
+		var ret bool
+		return ret
+	}
+	return *o.BlockPageIncludeInternalDeviceIp
+}
+
+// GetBlockPageIncludeInternalDeviceIpOk returns a tuple with the BlockPageIncludeInternalDeviceIp field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeInternalDeviceIpOk() (*bool, bool) {
+	if o == nil || IsNil(o.BlockPageIncludeInternalDeviceIp) {
+		return nil, false
+	}
+	return o.BlockPageIncludeInternalDeviceIp, true
+}
+
+// HasBlockPageIncludeInternalDeviceIp returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasBlockPageIncludeInternalDeviceIp() bool {
+	if o != nil && !IsNil(o.BlockPageIncludeInternalDeviceIp) {
+		return true
+	}
+
+	return false
+}
+
+// SetBlockPageIncludeInternalDeviceIp gets a reference to the given bool and assigns it to the BlockPageIncludeInternalDeviceIp field.
+func (o *UpdateNotificationPagesRequest) SetBlockPageIncludeInternalDeviceIp(v bool) {
+	o.BlockPageIncludeInternalDeviceIp = &v
+}
+
+// GetBlockPageIncludeUserId returns the BlockPageIncludeUserId field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeUserId() bool {
+	if o == nil || IsNil(o.BlockPageIncludeUserId) {
+		var ret bool
+		return ret
+	}
+	return *o.BlockPageIncludeUserId
+}
+
+// GetBlockPageIncludeUserIdOk returns a tuple with the BlockPageIncludeUserId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeUserIdOk() (*bool, bool) {
+	if o == nil || IsNil(o.BlockPageIncludeUserId) {
+		return nil, false
+	}
+	return o.BlockPageIncludeUserId, true
+}
+
+// HasBlockPageIncludeUserId returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasBlockPageIncludeUserId() bool {
+	if o != nil && !IsNil(o.BlockPageIncludeUserId) {
+		return true
+	}
+
+	return false
+}
+
+// SetBlockPageIncludeUserId gets a reference to the given bool and assigns it to the BlockPageIncludeUserId field.
+func (o *UpdateNotificationPagesRequest) SetBlockPageIncludeUserId(v bool) {
+	o.BlockPageIncludeUserId = &v
+}
+
+// GetBlockPageIncludeDeviceId returns the BlockPageIncludeDeviceId field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeDeviceId() bool {
+	if o == nil || IsNil(o.BlockPageIncludeDeviceId) {
+		var ret bool
+		return ret
+	}
+	return *o.BlockPageIncludeDeviceId
+}
+
+// GetBlockPageIncludeDeviceIdOk returns a tuple with the BlockPageIncludeDeviceId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeDeviceIdOk() (*bool, bool) {
+	if o == nil || IsNil(o.BlockPageIncludeDeviceId) {
+		return nil, false
+	}
+	return o.BlockPageIncludeDeviceId, true
+}
+
+// HasBlockPageIncludeDeviceId returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasBlockPageIncludeDeviceId() bool {
+	if o != nil && !IsNil(o.BlockPageIncludeDeviceId) {
+		return true
+	}
+
+	return false
+}
+
+// SetBlockPageIncludeDeviceId gets a reference to the given bool and assigns it to the BlockPageIncludeDeviceId field.
+func (o *UpdateNotificationPagesRequest) SetBlockPageIncludeDeviceId(v bool) {
+	o.BlockPageIncludeDeviceId = &v
+}
+
+// GetBlockPageIncludeWebCategory returns the BlockPageIncludeWebCategory field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeWebCategory() bool {
+	if o == nil || IsNil(o.BlockPageIncludeWebCategory) {
+		var ret bool
+		return ret
+	}
+	return *o.BlockPageIncludeWebCategory
+}
+
+// GetBlockPageIncludeWebCategoryOk returns a tuple with the BlockPageIncludeWebCategory field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeWebCategoryOk() (*bool, bool) {
+	if o == nil || IsNil(o.BlockPageIncludeWebCategory) {
+		return nil, false
+	}
+	return o.BlockPageIncludeWebCategory, true
+}
+
+// HasBlockPageIncludeWebCategory returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasBlockPageIncludeWebCategory() bool {
+	if o != nil && !IsNil(o.BlockPageIncludeWebCategory) {
+		return true
+	}
+
+	return false
+}
+
+// SetBlockPageIncludeWebCategory gets a reference to the given bool and assigns it to the BlockPageIncludeWebCategory field.
+func (o *UpdateNotificationPagesRequest) SetBlockPageIncludeWebCategory(v bool) {
+	o.BlockPageIncludeWebCategory = &v
+}
+
+// GetBlockPageIncludeRestrictedResource returns the BlockPageIncludeRestrictedResource field value if set, zero value otherwise.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeRestrictedResource() bool {
+	if o == nil || IsNil(o.BlockPageIncludeRestrictedResource) {
+		var ret bool
+		return ret
+	}
+	return *o.BlockPageIncludeRestrictedResource
+}
+
+// GetBlockPageIncludeRestrictedResourceOk returns a tuple with the BlockPageIncludeRestrictedResource field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *UpdateNotificationPagesRequest) GetBlockPageIncludeRestrictedResourceOk() (*bool, bool) {
+	if o == nil || IsNil(o.BlockPageIncludeRestrictedResource) {
+		return nil, false
+	}
+	return o.BlockPageIncludeRestrictedResource, true
+}
+
+// HasBlockPageIncludeRestrictedResource returns a boolean if a field has been set.
+func (o *UpdateNotificationPagesRequest) HasBlockPageIncludeRestrictedResource() bool {
+	if o != nil && !IsNil(o.BlockPageIncludeRestrictedResource) {
+		return true
+	}
+
+	return false
+}
+
+// SetBlockPageIncludeRestrictedResource gets a reference to the given bool and assigns it to the BlockPageIncludeRestrictedResource field.
+func (o *UpdateNotificationPagesRequest) SetBlockPageIncludeRestrictedResource(v bool) {
+	o.BlockPageIncludeRestrictedResource = &v
+}
+
+func (o UpdateNotificationPagesRequest) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o UpdateNotificationPagesRequest) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.BlockPageMessage) {
+		toSerialize["blockPageMessage"] = o.BlockPageMessage
+	}
+	if !IsNil(o.LogoFile) {
+		toSerialize["logoFile"] = o.LogoFile
+	}
+	if !IsNil(o.BlockPageIncludeUrl) {
+		toSerialize["blockPageIncludeUrl"] = o.BlockPageIncludeUrl
+	}
+	if !IsNil(o.BlockPageIncludeRuleName) {
+		toSerialize["blockPageIncludeRuleName"] = o.BlockPageIncludeRuleName
+	}
+	if !IsNil(o.BlockPageIncludeInternalDeviceIp) {
+		toSerialize["blockPageIncludeInternalDeviceIp"] = o.BlockPageIncludeInternalDeviceIp
+	}
+	if !IsNil(o.BlockPageIncludeUserId) {
+		toSerialize["blockPageIncludeUserId"] = o.BlockPageIncludeUserId
+	}
+	if !IsNil(o.BlockPageIncludeDeviceId) {
+		toSerialize["blockPageIncludeDeviceId"] = o.BlockPageIncludeDeviceId
+	}
+	if !IsNil(o.BlockPageIncludeWebCategory) {
+		toSerialize["blockPageIncludeWebCategory"] = o.BlockPageIncludeWebCategory
+	}
+	if !IsNil(o.BlockPageIncludeRestrictedResource) {
+		toSerialize["blockPageIncludeRestrictedResource"] = o.BlockPageIncludeRestrictedResource
+	}
+
+	for key, value := range o.AdditionalProperties {
+		toSerialize[key] = value
+	}
+
+	return toSerialize, nil
+}
+
+func (o *UpdateNotificationPagesRequest) UnmarshalJSON(data []byte) (err error) {
+	varUpdateNotificationPagesRequest := _UpdateNotificationPagesRequest{}
+
+	err = json.Unmarshal(data, &varUpdateNotificationPagesRequest)
+
+	if err != nil {
+		return err
+	}
+
+	*o = UpdateNotificationPagesRequest(varUpdateNotificationPagesRequest)
+
+	additionalProperties := make(map[string]interface{})
+
+	if err = json.Unmarshal(data, &additionalProperties); err == nil {
+		delete(additionalProperties, "blockPageMessage")
+		delete(additionalProperties, "logoFile")
+		delete(additionalProperties, "blockPageIncludeUrl")
+		delete(additionalProperties, "blockPageIncludeRuleName")
+		delete(additionalProperties, "blockPageIncludeInternalDeviceIp")
+		delete(additionalProperties, "blockPageIncludeUserId")
+		delete(additionalProperties, "blockPageIncludeDeviceId")
+		delete(additionalProperties, "blockPageIncludeWebCategory")
+		delete(additionalProperties, "blockPageIncludeRestrictedResource")
+		o.AdditionalProperties = additionalProperties
+	}
+
+	return err
+}
 
 type NullableUpdateNotificationPagesRequest struct {
 	value *UpdateNotificationPagesRequest

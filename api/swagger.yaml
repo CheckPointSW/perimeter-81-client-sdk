@@ -5748,56 +5748,6 @@ components:
           description: 'Entries of a regex object, at least one and at most 100: RE2 regular expressions, kept exactly as written.'
       required:
       - name
-      oneOf:
-      - title: url object
-        properties:
-          entryType:
-            enum:
-            - url
-          urls:
-            type: array
-            minItems: 1
-            items:
-              type: string
-              minLength: 1
-              maxLength: 2048
-              pattern: ^[^<>]+$
-          urlPatterns:
-            type: array
-            maxItems: 0
-            items:
-              type: string
-              minLength: 1
-              maxLength: 1024
-              pattern: ^[^<>]+$
-        required:
-        - urls
-        additionalProperties: true
-      - title: regex object
-        properties:
-          entryType:
-            enum:
-            - regex
-          urls:
-            type: array
-            maxItems: 0
-            items:
-              type: string
-              minLength: 1
-              maxLength: 2048
-              pattern: ^[^<>]+$
-          urlPatterns:
-            type: array
-            minItems: 1
-            items:
-              type: string
-              minLength: 1
-              maxLength: 1024
-              pattern: ^[^<>]+$
-        required:
-        - entryType
-        - urlPatterns
-        additionalProperties: true
       additionalProperties: false
     DBAddress:
       type: object
@@ -9679,34 +9629,6 @@ components:
           type: boolean
         blockPageIncludeRestrictedResource:
           type: boolean
-      anyOf:
-      - required:
-        - blockPageMessage
-        additionalProperties: true
-      - required:
-        - logoFile
-        additionalProperties: true
-      - required:
-        - blockPageIncludeUrl
-        additionalProperties: true
-      - required:
-        - blockPageIncludeRuleName
-        additionalProperties: true
-      - required:
-        - blockPageIncludeInternalDeviceIp
-        additionalProperties: true
-      - required:
-        - blockPageIncludeUserId
-        additionalProperties: true
-      - required:
-        - blockPageIncludeDeviceId
-        additionalProperties: true
-      - required:
-        - blockPageIncludeWebCategory
-        additionalProperties: true
-      - required:
-        - blockPageIncludeRestrictedResource
-        additionalProperties: true
       additionalProperties: true
     UpdatedNetwork:
       allOf:
