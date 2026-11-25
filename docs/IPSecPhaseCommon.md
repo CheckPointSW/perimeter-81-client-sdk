@@ -4,13 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Dh** | **[]int32** | Diffie Helman encryption | 
+**Dh** | Pointer to **[]int32** | Diffie Helman encryption | [optional] 
 
 ## Methods
 
 ### NewIPSecPhaseCommon
 
-`func NewIPSecPhaseCommon(dh []int32, ) *IPSecPhaseCommon`
+`func NewIPSecPhaseCommon() *IPSecPhaseCommon`
 
 NewIPSecPhaseCommon instantiates a new IPSecPhaseCommon object
 This constructor will assign default values to properties that have it defined,
@@ -44,6 +44,11 @@ and a boolean to check if the value has been set.
 
 SetDh sets Dh field to given value.
 
+### HasDh
+
+`func (o *IPSecPhaseCommon) HasDh() bool`
+
+HasDh returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

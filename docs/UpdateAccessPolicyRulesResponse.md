@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Status** | Pointer to **int32** |  | [optional] 
-**Data** | Pointer to [**AccessPolicyRulesGetResponseData**](AccessPolicyRulesGetResponseData.md) |  | [optional] 
+**Data** | Pointer to [**UpdateAccessPolicyRulesResponseData**](UpdateAccessPolicyRulesResponseData.md) |  | [optional] 
 
 ## Methods
 
@@ -53,20 +53,20 @@ HasStatus returns a boolean if a field has been set.
 
 ### GetData
 
-`func (o *UpdateAccessPolicyRulesResponse) GetData() AccessPolicyRulesGetResponseData`
+`func (o *UpdateAccessPolicyRulesResponse) GetData() UpdateAccessPolicyRulesResponseData`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *UpdateAccessPolicyRulesResponse) GetDataOk() (*AccessPolicyRulesGetResponseData, bool)`
+`func (o *UpdateAccessPolicyRulesResponse) GetDataOk() (*UpdateAccessPolicyRulesResponseData, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *UpdateAccessPolicyRulesResponse) SetData(v AccessPolicyRulesGetResponseData)`
+`func (o *UpdateAccessPolicyRulesResponse) SetData(v UpdateAccessPolicyRulesResponseData)`
 
 SetData sets Data field to given value.
 

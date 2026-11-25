@@ -17,12 +17,12 @@ import (
 // checks if the GumErrorResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &GumErrorResponse{}
 
-// GumErrorResponse struct for GumErrorResponse
+// GumErrorResponse Error envelope actually emitted by the lambda (common/src/libs/utils/httpResponse.ts toErrorResponse) — the HTTP status lives on the response itself, not in the body.
 type GumErrorResponse struct {
-	// Error message.
-	Body *string `json:"body,omitempty"`
-	// HTTP status code.
-	StatusCode *int32 `json:"statusCode,omitempty"`
+	// Human-readable error message.
+	Message *string `json:"message,omitempty"`
+	// Stable machine-readable error code — one of INTERNAL_SERVER_ERROR, BAD_REQUEST, NOT_IMPLEMENTED_ERROR, NOT_FOUND, VALIDATION_SCHEMA_ERROR, PRECONDITION_FAILED, CONFLICT, UNAUTHORIZED. Mirrors common/src/libs/exceptions/ErrorCodes.ts, which is the source of truth; these values are a caller-visible contract.
+	MessageCode *string `json:"messageCode,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -45,68 +45,68 @@ func NewGumErrorResponseWithDefaults() *GumErrorResponse {
 	return &this
 }
 
-// GetBody returns the Body field value if set, zero value otherwise.
-func (o *GumErrorResponse) GetBody() string {
-	if o == nil || IsNil(o.Body) {
+// GetMessage returns the Message field value if set, zero value otherwise.
+func (o *GumErrorResponse) GetMessage() string {
+	if o == nil || IsNil(o.Message) {
 		var ret string
 		return ret
 	}
-	return *o.Body
+	return *o.Message
 }
 
-// GetBodyOk returns a tuple with the Body field value if set, nil otherwise
+// GetMessageOk returns a tuple with the Message field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GumErrorResponse) GetBodyOk() (*string, bool) {
-	if o == nil || IsNil(o.Body) {
+func (o *GumErrorResponse) GetMessageOk() (*string, bool) {
+	if o == nil || IsNil(o.Message) {
 		return nil, false
 	}
-	return o.Body, true
+	return o.Message, true
 }
 
-// HasBody returns a boolean if a field has been set.
-func (o *GumErrorResponse) HasBody() bool {
-	if o != nil && !IsNil(o.Body) {
+// HasMessage returns a boolean if a field has been set.
+func (o *GumErrorResponse) HasMessage() bool {
+	if o != nil && !IsNil(o.Message) {
 		return true
 	}
 
 	return false
 }
 
-// SetBody gets a reference to the given string and assigns it to the Body field.
-func (o *GumErrorResponse) SetBody(v string) {
-	o.Body = &v
+// SetMessage gets a reference to the given string and assigns it to the Message field.
+func (o *GumErrorResponse) SetMessage(v string) {
+	o.Message = &v
 }
 
-// GetStatusCode returns the StatusCode field value if set, zero value otherwise.
-func (o *GumErrorResponse) GetStatusCode() int32 {
-	if o == nil || IsNil(o.StatusCode) {
-		var ret int32
+// GetMessageCode returns the MessageCode field value if set, zero value otherwise.
+func (o *GumErrorResponse) GetMessageCode() string {
+	if o == nil || IsNil(o.MessageCode) {
+		var ret string
 		return ret
 	}
-	return *o.StatusCode
+	return *o.MessageCode
 }
 
-// GetStatusCodeOk returns a tuple with the StatusCode field value if set, nil otherwise
+// GetMessageCodeOk returns a tuple with the MessageCode field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GumErrorResponse) GetStatusCodeOk() (*int32, bool) {
-	if o == nil || IsNil(o.StatusCode) {
+func (o *GumErrorResponse) GetMessageCodeOk() (*string, bool) {
+	if o == nil || IsNil(o.MessageCode) {
 		return nil, false
 	}
-	return o.StatusCode, true
+	return o.MessageCode, true
 }
 
-// HasStatusCode returns a boolean if a field has been set.
-func (o *GumErrorResponse) HasStatusCode() bool {
-	if o != nil && !IsNil(o.StatusCode) {
+// HasMessageCode returns a boolean if a field has been set.
+func (o *GumErrorResponse) HasMessageCode() bool {
+	if o != nil && !IsNil(o.MessageCode) {
 		return true
 	}
 
 	return false
 }
 
-// SetStatusCode gets a reference to the given int32 and assigns it to the StatusCode field.
-func (o *GumErrorResponse) SetStatusCode(v int32) {
-	o.StatusCode = &v
+// SetMessageCode gets a reference to the given string and assigns it to the MessageCode field.
+func (o *GumErrorResponse) SetMessageCode(v string) {
+	o.MessageCode = &v
 }
 
 func (o GumErrorResponse) MarshalJSON() ([]byte, error) {
@@ -119,11 +119,11 @@ func (o GumErrorResponse) MarshalJSON() ([]byte, error) {
 
 func (o GumErrorResponse) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.Body) {
-		toSerialize["body"] = o.Body
+	if !IsNil(o.Message) {
+		toSerialize["message"] = o.Message
 	}
-	if !IsNil(o.StatusCode) {
-		toSerialize["statusCode"] = o.StatusCode
+	if !IsNil(o.MessageCode) {
+		toSerialize["messageCode"] = o.MessageCode
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -147,8 +147,8 @@ func (o *GumErrorResponse) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "body")
-		delete(additionalProperties, "statusCode")
+		delete(additionalProperties, "message")
+		delete(additionalProperties, "messageCode")
 		o.AdditionalProperties = additionalProperties
 	}
 

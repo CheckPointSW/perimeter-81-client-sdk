@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**HarmonySaseRegionId** | **string** | Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions). | 
+**HarmonySaseRegionId** | **string** | ID of the Check Point SASE region to deploy in.  | 
 **ScaleUnits** | Pointer to **int32** | Number of scale units for the region. Scale units determine the capacity and performance level of the enhanced region. Higher values provide greater throughput and connection capacity.  | [optional] [default to 1]
 **Idle** | Pointer to **bool** | Region is disabled for users if true | [optional] [default to true]
 

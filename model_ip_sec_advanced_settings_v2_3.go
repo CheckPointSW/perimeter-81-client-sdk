@@ -20,13 +20,13 @@ var _ MappedNullable = &IPSecAdvancedSettingsV23{}
 
 // IPSecAdvancedSettingsV23 struct for IPSecAdvancedSettingsV23
 type IPSecAdvancedSettingsV23 struct {
-	KeyExchange string `json:"keyExchange"`
 	IkeLifeTime string `json:"ikeLifeTime" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
 	Lifetime string `json:"lifetime" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
 	DpdDelay string `json:"dpdDelay" validate:"regexp=^([5-9]|[1-5][0-9]|60)s$"`
 	DpdTimeout string `json:"dpdTimeout" validate:"regexp=^([5-9]|[1-5][0-9]|60)s$"`
 	Phase1 IPSecPhaseConfigV23 `json:"phase1"`
 	Phase2 IPSecPhaseConfigV23 `json:"phase2"`
+	KeyExchange string `json:"keyExchange"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -36,15 +36,15 @@ type _IPSecAdvancedSettingsV23 IPSecAdvancedSettingsV23
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIPSecAdvancedSettingsV23(keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23) *IPSecAdvancedSettingsV23 {
+func NewIPSecAdvancedSettingsV23(ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfigV23, phase2 IPSecPhaseConfigV23, keyExchange string) *IPSecAdvancedSettingsV23 {
 	this := IPSecAdvancedSettingsV23{}
-	this.KeyExchange = keyExchange
 	this.IkeLifeTime = ikeLifeTime
 	this.Lifetime = lifetime
 	this.DpdDelay = dpdDelay
 	this.DpdTimeout = dpdTimeout
 	this.Phase1 = phase1
 	this.Phase2 = phase2
+	this.KeyExchange = keyExchange
 	return &this
 }
 
@@ -54,30 +54,6 @@ func NewIPSecAdvancedSettingsV23(keyExchange string, ikeLifeTime string, lifetim
 func NewIPSecAdvancedSettingsV23WithDefaults() *IPSecAdvancedSettingsV23 {
 	this := IPSecAdvancedSettingsV23{}
 	return &this
-}
-
-// GetKeyExchange returns the KeyExchange field value
-func (o *IPSecAdvancedSettingsV23) GetKeyExchange() string {
-	if o == nil {
-		var ret string
-		return ret
-	}
-
-	return o.KeyExchange
-}
-
-// GetKeyExchangeOk returns a tuple with the KeyExchange field value
-// and a boolean to check if the value has been set.
-func (o *IPSecAdvancedSettingsV23) GetKeyExchangeOk() (*string, bool) {
-	if o == nil {
-		return nil, false
-	}
-	return &o.KeyExchange, true
-}
-
-// SetKeyExchange sets field value
-func (o *IPSecAdvancedSettingsV23) SetKeyExchange(v string) {
-	o.KeyExchange = v
 }
 
 // GetIkeLifeTime returns the IkeLifeTime field value
@@ -224,6 +200,30 @@ func (o *IPSecAdvancedSettingsV23) SetPhase2(v IPSecPhaseConfigV23) {
 	o.Phase2 = v
 }
 
+// GetKeyExchange returns the KeyExchange field value
+func (o *IPSecAdvancedSettingsV23) GetKeyExchange() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.KeyExchange
+}
+
+// GetKeyExchangeOk returns a tuple with the KeyExchange field value
+// and a boolean to check if the value has been set.
+func (o *IPSecAdvancedSettingsV23) GetKeyExchangeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.KeyExchange, true
+}
+
+// SetKeyExchange sets field value
+func (o *IPSecAdvancedSettingsV23) SetKeyExchange(v string) {
+	o.KeyExchange = v
+}
+
 func (o IPSecAdvancedSettingsV23) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -234,13 +234,13 @@ func (o IPSecAdvancedSettingsV23) MarshalJSON() ([]byte, error) {
 
 func (o IPSecAdvancedSettingsV23) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["keyExchange"] = o.KeyExchange
 	toSerialize["ikeLifeTime"] = o.IkeLifeTime
 	toSerialize["lifetime"] = o.Lifetime
 	toSerialize["dpdDelay"] = o.DpdDelay
 	toSerialize["dpdTimeout"] = o.DpdTimeout
 	toSerialize["phase1"] = o.Phase1
 	toSerialize["phase2"] = o.Phase2
+	toSerialize["keyExchange"] = o.KeyExchange
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -254,13 +254,13 @@ func (o *IPSecAdvancedSettingsV23) UnmarshalJSON(data []byte) (err error) {
 	// by unmarshalling the object into a generic map with string keys and checking
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
-		"keyExchange",
 		"ikeLifeTime",
 		"lifetime",
 		"dpdDelay",
 		"dpdTimeout",
 		"phase1",
 		"phase2",
+		"keyExchange",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -290,13 +290,13 @@ func (o *IPSecAdvancedSettingsV23) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "keyExchange")
 		delete(additionalProperties, "ikeLifeTime")
 		delete(additionalProperties, "lifetime")
 		delete(additionalProperties, "dpdDelay")
 		delete(additionalProperties, "dpdTimeout")
 		delete(additionalProperties, "phase1")
 		delete(additionalProperties, "phase2")
+		delete(additionalProperties, "keyExchange")
 		o.AdditionalProperties = additionalProperties
 	}
 

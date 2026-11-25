@@ -12,7 +12,6 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the UpdateIPSecRedundantPayload type satisfies the MappedNullable interface at compile time
@@ -22,8 +21,8 @@ var _ MappedNullable = &UpdateIPSecRedundantPayload{}
 type UpdateIPSecRedundantPayload struct {
 	Tunnel1 *IPSecRedundantTunnelUpdatePayload `json:"tunnel1,omitempty"`
 	Tunnel2 *IPSecRedundantTunnelUpdatePayload `json:"tunnel2,omitempty"`
-	SharedSettings IPSecSharedSettings `json:"sharedSettings"`
-	AdvancedSettings IPSecAdvancedSettings `json:"advancedSettings"`
+	SharedSettings *IPSecSharedSettings `json:"sharedSettings,omitempty"`
+	AdvancedSettings *IPSecAdvancedSettings `json:"advancedSettings,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -33,10 +32,8 @@ type _UpdateIPSecRedundantPayload UpdateIPSecRedundantPayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewUpdateIPSecRedundantPayload(sharedSettings IPSecSharedSettings, advancedSettings IPSecAdvancedSettings) *UpdateIPSecRedundantPayload {
+func NewUpdateIPSecRedundantPayload() *UpdateIPSecRedundantPayload {
 	this := UpdateIPSecRedundantPayload{}
-	this.SharedSettings = sharedSettings
-	this.AdvancedSettings = advancedSettings
 	return &this
 }
 
@@ -112,52 +109,68 @@ func (o *UpdateIPSecRedundantPayload) SetTunnel2(v IPSecRedundantTunnelUpdatePay
 	o.Tunnel2 = &v
 }
 
-// GetSharedSettings returns the SharedSettings field value
+// GetSharedSettings returns the SharedSettings field value if set, zero value otherwise.
 func (o *UpdateIPSecRedundantPayload) GetSharedSettings() IPSecSharedSettings {
-	if o == nil {
+	if o == nil || IsNil(o.SharedSettings) {
 		var ret IPSecSharedSettings
 		return ret
 	}
-
-	return o.SharedSettings
+	return *o.SharedSettings
 }
 
-// GetSharedSettingsOk returns a tuple with the SharedSettings field value
+// GetSharedSettingsOk returns a tuple with the SharedSettings field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UpdateIPSecRedundantPayload) GetSharedSettingsOk() (*IPSecSharedSettings, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.SharedSettings) {
 		return nil, false
 	}
-	return &o.SharedSettings, true
+	return o.SharedSettings, true
 }
 
-// SetSharedSettings sets field value
+// HasSharedSettings returns a boolean if a field has been set.
+func (o *UpdateIPSecRedundantPayload) HasSharedSettings() bool {
+	if o != nil && !IsNil(o.SharedSettings) {
+		return true
+	}
+
+	return false
+}
+
+// SetSharedSettings gets a reference to the given IPSecSharedSettings and assigns it to the SharedSettings field.
 func (o *UpdateIPSecRedundantPayload) SetSharedSettings(v IPSecSharedSettings) {
-	o.SharedSettings = v
+	o.SharedSettings = &v
 }
 
-// GetAdvancedSettings returns the AdvancedSettings field value
+// GetAdvancedSettings returns the AdvancedSettings field value if set, zero value otherwise.
 func (o *UpdateIPSecRedundantPayload) GetAdvancedSettings() IPSecAdvancedSettings {
-	if o == nil {
+	if o == nil || IsNil(o.AdvancedSettings) {
 		var ret IPSecAdvancedSettings
 		return ret
 	}
-
-	return o.AdvancedSettings
+	return *o.AdvancedSettings
 }
 
-// GetAdvancedSettingsOk returns a tuple with the AdvancedSettings field value
+// GetAdvancedSettingsOk returns a tuple with the AdvancedSettings field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *UpdateIPSecRedundantPayload) GetAdvancedSettingsOk() (*IPSecAdvancedSettings, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.AdvancedSettings) {
 		return nil, false
 	}
-	return &o.AdvancedSettings, true
+	return o.AdvancedSettings, true
 }
 
-// SetAdvancedSettings sets field value
+// HasAdvancedSettings returns a boolean if a field has been set.
+func (o *UpdateIPSecRedundantPayload) HasAdvancedSettings() bool {
+	if o != nil && !IsNil(o.AdvancedSettings) {
+		return true
+	}
+
+	return false
+}
+
+// SetAdvancedSettings gets a reference to the given IPSecAdvancedSettings and assigns it to the AdvancedSettings field.
 func (o *UpdateIPSecRedundantPayload) SetAdvancedSettings(v IPSecAdvancedSettings) {
-	o.AdvancedSettings = v
+	o.AdvancedSettings = &v
 }
 
 func (o UpdateIPSecRedundantPayload) MarshalJSON() ([]byte, error) {
@@ -176,8 +189,12 @@ func (o UpdateIPSecRedundantPayload) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Tunnel2) {
 		toSerialize["tunnel2"] = o.Tunnel2
 	}
-	toSerialize["sharedSettings"] = o.SharedSettings
-	toSerialize["advancedSettings"] = o.AdvancedSettings
+	if !IsNil(o.SharedSettings) {
+		toSerialize["sharedSettings"] = o.SharedSettings
+	}
+	if !IsNil(o.AdvancedSettings) {
+		toSerialize["advancedSettings"] = o.AdvancedSettings
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -187,28 +204,6 @@ func (o UpdateIPSecRedundantPayload) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *UpdateIPSecRedundantPayload) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"sharedSettings",
-		"advancedSettings",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err;
-	}
-
-	for _, requiredProperty := range(requiredProperties) {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
 	varUpdateIPSecRedundantPayload := _UpdateIPSecRedundantPayload{}
 
 	err = json.Unmarshal(data, &varUpdateIPSecRedundantPayload)

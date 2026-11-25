@@ -20,7 +20,7 @@ var _ MappedNullable = &EnhancedRouteTableDynamicCreate{}
 
 // EnhancedRouteTableDynamicCreate struct for EnhancedRouteTableDynamicCreate
 type EnhancedRouteTableDynamicCreate struct {
-	// All IDs of dynamic tunnels
+	// IDs of the member tunnels of one dynamic tunnel group. Must list every member of the group, since the route table is created for the group as a whole. Take the values from the `id` field of the tunnels returned for that group. 
 	TunnelIds []string `json:"tunnelIds"`
 	// List of subnet CIDR blocks
 	Subnets []string `json:"subnets"`

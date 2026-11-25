@@ -4,11 +4,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**P81GatewaySubnets** | **[]string** |  | 
-**RemoteGatewaySubnets** | **[]string** |  | 
-**P81ASN** | Pointer to **int32** |  | [optional] 
+**P81GatewaySubnets** | **[]string** | Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \&quot;0.0.0.0/0\&quot;, to route all traffic through the tunnel, or the network&#39;s own subnet.  | 
+**RemoteGatewaySubnets** | **[]string** | Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation.  | 
 **Features** | [**NetworkFeaturesCreate**](NetworkFeaturesCreate.md) |  | 
-**LeftASN** | **int32** |  | 
+**LeftASN** | **int32** | BGP ASN of the Check Point SASE side of the tunnel. The first dynamic tunnel created on a network fixes the network&#39;s ASN; every later dynamic tunnel on that network must send the same value. The ASN can never be changed once set.  | 
+**PeakBandwidthMbps** | Pointer to **int32** | Deprecated: ignored for non-China regions. China regions still use this field. Expected peak throughput of the tunnel in Mbps. A typical connection is 1000. Consumes bandwidth licenses, so set it no higher than the tunnel needs.  | [optional] [default to 1000]
 
 ## Methods
 
@@ -69,31 +69,6 @@ and a boolean to check if the value has been set.
 SetRemoteGatewaySubnets sets RemoteGatewaySubnets field to given value.
 
 
-### GetP81ASN
-
-`func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASN() int32`
-
-GetP81ASN returns the P81ASN field if non-nil, zero value otherwise.
-
-### GetP81ASNOk
-
-`func (o *EnhancedIPSecSharedSettingsCreate) GetP81ASNOk() (*int32, bool)`
-
-GetP81ASNOk returns a tuple with the P81ASN field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetP81ASN
-
-`func (o *EnhancedIPSecSharedSettingsCreate) SetP81ASN(v int32)`
-
-SetP81ASN sets P81ASN field to given value.
-
-### HasP81ASN
-
-`func (o *EnhancedIPSecSharedSettingsCreate) HasP81ASN() bool`
-
-HasP81ASN returns a boolean if a field has been set.
-
 ### GetFeatures
 
 `func (o *EnhancedIPSecSharedSettingsCreate) GetFeatures() NetworkFeaturesCreate`
@@ -133,6 +108,31 @@ and a boolean to check if the value has been set.
 
 SetLeftASN sets LeftASN field to given value.
 
+
+### GetPeakBandwidthMbps
+
+`func (o *EnhancedIPSecSharedSettingsCreate) GetPeakBandwidthMbps() int32`
+
+GetPeakBandwidthMbps returns the PeakBandwidthMbps field if non-nil, zero value otherwise.
+
+### GetPeakBandwidthMbpsOk
+
+`func (o *EnhancedIPSecSharedSettingsCreate) GetPeakBandwidthMbpsOk() (*int32, bool)`
+
+GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPeakBandwidthMbps
+
+`func (o *EnhancedIPSecSharedSettingsCreate) SetPeakBandwidthMbps(v int32)`
+
+SetPeakBandwidthMbps sets PeakBandwidthMbps field to given value.
+
+### HasPeakBandwidthMbps
+
+`func (o *EnhancedIPSecSharedSettingsCreate) HasPeakBandwidthMbps() bool`
+
+HasPeakBandwidthMbps returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

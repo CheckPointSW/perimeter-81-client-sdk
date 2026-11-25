@@ -4,9 +4,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ControlledBy** | Pointer to **string** | Indicates whether the policy is controlled by Quantum or Hsase | [optional] 
 **BypassRules** | Pointer to [**[]HttpsInspectionRule**](HttpsInspectionRule.md) |  | [optional] 
 **CleanupBypassRuleDefaultAction** | Pointer to **string** | Default action for traffic not matched by any explicit bypass rule (the cleanup rule). Included in the response only when the tenant has the Inspection Policy feature enabled; when the feature is off the field is omitted entirely. Defaults to \&quot;inspect\&quot; when the tenant has the feature enabled but hasn&#39;t configured a specific value.  | [optional] 
+**ControlledBy** | Pointer to **string** | Indicates whether the policy is controlled by Quantum or Hsase | [optional] 
 
 ## Methods
 
@@ -26,31 +26,6 @@ will change when the set of required properties is changed
 NewHttpsInspectionPolicyGetResponseDataWithDefaults instantiates a new HttpsInspectionPolicyGetResponseData object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
-
-### GetControlledBy
-
-`func (o *HttpsInspectionPolicyGetResponseData) GetControlledBy() string`
-
-GetControlledBy returns the ControlledBy field if non-nil, zero value otherwise.
-
-### GetControlledByOk
-
-`func (o *HttpsInspectionPolicyGetResponseData) GetControlledByOk() (*string, bool)`
-
-GetControlledByOk returns a tuple with the ControlledBy field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetControlledBy
-
-`func (o *HttpsInspectionPolicyGetResponseData) SetControlledBy(v string)`
-
-SetControlledBy sets ControlledBy field to given value.
-
-### HasControlledBy
-
-`func (o *HttpsInspectionPolicyGetResponseData) HasControlledBy() bool`
-
-HasControlledBy returns a boolean if a field has been set.
 
 ### GetBypassRules
 
@@ -101,6 +76,31 @@ SetCleanupBypassRuleDefaultAction sets CleanupBypassRuleDefaultAction field to g
 `func (o *HttpsInspectionPolicyGetResponseData) HasCleanupBypassRuleDefaultAction() bool`
 
 HasCleanupBypassRuleDefaultAction returns a boolean if a field has been set.
+
+### GetControlledBy
+
+`func (o *HttpsInspectionPolicyGetResponseData) GetControlledBy() string`
+
+GetControlledBy returns the ControlledBy field if non-nil, zero value otherwise.
+
+### GetControlledByOk
+
+`func (o *HttpsInspectionPolicyGetResponseData) GetControlledByOk() (*string, bool)`
+
+GetControlledByOk returns a tuple with the ControlledBy field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetControlledBy
+
+`func (o *HttpsInspectionPolicyGetResponseData) SetControlledBy(v string)`
+
+SetControlledBy sets ControlledBy field to given value.
+
+### HasControlledBy
+
+`func (o *HttpsInspectionPolicyGetResponseData) HasControlledBy() bool`
+
+HasControlledBy returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

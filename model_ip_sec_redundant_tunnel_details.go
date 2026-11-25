@@ -20,12 +20,15 @@ var _ MappedNullable = &IPSecRedundantTunnelDetails{}
 
 // IPSecRedundantTunnelDetails struct for IPSecRedundantTunnelDetails
 type IPSecRedundantTunnelDetails struct {
+	// Pre-shared key for tunnel authentication. 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
 	Passphrase string `json:"passphrase" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
 	P81GWInternalIP string `json:"p81GWInternalIP"`
 	RemoteGWInternalIP string `json:"remoteGWInternalIP"`
 	RemotePublicIP string `json:"remotePublicIP"`
+	// BGP ASN of the remote gateway. Must differ from the ASN of the Check Point SASE side (`p81ASN` in `sharedSettings`). 
 	RemoteASN int32 `json:"remoteASN"`
-	RemoteID RemoteID `json:"remoteID"`
+	// IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. 
+	RemoteID string `json:"remoteID"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -35,7 +38,7 @@ type _IPSecRedundantTunnelDetails IPSecRedundantTunnelDetails
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIPSecRedundantTunnelDetails(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID RemoteID) *IPSecRedundantTunnelDetails {
+func NewIPSecRedundantTunnelDetails(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string) *IPSecRedundantTunnelDetails {
 	this := IPSecRedundantTunnelDetails{}
 	this.Passphrase = passphrase
 	this.P81GWInternalIP = p81GWInternalIP
@@ -175,9 +178,9 @@ func (o *IPSecRedundantTunnelDetails) SetRemoteASN(v int32) {
 }
 
 // GetRemoteID returns the RemoteID field value
-func (o *IPSecRedundantTunnelDetails) GetRemoteID() RemoteID {
+func (o *IPSecRedundantTunnelDetails) GetRemoteID() string {
 	if o == nil {
-		var ret RemoteID
+		var ret string
 		return ret
 	}
 
@@ -186,7 +189,7 @@ func (o *IPSecRedundantTunnelDetails) GetRemoteID() RemoteID {
 
 // GetRemoteIDOk returns a tuple with the RemoteID field value
 // and a boolean to check if the value has been set.
-func (o *IPSecRedundantTunnelDetails) GetRemoteIDOk() (*RemoteID, bool) {
+func (o *IPSecRedundantTunnelDetails) GetRemoteIDOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -194,7 +197,7 @@ func (o *IPSecRedundantTunnelDetails) GetRemoteIDOk() (*RemoteID, bool) {
 }
 
 // SetRemoteID sets field value
-func (o *IPSecRedundantTunnelDetails) SetRemoteID(v RemoteID) {
+func (o *IPSecRedundantTunnelDetails) SetRemoteID(v string) {
 	o.RemoteID = v
 }
 

@@ -4,10 +4,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | ID for the Harmony SASE region. | 
+**Id** | **string** | ID of the Check Point SASE region. Use this value when creating a region on a network. | 
 **ObjectId** | Pointer to **string** | Alias of id | [optional] 
 **DisplayName** | **string** |  | 
-**Name** | **string** | Name of the Harmony SASE region. | 
+**Name** | **string** | Machine-readable name of the Check Point SASE region. | 
 **CountryCode** | **string** | ISO 3166-1 alpha-2 country code for the region. | 
 **ContinentCode** | **string** | ISO 3166-1 alpha-2 continent code for the region. | 
 

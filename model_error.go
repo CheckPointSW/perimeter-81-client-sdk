@@ -12,15 +12,22 @@ package perimeter81sdk
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // checks if the Error type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &Error{}
 
-// Error struct for Error
+// Error Standard error envelope. 
 type Error struct {
-	Id *string `json:"id,omitempty"`
-	Message *string `json:"message,omitempty"`
+	// HTTP status code, repeated in the body.
+	Status int32 `json:"status"`
+	// Human-readable explanation of what went wrong.
+	Message string `json:"message"`
+	// Machine-readable name of the HTTP status, for example `BAD_REQUEST`.
+	MessageCode string `json:"messageCode"`
+	// Additional context about the failure, present only for some errors. 
+	Data map[string]interface{} `json:"data,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -30,8 +37,11 @@ type _Error Error
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewError() *Error {
+func NewError(status int32, message string, messageCode string) *Error {
 	this := Error{}
+	this.Status = status
+	this.Message = message
+	this.MessageCode = messageCode
 	return &this
 }
 
@@ -43,68 +53,108 @@ func NewErrorWithDefaults() *Error {
 	return &this
 }
 
-// GetId returns the Id field value if set, zero value otherwise.
-func (o *Error) GetId() string {
-	if o == nil || IsNil(o.Id) {
-		var ret string
+// GetStatus returns the Status field value
+func (o *Error) GetStatus() int32 {
+	if o == nil {
+		var ret int32
 		return ret
 	}
-	return *o.Id
+
+	return o.Status
 }
 
-// GetIdOk returns a tuple with the Id field value if set, nil otherwise
+// GetStatusOk returns a tuple with the Status field value
 // and a boolean to check if the value has been set.
-func (o *Error) GetIdOk() (*string, bool) {
-	if o == nil || IsNil(o.Id) {
+func (o *Error) GetStatusOk() (*int32, bool) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Id, true
+	return &o.Status, true
 }
 
-// HasId returns a boolean if a field has been set.
-func (o *Error) HasId() bool {
-	if o != nil && !IsNil(o.Id) {
-		return true
-	}
-
-	return false
+// SetStatus sets field value
+func (o *Error) SetStatus(v int32) {
+	o.Status = v
 }
 
-// SetId gets a reference to the given string and assigns it to the Id field.
-func (o *Error) SetId(v string) {
-	o.Id = &v
-}
-
-// GetMessage returns the Message field value if set, zero value otherwise.
+// GetMessage returns the Message field value
 func (o *Error) GetMessage() string {
-	if o == nil || IsNil(o.Message) {
+	if o == nil {
 		var ret string
 		return ret
 	}
-	return *o.Message
+
+	return o.Message
 }
 
-// GetMessageOk returns a tuple with the Message field value if set, nil otherwise
+// GetMessageOk returns a tuple with the Message field value
 // and a boolean to check if the value has been set.
 func (o *Error) GetMessageOk() (*string, bool) {
-	if o == nil || IsNil(o.Message) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Message, true
+	return &o.Message, true
 }
 
-// HasMessage returns a boolean if a field has been set.
-func (o *Error) HasMessage() bool {
-	if o != nil && !IsNil(o.Message) {
+// SetMessage sets field value
+func (o *Error) SetMessage(v string) {
+	o.Message = v
+}
+
+// GetMessageCode returns the MessageCode field value
+func (o *Error) GetMessageCode() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.MessageCode
+}
+
+// GetMessageCodeOk returns a tuple with the MessageCode field value
+// and a boolean to check if the value has been set.
+func (o *Error) GetMessageCodeOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.MessageCode, true
+}
+
+// SetMessageCode sets field value
+func (o *Error) SetMessageCode(v string) {
+	o.MessageCode = v
+}
+
+// GetData returns the Data field value if set, zero value otherwise.
+func (o *Error) GetData() map[string]interface{} {
+	if o == nil || IsNil(o.Data) {
+		var ret map[string]interface{}
+		return ret
+	}
+	return o.Data
+}
+
+// GetDataOk returns a tuple with the Data field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Error) GetDataOk() (map[string]interface{}, bool) {
+	if o == nil || IsNil(o.Data) {
+		return map[string]interface{}{}, false
+	}
+	return o.Data, true
+}
+
+// HasData returns a boolean if a field has been set.
+func (o *Error) HasData() bool {
+	if o != nil && !IsNil(o.Data) {
 		return true
 	}
 
 	return false
 }
 
-// SetMessage gets a reference to the given string and assigns it to the Message field.
-func (o *Error) SetMessage(v string) {
-	o.Message = &v
+// SetData gets a reference to the given map[string]interface{} and assigns it to the Data field.
+func (o *Error) SetData(v map[string]interface{}) {
+	o.Data = v
 }
 
 func (o Error) MarshalJSON() ([]byte, error) {
@@ -117,11 +167,11 @@ func (o Error) MarshalJSON() ([]byte, error) {
 
 func (o Error) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if !IsNil(o.Id) {
-		toSerialize["id"] = o.Id
-	}
-	if !IsNil(o.Message) {
-		toSerialize["message"] = o.Message
+	toSerialize["status"] = o.Status
+	toSerialize["message"] = o.Message
+	toSerialize["messageCode"] = o.MessageCode
+	if !IsNil(o.Data) {
+		toSerialize["data"] = o.Data
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -132,6 +182,29 @@ func (o Error) ToMap() (map[string]interface{}, error) {
 }
 
 func (o *Error) UnmarshalJSON(data []byte) (err error) {
+	// This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"status",
+		"message",
+		"messageCode",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(data, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
 	varError := _Error{}
 
 	err = json.Unmarshal(data, &varError)
@@ -145,8 +218,10 @@ func (o *Error) UnmarshalJSON(data []byte) (err error) {
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
-		delete(additionalProperties, "id")
+		delete(additionalProperties, "status")
 		delete(additionalProperties, "message")
+		delete(additionalProperties, "messageCode")
+		delete(additionalProperties, "data")
 		o.AdditionalProperties = additionalProperties
 	}
 

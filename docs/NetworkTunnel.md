@@ -12,9 +12,9 @@ Name | Type | Description | Notes
 **Type** | **string** |  | 
 **IsHA** | **bool** | Indicates if it&#39;s a redundant tunnel. | 
 **TenantId** | **string** | ID of the tenant. | 
-**CreatedAt** | **time.Time** | The date when this record was created. | 
+**CreatedAt** | Pointer to **time.Time** | The date when this record was created. | [optional] 
 **UpdatedAt** | Pointer to **time.Time** | The date of last update of the record. | [optional] 
-**Passphrase** | **string** |  | 
+**Passphrase** | **string** | Passphrase as stored for a tunnel on a standard network.  | 
 **Username** | **string** | Openvpn username. | 
 **LeftAllowedIP** | **[]string** |  | 
 **LeftEndpoint** | **string** |  | 
@@ -29,19 +29,15 @@ Name | Type | Description | Notes
 **Phase2** | [**IPSecPhaseConfig**](IPSecPhaseConfig.md) |  | 
 **Right** | **string** |  | 
 **RightID** | [**NetworkIpsecBaseAllOfRightID**](NetworkIpsecBaseAllOfRightID.md) |  | 
-**DpdAction** | **string** | dpdAction. | 
 **LeftSubnets** | **[]string** |  | 
 **RightSubnets** | **[]string** |  | 
-**HaTunnelID** | [**NetworkHaTunnelID**](NetworkHaTunnelID.md) |  | 
-**RightASN** | Pointer to **int32** | Autonomous System Number (ASN) for BGP routing. It will be automatically assigned an ASN once creating the first dynamic tunnel in this network. The network ASN can never be changed once it is set. | [optional] 
-**RightPrivateIP** | Pointer to **string** |  | [optional] 
-**LeftPrivateIP** | Pointer to **string** |  | [optional] 
+**DpdAction** | **string** | Action taken when dead peer detection declares the peer unreachable. Always \&quot;restart\&quot;; the value is fixed and is not accepted on create or update.  | 
 
 ## Methods
 
 ### NewNetworkTunnel
 
-`func NewNetworkTunnel(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, createdAt time.Time, passphrase string, username string, leftAllowedIP []string, leftEndpoint string, vault string, requestConfigToken string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, dpdAction string, leftSubnets []string, rightSubnets []string, haTunnelID NetworkHaTunnelID, ) *NetworkTunnel`
+`func NewNetworkTunnel(id string, network string, region string, instance string, interfaceName string, type_ string, isHA bool, tenantId string, passphrase string, username string, leftAllowedIP []string, leftEndpoint string, vault string, requestConfigToken string, keyExchange string, ikeLifeTime string, lifetime string, dpdDelay string, dpdTimeout string, phase1 IPSecPhaseConfig, phase2 IPSecPhaseConfig, right string, rightID NetworkIpsecBaseAllOfRightID, leftSubnets []string, rightSubnets []string, dpdAction string, ) *NetworkTunnel`
 
 NewNetworkTunnel instantiates a new NetworkTunnel object
 This constructor will assign default values to properties that have it defined,
@@ -235,6 +231,11 @@ and a boolean to check if the value has been set.
 
 SetCreatedAt sets CreatedAt field to given value.
 
+### HasCreatedAt
+
+`func (o *NetworkTunnel) HasCreatedAt() bool`
+
+HasCreatedAt returns a boolean if a field has been set.
 
 ### GetUpdatedAt
 
@@ -561,26 +562,6 @@ and a boolean to check if the value has been set.
 SetRightID sets RightID field to given value.
 
 
-### GetDpdAction
-
-`func (o *NetworkTunnel) GetDpdAction() string`
-
-GetDpdAction returns the DpdAction field if non-nil, zero value otherwise.
-
-### GetDpdActionOk
-
-`func (o *NetworkTunnel) GetDpdActionOk() (*string, bool)`
-
-GetDpdActionOk returns a tuple with the DpdAction field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetDpdAction
-
-`func (o *NetworkTunnel) SetDpdAction(v string)`
-
-SetDpdAction sets DpdAction field to given value.
-
-
 ### GetLeftSubnets
 
 `func (o *NetworkTunnel) GetLeftSubnets() []string`
@@ -621,100 +602,25 @@ and a boolean to check if the value has been set.
 SetRightSubnets sets RightSubnets field to given value.
 
 
-### GetHaTunnelID
+### GetDpdAction
 
-`func (o *NetworkTunnel) GetHaTunnelID() NetworkHaTunnelID`
+`func (o *NetworkTunnel) GetDpdAction() string`
 
-GetHaTunnelID returns the HaTunnelID field if non-nil, zero value otherwise.
+GetDpdAction returns the DpdAction field if non-nil, zero value otherwise.
 
-### GetHaTunnelIDOk
+### GetDpdActionOk
 
-`func (o *NetworkTunnel) GetHaTunnelIDOk() (*NetworkHaTunnelID, bool)`
+`func (o *NetworkTunnel) GetDpdActionOk() (*string, bool)`
 
-GetHaTunnelIDOk returns a tuple with the HaTunnelID field if it's non-nil, zero value otherwise
+GetDpdActionOk returns a tuple with the DpdAction field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetHaTunnelID
+### SetDpdAction
 
-`func (o *NetworkTunnel) SetHaTunnelID(v NetworkHaTunnelID)`
+`func (o *NetworkTunnel) SetDpdAction(v string)`
 
-SetHaTunnelID sets HaTunnelID field to given value.
+SetDpdAction sets DpdAction field to given value.
 
-
-### GetRightASN
-
-`func (o *NetworkTunnel) GetRightASN() int32`
-
-GetRightASN returns the RightASN field if non-nil, zero value otherwise.
-
-### GetRightASNOk
-
-`func (o *NetworkTunnel) GetRightASNOk() (*int32, bool)`
-
-GetRightASNOk returns a tuple with the RightASN field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRightASN
-
-`func (o *NetworkTunnel) SetRightASN(v int32)`
-
-SetRightASN sets RightASN field to given value.
-
-### HasRightASN
-
-`func (o *NetworkTunnel) HasRightASN() bool`
-
-HasRightASN returns a boolean if a field has been set.
-
-### GetRightPrivateIP
-
-`func (o *NetworkTunnel) GetRightPrivateIP() string`
-
-GetRightPrivateIP returns the RightPrivateIP field if non-nil, zero value otherwise.
-
-### GetRightPrivateIPOk
-
-`func (o *NetworkTunnel) GetRightPrivateIPOk() (*string, bool)`
-
-GetRightPrivateIPOk returns a tuple with the RightPrivateIP field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetRightPrivateIP
-
-`func (o *NetworkTunnel) SetRightPrivateIP(v string)`
-
-SetRightPrivateIP sets RightPrivateIP field to given value.
-
-### HasRightPrivateIP
-
-`func (o *NetworkTunnel) HasRightPrivateIP() bool`
-
-HasRightPrivateIP returns a boolean if a field has been set.
-
-### GetLeftPrivateIP
-
-`func (o *NetworkTunnel) GetLeftPrivateIP() string`
-
-GetLeftPrivateIP returns the LeftPrivateIP field if non-nil, zero value otherwise.
-
-### GetLeftPrivateIPOk
-
-`func (o *NetworkTunnel) GetLeftPrivateIPOk() (*string, bool)`
-
-GetLeftPrivateIPOk returns a tuple with the LeftPrivateIP field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetLeftPrivateIP
-
-`func (o *NetworkTunnel) SetLeftPrivateIP(v string)`
-
-SetLeftPrivateIP sets LeftPrivateIP field to given value.
-
-### HasLeftPrivateIP
-
-`func (o *NetworkTunnel) HasLeftPrivateIP() bool`
-
-HasLeftPrivateIP returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

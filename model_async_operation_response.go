@@ -17,9 +17,11 @@ import (
 // checks if the AsyncOperationResponse type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &AsyncOperationResponse{}
 
-// AsyncOperationResponse struct for AsyncOperationResponse
+// AsyncOperationResponse Returned with 202 Accepted. The operation has been queued, not completed. Poll `statusUrl` until the returned `completed` field is true, then read `result` for the outcome. 
 type AsyncOperationResponse struct {
+	// Absolute URL to poll for the outcome of this operation. Responds with an `AsyncOperationStatus` body. 
 	StatusUrl *string `json:"statusUrl,omitempty"`
+	// Recommended interval, in seconds, to wait between polls of `statusUrl`. Polling faster than this may be rate limited. 
 	SamplingTime *int32 `json:"samplingTime,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

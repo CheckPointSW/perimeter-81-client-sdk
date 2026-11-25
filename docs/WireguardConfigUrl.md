@@ -1,4 +1,4 @@
-# WireguardConfigUrl
+# WireGuardConfigUrl
 
 ## Properties
 
@@ -8,39 +8,39 @@ Name | Type | Description | Notes
 
 ## Methods
 
-### NewWireguardConfigUrl
+### NewWireGuardConfigUrl
 
-`func NewWireguardConfigUrl(wireguardConfigUrl string, ) *WireguardConfigUrl`
+`func NewWireGuardConfigUrl(wireguardConfigUrl string, ) *WireGuardConfigUrl`
 
-NewWireguardConfigUrl instantiates a new WireguardConfigUrl object
+NewWireGuardConfigUrl instantiates a new WireGuardConfigUrl object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewWireguardConfigUrlWithDefaults
+### NewWireGuardConfigUrlWithDefaults
 
-`func NewWireguardConfigUrlWithDefaults() *WireguardConfigUrl`
+`func NewWireGuardConfigUrlWithDefaults() *WireGuardConfigUrl`
 
-NewWireguardConfigUrlWithDefaults instantiates a new WireguardConfigUrl object
+NewWireGuardConfigUrlWithDefaults instantiates a new WireGuardConfigUrl object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetWireguardConfigUrl
 
-`func (o *WireguardConfigUrl) GetWireguardConfigUrl() string`
+`func (o *WireGuardConfigUrl) GetWireguardConfigUrl() string`
 
 GetWireguardConfigUrl returns the WireguardConfigUrl field if non-nil, zero value otherwise.
 
 ### GetWireguardConfigUrlOk
 
-`func (o *WireguardConfigUrl) GetWireguardConfigUrlOk() (*string, bool)`
+`func (o *WireGuardConfigUrl) GetWireguardConfigUrlOk() (*string, bool)`
 
 GetWireguardConfigUrlOk returns a tuple with the WireguardConfigUrl field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetWireguardConfigUrl
 
-`func (o *WireguardConfigUrl) SetWireguardConfigUrl(v string)`
+`func (o *WireGuardConfigUrl) SetWireguardConfigUrl(v string)`
 
 SetWireguardConfigUrl sets WireguardConfigUrl field to given value.
 

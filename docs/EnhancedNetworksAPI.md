@@ -1,12 +1,12 @@
 # \EnhancedNetworksAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreateEnhancedNetwork**](EnhancedNetworksAPI.md#CreateEnhancedNetwork) | **Post** /v3/networks/enhanced | Create enhanced network
 [**DeleteEnhancedNetwork**](EnhancedNetworksAPI.md#DeleteEnhancedNetwork) | **Delete** /v3/networks/enhanced/{networkId} | Delete enhanced network
-[**EnhancedNetworksControllerV23GetNetworkCustomerCertificate**](EnhancedNetworksAPI.md#EnhancedNetworksControllerV23GetNetworkCustomerCertificate) | **Get** /v3/networks/enhanced/network-customer-certificate | Get network customer certificate
+[**EnhancedNetworksControllerV23GetNetworkCustomerCertificate**](EnhancedNetworksAPI.md#EnhancedNetworksControllerV23GetNetworkCustomerCertificate) | **Get** /v3/networks/enhanced/network-customer-certificate | Get network customer certificates
 [**GetEnhancedNetwork**](EnhancedNetworksAPI.md#GetEnhancedNetwork) | **Get** /v3/networks/enhanced/{networkId} | Get enhanced network by ID
 [**GetEnhancedNetworkHealth**](EnhancedNetworksAPI.md#GetEnhancedNetworkHealth) | **Get** /v3/networks/enhanced/{networkId}/health | Get enhanced network health status
 [**GetEnhancedNetworks**](EnhancedNetworksAPI.md#GetEnhancedNetworks) | **Get** /v3/networks/enhanced | Get all enhanced networks
@@ -154,7 +154,7 @@ Name | Type | Description  | Notes
 
 > []NetworkCustomerCertificateResponseInner EnhancedNetworksControllerV23GetNetworkCustomerCertificate(ctx).Execute()
 
-Get network customer certificate
+Get network customer certificates
 
 
 

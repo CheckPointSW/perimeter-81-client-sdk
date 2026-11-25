@@ -114,7 +114,7 @@ func (a *NetworksAPIService) GetSplitTunnelingConfigurationExecute(r ApiGetSplit
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -125,7 +125,7 @@ func (a *NetworksAPIService) GetSplitTunnelingConfigurationExecute(r ApiGetSplit
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -245,7 +245,7 @@ func (a *NetworksAPIService) GetStatusExecute(r ApiGetStatusRequest) (string, *h
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -256,7 +256,7 @@ func (a *NetworksAPIService) GetStatusExecute(r ApiGetStatusRequest) (string, *h
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -368,6 +368,28 @@ func (a *NetworksAPIService) NetworksControllerV2StatusExecute(r ApiNetworksCont
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 401 {
+			var v UnauthorizedError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ForbiddenError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -405,7 +427,7 @@ UpdateSplitTunnelingConfigurationAsync Set up split tunneling configuration (asy
 Required permissions: `["network:update"]`<br><br>Set up split tunneling configuration for a network asynchronously. Modifies tunnel all mode and exception data.
 
 **Important validation rules:**
-- Exceptions are only supported in 'out_of_tunnel' mode. Providing exceptions when defaultTunnelingMode is 'via_tunnel' will result in a 400 Bad Request error.
+- Exceptions are only supported in 'out_of_tunnel' mode. Do not provide exceptions when defaultTunnelingMode is 'via_tunnel'.
 - Addresses cannot be defined in a private network (routing table) and be excluded from 'tunnel all' at the same time.
 - In case of a contradiction, the addresses will be tunneled.
 
@@ -513,7 +535,7 @@ func (a *NetworksAPIService) UpdateSplitTunnelingConfigurationAsyncExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -524,7 +546,7 @@ func (a *NetworksAPIService) UpdateSplitTunnelingConfigurationAsyncExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

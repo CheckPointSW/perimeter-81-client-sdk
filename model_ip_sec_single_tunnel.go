@@ -26,11 +26,14 @@ type IPSecSingleTunnel struct {
 	// Gateway ID
 	GatewayID string `json:"gatewayID"`
 	// The name of the tunnel
-	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]*$"`
+	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]+$"`
+	// Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \"0.0.0.0/0\", to route all traffic through the tunnel, or the network's own subnet. 
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
+	// Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation. 
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
+	// BGP ASN of the Check Point SASE side of the tunnel. Must differ from the ASN of the remote gateway. 
 	P81ASN *int32 `json:"p81ASN,omitempty"`
-	Features *IPSecSharedSettingsFeatures `json:"features,omitempty"`
+	Features *IPSecSharedSettingsAllOfFeatures `json:"features,omitempty"`
 	KeyExchange string `json:"keyExchange"`
 	IkeLifeTime string `json:"ikeLifeTime" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
 	Lifetime string `json:"lifetime" validate:"regexp=^((1[0-9]|[2-9][0-9]|[1-9][0-9]{2\\,3}|[1-7][0-9]{4}|8[0-5][0-9]{3}|86[0-3][0-9]{2}|86400)s)|(([1-9]|[1-9][0-9]|[1-9][0-9][0-9]|1[0-3][0-9][0-9]|14[0-3][0-9]|1440)m)|(([1-9]|1[0-9]|2[0-4])h)$"`
@@ -38,9 +41,11 @@ type IPSecSingleTunnel struct {
 	DpdTimeout string `json:"dpdTimeout" validate:"regexp=^([5-9]|[1-5][0-9]|60)s$"`
 	Phase1 IPSecPhaseConfig `json:"phase1"`
 	Phase2 IPSecPhaseConfig `json:"phase2"`
+	// Pre-shared key for tunnel authentication. 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
 	Passphrase *string `json:"passphrase,omitempty" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
 	RemotePublicIP *string `json:"remotePublicIP,omitempty"`
-	RemoteID *RemoteID `json:"remoteID,omitempty"`
+	// IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. 
+	RemoteID *string `json:"remoteID,omitempty"`
 	// The date when this record was created.
 	CreatedAt time.Time `json:"createdAt"`
 	// The date of last update of the record.
@@ -239,9 +244,9 @@ func (o *IPSecSingleTunnel) SetP81ASN(v int32) {
 }
 
 // GetFeatures returns the Features field value if set, zero value otherwise.
-func (o *IPSecSingleTunnel) GetFeatures() IPSecSharedSettingsFeatures {
+func (o *IPSecSingleTunnel) GetFeatures() IPSecSharedSettingsAllOfFeatures {
 	if o == nil || IsNil(o.Features) {
-		var ret IPSecSharedSettingsFeatures
+		var ret IPSecSharedSettingsAllOfFeatures
 		return ret
 	}
 	return *o.Features
@@ -249,7 +254,7 @@ func (o *IPSecSingleTunnel) GetFeatures() IPSecSharedSettingsFeatures {
 
 // GetFeaturesOk returns a tuple with the Features field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *IPSecSingleTunnel) GetFeaturesOk() (*IPSecSharedSettingsFeatures, bool) {
+func (o *IPSecSingleTunnel) GetFeaturesOk() (*IPSecSharedSettingsAllOfFeatures, bool) {
 	if o == nil || IsNil(o.Features) {
 		return nil, false
 	}
@@ -265,8 +270,8 @@ func (o *IPSecSingleTunnel) HasFeatures() bool {
 	return false
 }
 
-// SetFeatures gets a reference to the given IPSecSharedSettingsFeatures and assigns it to the Features field.
-func (o *IPSecSingleTunnel) SetFeatures(v IPSecSharedSettingsFeatures) {
+// SetFeatures gets a reference to the given IPSecSharedSettingsAllOfFeatures and assigns it to the Features field.
+func (o *IPSecSingleTunnel) SetFeatures(v IPSecSharedSettingsAllOfFeatures) {
 	o.Features = &v
 }
 
@@ -503,9 +508,9 @@ func (o *IPSecSingleTunnel) SetRemotePublicIP(v string) {
 }
 
 // GetRemoteID returns the RemoteID field value if set, zero value otherwise.
-func (o *IPSecSingleTunnel) GetRemoteID() RemoteID {
+func (o *IPSecSingleTunnel) GetRemoteID() string {
 	if o == nil || IsNil(o.RemoteID) {
-		var ret RemoteID
+		var ret string
 		return ret
 	}
 	return *o.RemoteID
@@ -513,7 +518,7 @@ func (o *IPSecSingleTunnel) GetRemoteID() RemoteID {
 
 // GetRemoteIDOk returns a tuple with the RemoteID field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *IPSecSingleTunnel) GetRemoteIDOk() (*RemoteID, bool) {
+func (o *IPSecSingleTunnel) GetRemoteIDOk() (*string, bool) {
 	if o == nil || IsNil(o.RemoteID) {
 		return nil, false
 	}
@@ -529,8 +534,8 @@ func (o *IPSecSingleTunnel) HasRemoteID() bool {
 	return false
 }
 
-// SetRemoteID gets a reference to the given RemoteID and assigns it to the RemoteID field.
-func (o *IPSecSingleTunnel) SetRemoteID(v RemoteID) {
+// SetRemoteID gets a reference to the given string and assigns it to the RemoteID field.
+func (o *IPSecSingleTunnel) SetRemoteID(v string) {
 	o.RemoteID = &v
 }
 

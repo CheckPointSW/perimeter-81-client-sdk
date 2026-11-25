@@ -47,72 +47,50 @@ func ObjectServiceProtocolSingleAsObjectServiceProtocolTCPUDP(v *ObjectServicePr
 // Unmarshal JSON data into one of the pointers in the struct
 func (dst *ObjectServiceProtocolTCPUDP) UnmarshalJSON(data []byte) error {
 	var err error
-	match := 0
-	// try to unmarshal data into ObjectServiceProtocolList
-	err = json.Unmarshal(data, &dst.ObjectServiceProtocolList)
-	if err == nil {
-		jsonObjectServiceProtocolList, _ := json.Marshal(dst.ObjectServiceProtocolList)
-		if string(jsonObjectServiceProtocolList) == "{}" { // empty struct
+	// use discriminator value to speed up the lookup
+	var jsonDict map[string]interface{}
+	err = newStrictDecoder(data).Decode(&jsonDict)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal JSON into map for the discriminator lookup")
+	}
+
+	// check if the discriminator value is 'list'
+	if jsonDict["valueType"] == "list" {
+		// try to unmarshal JSON data into ObjectServiceProtocolList
+		err = json.Unmarshal(data, &dst.ObjectServiceProtocolList)
+		if err == nil {
+			return nil // data stored in dst.ObjectServiceProtocolList, return on the first match
+		} else {
 			dst.ObjectServiceProtocolList = nil
-		} else {
-			match++
+			return fmt.Errorf("failed to unmarshal ObjectServiceProtocolTCPUDP as ObjectServiceProtocolList: %s", err.Error())
 		}
-	} else {
-		dst.ObjectServiceProtocolList = nil
 	}
 
-	// try to unmarshal data into ObjectServiceProtocolRange
-	err = json.Unmarshal(data, &dst.ObjectServiceProtocolRange)
-	if err == nil {
-		jsonObjectServiceProtocolRange, _ := json.Marshal(dst.ObjectServiceProtocolRange)
-		if string(jsonObjectServiceProtocolRange) == "{}" { // empty struct
+	// check if the discriminator value is 'range'
+	if jsonDict["valueType"] == "range" {
+		// try to unmarshal JSON data into ObjectServiceProtocolRange
+		err = json.Unmarshal(data, &dst.ObjectServiceProtocolRange)
+		if err == nil {
+			return nil // data stored in dst.ObjectServiceProtocolRange, return on the first match
+		} else {
 			dst.ObjectServiceProtocolRange = nil
-		} else {
-			match++
+			return fmt.Errorf("failed to unmarshal ObjectServiceProtocolTCPUDP as ObjectServiceProtocolRange: %s", err.Error())
 		}
-	} else {
-		dst.ObjectServiceProtocolRange = nil
 	}
 
-	// try to unmarshal data into ObjectServiceProtocolSingle
-	err = json.Unmarshal(data, &dst.ObjectServiceProtocolSingle)
-	if err == nil {
-		jsonObjectServiceProtocolSingle, _ := json.Marshal(dst.ObjectServiceProtocolSingle)
-		if string(jsonObjectServiceProtocolSingle) == "{}" { // empty struct
+	// check if the discriminator value is 'single'
+	if jsonDict["valueType"] == "single" {
+		// try to unmarshal JSON data into ObjectServiceProtocolSingle
+		err = json.Unmarshal(data, &dst.ObjectServiceProtocolSingle)
+		if err == nil {
+			return nil // data stored in dst.ObjectServiceProtocolSingle, return on the first match
+		} else {
 			dst.ObjectServiceProtocolSingle = nil
-		} else {
-			match++
+			return fmt.Errorf("failed to unmarshal ObjectServiceProtocolTCPUDP as ObjectServiceProtocolSingle: %s", err.Error())
 		}
-	} else {
-		dst.ObjectServiceProtocolSingle = nil
 	}
 
-	if match > 1 { // more than 1 match
-		// reset to nil
-		dst.ObjectServiceProtocolList = nil
-		dst.ObjectServiceProtocolRange = nil
-		dst.ObjectServiceProtocolSingle = nil
-
-		return fmt.Errorf("data matches more than one schema in oneOf(ObjectServiceProtocolTCPUDP)")
-	} else if match == 1 {
-		return nil // exactly one match
-	} else { // no match
-        if err != nil {
-		   return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
-        } else {
-           return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
-        }
-        if err != nil {
-		   return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
-        } else {
-           return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
-        }
-        if err != nil {
-		   return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP): %v", err)
-        } else {
-           return fmt.Errorf("data failed to match schemas in oneOf(ObjectServiceProtocolTCPUDP)")
-        }
-	}
+	return nil
 }
 
 // Marshal data from the first non-nil pointers in the struct to JSON

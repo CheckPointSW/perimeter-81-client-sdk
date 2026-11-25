@@ -1,20 +1,25 @@
 # \ObjectsAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreateAddress**](ObjectsAPI.md#CreateAddress) | **Post** /v3/objects/addresses | Create address
+[**CreateCustomUrl**](ObjectsAPI.md#CreateCustomUrl) | **Post** /v3/objects/custom-urls | 
 [**DeleteAddress**](ObjectsAPI.md#DeleteAddress) | **Delete** /v3/objects/addresses/{addressId} | Delete address
+[**DeleteCustomUrl**](ObjectsAPI.md#DeleteCustomUrl) | **Delete** /v3/objects/custom-urls/{customUrlId} | 
 [**DeleteObjectsServices**](ObjectsAPI.md#DeleteObjectsServices) | **Delete** /v3/objects/services/{objectId} | Delete Service object
 [**GetAddresses**](ObjectsAPI.md#GetAddresses) | **Get** /v3/objects/addresses | Get list of addresses
 [**GetApplicationControlApplications**](ObjectsAPI.md#GetApplicationControlApplications) | **Get** /v3/objects/application-control/application | Get all applications available in Application Control applications
+[**GetCustomUrl**](ObjectsAPI.md#GetCustomUrl) | **Get** /v3/objects/custom-urls/{customUrlId} | 
 [**GetObjectsServices**](ObjectsAPI.md#GetObjectsServices) | **Get** /v3/objects/services | Get object services
 [**GetUpdatableObjects**](ObjectsAPI.md#GetUpdatableObjects) | **Get** /v3/objects/updatable-objects | 
 [**GetWebCategories**](ObjectsAPI.md#GetWebCategories) | **Get** /v3/objects/web-category | Get all Web categories
+[**ListCustomUrls**](ObjectsAPI.md#ListCustomUrls) | **Get** /v3/objects/custom-urls | 
 [**PostObjectsServices**](ObjectsAPI.md#PostObjectsServices) | **Post** /v3/objects/services | Create new Service object
 [**PutObjectsServices**](ObjectsAPI.md#PutObjectsServices) | **Put** /v3/objects/services/{objectId} | Update Service object
 [**UpdateAddress**](ObjectsAPI.md#UpdateAddress) | **Put** /v3/objects/addresses/{id} | Update address
+[**UpdateCustomUrl**](ObjectsAPI.md#UpdateCustomUrl) | **Put** /v3/objects/custom-urls/{customUrlId} | 
 
 
 
@@ -67,6 +72,72 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**DBAddress**](DBAddress.md)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## CreateCustomUrl
+
+> CustomUrl CreateCustomUrl(ctx).CustomUrlWriteRequest(customUrlWriteRequest).Execute()
+
+
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
+)
+
+func main() {
+	customUrlWriteRequest := *openapiclient.NewCustomUrlWriteRequest("Name_example") // CustomUrlWriteRequest | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ObjectsAPI.CreateCustomUrl(context.Background()).CustomUrlWriteRequest(customUrlWriteRequest).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ObjectsAPI.CreateCustomUrl``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `CreateCustomUrl`: CustomUrl
+	fmt.Fprintf(os.Stdout, "Response from `ObjectsAPI.CreateCustomUrl`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiCreateCustomUrlRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **customUrlWriteRequest** | [**CustomUrlWriteRequest**](CustomUrlWriteRequest.md) |  | 
+
+### Return type
+
+[**CustomUrl**](CustomUrl.md)
 
 ### Authorization
 
@@ -141,7 +212,75 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeleteCustomUrl
+
+> DeleteCustomUrl(ctx, customUrlId).Execute()
+
+
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
+)
+
+func main() {
+	customUrlId := "customUrlId_example" // string | custom URL object identifier
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	r, err := apiClient.ObjectsAPI.DeleteCustomUrl(context.Background(), customUrlId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ObjectsAPI.DeleteCustomUrl``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customUrlId** | **string** | custom URL object identifier | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiDeleteCustomUrlRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)
@@ -209,7 +348,7 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)
@@ -330,6 +469,74 @@ Other parameters are passed through a pointer to a apiGetApplicationControlAppli
 ### Return type
 
 [**ApplicationControlResponse**](ApplicationControlResponse.md)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetCustomUrl
+
+> CustomUrl GetCustomUrl(ctx, customUrlId).Execute()
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
+)
+
+func main() {
+	customUrlId := "customUrlId_example" // string | custom URL object identifier
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ObjectsAPI.GetCustomUrl(context.Background(), customUrlId).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ObjectsAPI.GetCustomUrl``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetCustomUrl`: CustomUrl
+	fmt.Fprintf(os.Stdout, "Response from `ObjectsAPI.GetCustomUrl`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customUrlId** | **string** | custom URL object identifier | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetCustomUrlRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**CustomUrl**](CustomUrl.md)
 
 ### Authorization
 
@@ -541,6 +748,76 @@ Other parameters are passed through a pointer to a apiGetWebCategoriesRequest st
 [[Back to README]](../README.md)
 
 
+## ListCustomUrls
+
+> CustomUrlList ListCustomUrls(ctx).Page(page).Limit(limit).Search(search).Sort(sort).Execute()
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
+)
+
+func main() {
+	page := int32(56) // int32 | the page number to retrieve from the paginated results. Default is 1. (optional)
+	limit := int32(56) // int32 | number of items per page. Default is 500. (optional)
+	search := "search_example" // string | free-text filter matched literally against name, description and the object's entries (urls or urlPatterns). A pattern is matched as text and never run. (optional)
+	sort := *openapiclient.NewListCustomUrlsSortParameter() // ListCustomUrlsSortParameter | sort order, passed as sort[name]=asc and/or sort[createdAt]=desc; name sorts first when both are given. Default is newest first. (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ObjectsAPI.ListCustomUrls(context.Background()).Page(page).Limit(limit).Search(search).Sort(sort).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ObjectsAPI.ListCustomUrls``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `ListCustomUrls`: CustomUrlList
+	fmt.Fprintf(os.Stdout, "Response from `ObjectsAPI.ListCustomUrls`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiListCustomUrlsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **int32** | the page number to retrieve from the paginated results. Default is 1. | 
+ **limit** | **int32** | number of items per page. Default is 500. | 
+ **search** | **string** | free-text filter matched literally against name, description and the object&#39;s entries (urls or urlPatterns). A pattern is matched as text and never run. | 
+ **sort** | [**ListCustomUrlsSortParameter**](ListCustomUrlsSortParameter.md) | sort order, passed as sort[name]&#x3D;asc and/or sort[createdAt]&#x3D;desc; name sorts first when both are given. Default is newest first. | 
+
+### Return type
+
+[**CustomUrlList**](CustomUrlList.md)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## PostObjectsServices
 
 > PostObjectsServices201Response PostObjectsServices(ctx).ObjectsServicesRequestObj(objectsServicesRequestObj).Execute()
@@ -734,6 +1011,78 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**DBAddress**](DBAddress.md)
+
+### Authorization
+
+[bearer](../README.md#bearer)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## UpdateCustomUrl
+
+> CustomUrl UpdateCustomUrl(ctx, customUrlId).CustomUrlWriteRequest(customUrlWriteRequest).Execute()
+
+
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/CheckPointSW/perimeter-81-client-sdk/v3"
+)
+
+func main() {
+	customUrlId := "customUrlId_example" // string | custom URL object identifier
+	customUrlWriteRequest := *openapiclient.NewCustomUrlWriteRequest("Name_example") // CustomUrlWriteRequest | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.ObjectsAPI.UpdateCustomUrl(context.Background(), customUrlId).CustomUrlWriteRequest(customUrlWriteRequest).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `ObjectsAPI.UpdateCustomUrl``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `UpdateCustomUrl`: CustomUrl
+	fmt.Fprintf(os.Stdout, "Response from `ObjectsAPI.UpdateCustomUrl`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**customUrlId** | **string** | custom URL object identifier | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiUpdateCustomUrlRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **customUrlWriteRequest** | [**CustomUrlWriteRequest**](CustomUrlWriteRequest.md) |  | 
+
+### Return type
+
+[**CustomUrl**](CustomUrl.md)
 
 ### Authorization
 

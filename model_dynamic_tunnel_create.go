@@ -18,13 +18,13 @@ import (
 // checks if the DynamicTunnelCreate type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &DynamicTunnelCreate{}
 
-// DynamicTunnelCreate struct for DynamicTunnelCreate
+// DynamicTunnelCreate Creates a dynamic (BGP-routed) tunnel group. A group holds 1-8 member tunnels that share one set of traffic selectors and one ASN; add more than one member to get an HA/redundant tunnel. Settings that apply to the whole group live in `sharedSettings` and `advancedSettings`; per-peer settings live in each entry of `tunnels`. 
 type DynamicTunnelCreate struct {
-	// Name of the tunnel
-	TunnelName string `json:"tunnelName"`
-	// Optional description for the tunnel
+	// Name of the dynamic tunnel group. 1-13 characters, letters and digits only. 
+	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]+$"`
+	// Free-text description of the tunnel group.
 	Description *string `json:"description,omitempty"`
-	// List of tunnels
+	// The member tunnels of this group. One entry creates a single tunnel; two or more create an HA group. Each entry must use a distinct set of IP addresses. 
 	Tunnels []DynamicTunnelDetails `json:"tunnels"`
 	SharedSettings EnhancedIPSecSharedSettingsCreate `json:"sharedSettings"`
 	AdvancedSettings IPSecAdvancedSettingsV23 `json:"advancedSettings"`

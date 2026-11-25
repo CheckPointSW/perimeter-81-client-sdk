@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Type** | **string** |  | 
-**Value** | **[]string** | Array of IDs (strings) | 
+**Value** | **[]string** | Array of string values. For categories, addresses, updatableObjects, and applicationControlApplications: object IDs. For domains: domain patterns (e.g. \&quot;*.example.com\&quot;, \&quot;example.com\&quot;). | 
 
 ## Methods
 

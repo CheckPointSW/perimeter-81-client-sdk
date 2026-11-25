@@ -1,4 +1,4 @@
-# WireguardTunnel
+# WireGuardTunnel
 
 ## Properties
 
@@ -16,215 +16,215 @@ Name | Type | Description | Notes
 
 ## Methods
 
-### NewWireguardTunnel
+### NewWireGuardTunnel
 
-`func NewWireguardTunnel(remoteEndpoint string, remoteSubnets []string, regionID string, gatewayID string, tunnelName string, createdAt time.Time, ) *WireguardTunnel`
+`func NewWireGuardTunnel(remoteEndpoint string, remoteSubnets []string, regionID string, gatewayID string, tunnelName string, createdAt time.Time, ) *WireGuardTunnel`
 
-NewWireguardTunnel instantiates a new WireguardTunnel object
+NewWireGuardTunnel instantiates a new WireGuardTunnel object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewWireguardTunnelWithDefaults
+### NewWireGuardTunnelWithDefaults
 
-`func NewWireguardTunnelWithDefaults() *WireguardTunnel`
+`func NewWireGuardTunnelWithDefaults() *WireGuardTunnel`
 
-NewWireguardTunnelWithDefaults instantiates a new WireguardTunnel object
+NewWireGuardTunnelWithDefaults instantiates a new WireGuardTunnel object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetRemoteEndpoint
 
-`func (o *WireguardTunnel) GetRemoteEndpoint() string`
+`func (o *WireGuardTunnel) GetRemoteEndpoint() string`
 
 GetRemoteEndpoint returns the RemoteEndpoint field if non-nil, zero value otherwise.
 
 ### GetRemoteEndpointOk
 
-`func (o *WireguardTunnel) GetRemoteEndpointOk() (*string, bool)`
+`func (o *WireGuardTunnel) GetRemoteEndpointOk() (*string, bool)`
 
 GetRemoteEndpointOk returns a tuple with the RemoteEndpoint field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteEndpoint
 
-`func (o *WireguardTunnel) SetRemoteEndpoint(v string)`
+`func (o *WireGuardTunnel) SetRemoteEndpoint(v string)`
 
 SetRemoteEndpoint sets RemoteEndpoint field to given value.
 
 
 ### GetRemoteSubnets
 
-`func (o *WireguardTunnel) GetRemoteSubnets() []string`
+`func (o *WireGuardTunnel) GetRemoteSubnets() []string`
 
 GetRemoteSubnets returns the RemoteSubnets field if non-nil, zero value otherwise.
 
 ### GetRemoteSubnetsOk
 
-`func (o *WireguardTunnel) GetRemoteSubnetsOk() (*[]string, bool)`
+`func (o *WireGuardTunnel) GetRemoteSubnetsOk() (*[]string, bool)`
 
 GetRemoteSubnetsOk returns a tuple with the RemoteSubnets field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRemoteSubnets
 
-`func (o *WireguardTunnel) SetRemoteSubnets(v []string)`
+`func (o *WireGuardTunnel) SetRemoteSubnets(v []string)`
 
 SetRemoteSubnets sets RemoteSubnets field to given value.
 
 
 ### GetRegionID
 
-`func (o *WireguardTunnel) GetRegionID() string`
+`func (o *WireGuardTunnel) GetRegionID() string`
 
 GetRegionID returns the RegionID field if non-nil, zero value otherwise.
 
 ### GetRegionIDOk
 
-`func (o *WireguardTunnel) GetRegionIDOk() (*string, bool)`
+`func (o *WireGuardTunnel) GetRegionIDOk() (*string, bool)`
 
 GetRegionIDOk returns a tuple with the RegionID field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRegionID
 
-`func (o *WireguardTunnel) SetRegionID(v string)`
+`func (o *WireGuardTunnel) SetRegionID(v string)`
 
 SetRegionID sets RegionID field to given value.
 
 
 ### GetGatewayID
 
-`func (o *WireguardTunnel) GetGatewayID() string`
+`func (o *WireGuardTunnel) GetGatewayID() string`
 
 GetGatewayID returns the GatewayID field if non-nil, zero value otherwise.
 
 ### GetGatewayIDOk
 
-`func (o *WireguardTunnel) GetGatewayIDOk() (*string, bool)`
+`func (o *WireGuardTunnel) GetGatewayIDOk() (*string, bool)`
 
 GetGatewayIDOk returns a tuple with the GatewayID field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetGatewayID
 
-`func (o *WireguardTunnel) SetGatewayID(v string)`
+`func (o *WireGuardTunnel) SetGatewayID(v string)`
 
 SetGatewayID sets GatewayID field to given value.
 
 
 ### GetTunnelName
 
-`func (o *WireguardTunnel) GetTunnelName() string`
+`func (o *WireGuardTunnel) GetTunnelName() string`
 
 GetTunnelName returns the TunnelName field if non-nil, zero value otherwise.
 
 ### GetTunnelNameOk
 
-`func (o *WireguardTunnel) GetTunnelNameOk() (*string, bool)`
+`func (o *WireGuardTunnel) GetTunnelNameOk() (*string, bool)`
 
 GetTunnelNameOk returns a tuple with the TunnelName field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTunnelName
 
-`func (o *WireguardTunnel) SetTunnelName(v string)`
+`func (o *WireGuardTunnel) SetTunnelName(v string)`
 
 SetTunnelName sets TunnelName field to given value.
 
 
 ### GetCreatedAt
 
-`func (o *WireguardTunnel) GetCreatedAt() time.Time`
+`func (o *WireGuardTunnel) GetCreatedAt() time.Time`
 
 GetCreatedAt returns the CreatedAt field if non-nil, zero value otherwise.
 
 ### GetCreatedAtOk
 
-`func (o *WireguardTunnel) GetCreatedAtOk() (*time.Time, bool)`
+`func (o *WireGuardTunnel) GetCreatedAtOk() (*time.Time, bool)`
 
 GetCreatedAtOk returns a tuple with the CreatedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetCreatedAt
 
-`func (o *WireguardTunnel) SetCreatedAt(v time.Time)`
+`func (o *WireGuardTunnel) SetCreatedAt(v time.Time)`
 
 SetCreatedAt sets CreatedAt field to given value.
 
 
 ### GetUpdatedAt
 
-`func (o *WireguardTunnel) GetUpdatedAt() time.Time`
+`func (o *WireGuardTunnel) GetUpdatedAt() time.Time`
 
 GetUpdatedAt returns the UpdatedAt field if non-nil, zero value otherwise.
 
 ### GetUpdatedAtOk
 
-`func (o *WireguardTunnel) GetUpdatedAtOk() (*time.Time, bool)`
+`func (o *WireGuardTunnel) GetUpdatedAtOk() (*time.Time, bool)`
 
 GetUpdatedAtOk returns a tuple with the UpdatedAt field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUpdatedAt
 
-`func (o *WireguardTunnel) SetUpdatedAt(v time.Time)`
+`func (o *WireGuardTunnel) SetUpdatedAt(v time.Time)`
 
 SetUpdatedAt sets UpdatedAt field to given value.
 
 ### HasUpdatedAt
 
-`func (o *WireguardTunnel) HasUpdatedAt() bool`
+`func (o *WireGuardTunnel) HasUpdatedAt() bool`
 
 HasUpdatedAt returns a boolean if a field has been set.
 
 ### GetTunnelID
 
-`func (o *WireguardTunnel) GetTunnelID() string`
+`func (o *WireGuardTunnel) GetTunnelID() string`
 
 GetTunnelID returns the TunnelID field if non-nil, zero value otherwise.
 
 ### GetTunnelIDOk
 
-`func (o *WireguardTunnel) GetTunnelIDOk() (*string, bool)`
+`func (o *WireGuardTunnel) GetTunnelIDOk() (*string, bool)`
 
 GetTunnelIDOk returns a tuple with the TunnelID field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTunnelID
 
-`func (o *WireguardTunnel) SetTunnelID(v string)`
+`func (o *WireGuardTunnel) SetTunnelID(v string)`
 
 SetTunnelID sets TunnelID field to given value.
 
 ### HasTunnelID
 
-`func (o *WireguardTunnel) HasTunnelID() bool`
+`func (o *WireGuardTunnel) HasTunnelID() bool`
 
 HasTunnelID returns a boolean if a field has been set.
 
 ### GetType
 
-`func (o *WireguardTunnel) GetType() string`
+`func (o *WireGuardTunnel) GetType() string`
 
 GetType returns the Type field if non-nil, zero value otherwise.
 
 ### GetTypeOk
 
-`func (o *WireguardTunnel) GetTypeOk() (*string, bool)`
+`func (o *WireGuardTunnel) GetTypeOk() (*string, bool)`
 
 GetTypeOk returns a tuple with the Type field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetType
 
-`func (o *WireguardTunnel) SetType(v string)`
+`func (o *WireGuardTunnel) SetType(v string)`
 
 SetType sets Type field to given value.
 
 ### HasType
 
-`func (o *WireguardTunnel) HasType() bool`
+`func (o *WireGuardTunnel) HasType() bool`
 
 HasType returns a boolean if a field has been set.
 

@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Body** | Pointer to **string** | Error message. | [optional] 
-**StatusCode** | Pointer to **int32** | HTTP status code. | [optional] 
+**Message** | Pointer to **string** | Human-readable error message. | [optional] 
+**MessageCode** | Pointer to **string** | Stable machine-readable error code — one of INTERNAL_SERVER_ERROR, BAD_REQUEST, NOT_IMPLEMENTED_ERROR, NOT_FOUND, VALIDATION_SCHEMA_ERROR, PRECONDITION_FAILED, CONFLICT, UNAUTHORIZED. Mirrors common/src/libs/exceptions/ErrorCodes.ts, which is the source of truth; these values are a caller-visible contract. | [optional] 
 
 ## Methods
 
@@ -26,55 +26,55 @@ NewGumErrorResponseWithDefaults instantiates a new GumErrorResponse object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetBody
+### GetMessage
 
-`func (o *GumErrorResponse) GetBody() string`
+`func (o *GumErrorResponse) GetMessage() string`
 
-GetBody returns the Body field if non-nil, zero value otherwise.
+GetMessage returns the Message field if non-nil, zero value otherwise.
 
-### GetBodyOk
+### GetMessageOk
 
-`func (o *GumErrorResponse) GetBodyOk() (*string, bool)`
+`func (o *GumErrorResponse) GetMessageOk() (*string, bool)`
 
-GetBodyOk returns a tuple with the Body field if it's non-nil, zero value otherwise
+GetMessageOk returns a tuple with the Message field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetBody
+### SetMessage
 
-`func (o *GumErrorResponse) SetBody(v string)`
+`func (o *GumErrorResponse) SetMessage(v string)`
 
-SetBody sets Body field to given value.
+SetMessage sets Message field to given value.
 
-### HasBody
+### HasMessage
 
-`func (o *GumErrorResponse) HasBody() bool`
+`func (o *GumErrorResponse) HasMessage() bool`
 
-HasBody returns a boolean if a field has been set.
+HasMessage returns a boolean if a field has been set.
 
-### GetStatusCode
+### GetMessageCode
 
-`func (o *GumErrorResponse) GetStatusCode() int32`
+`func (o *GumErrorResponse) GetMessageCode() string`
 
-GetStatusCode returns the StatusCode field if non-nil, zero value otherwise.
+GetMessageCode returns the MessageCode field if non-nil, zero value otherwise.
 
-### GetStatusCodeOk
+### GetMessageCodeOk
 
-`func (o *GumErrorResponse) GetStatusCodeOk() (*int32, bool)`
+`func (o *GumErrorResponse) GetMessageCodeOk() (*string, bool)`
 
-GetStatusCodeOk returns a tuple with the StatusCode field if it's non-nil, zero value otherwise
+GetMessageCodeOk returns a tuple with the MessageCode field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetStatusCode
+### SetMessageCode
 
-`func (o *GumErrorResponse) SetStatusCode(v int32)`
+`func (o *GumErrorResponse) SetMessageCode(v string)`
 
-SetStatusCode sets StatusCode field to given value.
+SetMessageCode sets MessageCode field to given value.
 
-### HasStatusCode
+### HasMessageCode
 
-`func (o *GumErrorResponse) HasStatusCode() bool`
+`func (o *GumErrorResponse) HasMessageCode() bool`
 
-HasStatusCode returns a boolean if a field has been set.
+HasMessageCode returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

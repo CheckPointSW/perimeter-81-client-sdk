@@ -20,12 +20,15 @@ var _ MappedNullable = &IPSecRedundantTunnelUpdatePayload{}
 
 // IPSecRedundantTunnelUpdatePayload struct for IPSecRedundantTunnelUpdatePayload
 type IPSecRedundantTunnelUpdatePayload struct {
+	// Pre-shared key for tunnel authentication. 8-64 characters, using letters, digits, \".\" and \"_\" only; the first character cannot be \"0\". 
 	Passphrase string `json:"passphrase" validate:"regexp=^[a-zA-Z1-9._][a-zA-Z0-9._]{7\\,63}$"`
 	P81GWInternalIP string `json:"p81GWInternalIP"`
 	RemoteGWInternalIP string `json:"remoteGWInternalIP"`
 	RemotePublicIP string `json:"remotePublicIP"`
+	// BGP ASN of the remote gateway. Must differ from the ASN of the Check Point SASE side (`p81ASN` in `sharedSettings`). 
 	RemoteASN int32 `json:"remoteASN"`
-	RemoteID RemoteID `json:"remoteID"`
+	// IKE identity presented by the remote gateway. Either an IP address or an alphanumeric string of 3-25 characters. It must match the local identity configured on the remote device, otherwise phase 1 negotiation fails. 
+	RemoteID string `json:"remoteID"`
 	GatewayID string `json:"gatewayID"`
 	TunnelId string `json:"tunnelId"`
 	AdditionalProperties map[string]interface{}
@@ -37,7 +40,7 @@ type _IPSecRedundantTunnelUpdatePayload IPSecRedundantTunnelUpdatePayload
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewIPSecRedundantTunnelUpdatePayload(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID RemoteID, gatewayID string, tunnelId string) *IPSecRedundantTunnelUpdatePayload {
+func NewIPSecRedundantTunnelUpdatePayload(passphrase string, p81GWInternalIP string, remoteGWInternalIP string, remotePublicIP string, remoteASN int32, remoteID string, gatewayID string, tunnelId string) *IPSecRedundantTunnelUpdatePayload {
 	this := IPSecRedundantTunnelUpdatePayload{}
 	this.Passphrase = passphrase
 	this.P81GWInternalIP = p81GWInternalIP
@@ -179,9 +182,9 @@ func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteASN(v int32) {
 }
 
 // GetRemoteID returns the RemoteID field value
-func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteID() RemoteID {
+func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteID() string {
 	if o == nil {
-		var ret RemoteID
+		var ret string
 		return ret
 	}
 
@@ -190,7 +193,7 @@ func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteID() RemoteID {
 
 // GetRemoteIDOk returns a tuple with the RemoteID field value
 // and a boolean to check if the value has been set.
-func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteIDOk() (*RemoteID, bool) {
+func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteIDOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -198,7 +201,7 @@ func (o *IPSecRedundantTunnelUpdatePayload) GetRemoteIDOk() (*RemoteID, bool) {
 }
 
 // SetRemoteID sets field value
-func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteID(v RemoteID) {
+func (o *IPSecRedundantTunnelUpdatePayload) SetRemoteID(v string) {
 	o.RemoteID = v
 }
 

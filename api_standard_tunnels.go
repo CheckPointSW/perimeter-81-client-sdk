@@ -134,18 +134,7 @@ func (a *StandardTunnelsAPIService) StandardCreateIPSecRedundantTunnelExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 402 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -156,7 +145,7 @@ func (a *StandardTunnelsAPIService) StandardCreateIPSecRedundantTunnelExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -167,17 +156,6 @@ func (a *StandardTunnelsAPIService) StandardCreateIPSecRedundantTunnelExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -313,18 +291,7 @@ func (a *StandardTunnelsAPIService) StandardCreateIPSecSingleTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 402 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -335,7 +302,7 @@ func (a *StandardTunnelsAPIService) StandardCreateIPSecSingleTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -346,17 +313,6 @@ func (a *StandardTunnelsAPIService) StandardCreateIPSecSingleTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -492,18 +448,7 @@ func (a *StandardTunnelsAPIService) StandardCreateOpenVPNTunnelExecute(r ApiStan
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 402 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -514,7 +459,7 @@ func (a *StandardTunnelsAPIService) StandardCreateOpenVPNTunnelExecute(r ApiStan
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -525,17 +470,6 @@ func (a *StandardTunnelsAPIService) StandardCreateOpenVPNTunnelExecute(r ApiStan
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -560,33 +494,33 @@ func (a *StandardTunnelsAPIService) StandardCreateOpenVPNTunnelExecute(r ApiStan
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiStandardCreateWireguardTunnelRequest struct {
+type ApiStandardCreateWireGuardTunnelRequest struct {
 	ctx context.Context
 	ApiService *StandardTunnelsAPIService
 	networkId string
-	createWireguardTunnelPayload *CreateWireguardTunnelPayload
+	createWireGuardTunnelPayload *CreateWireGuardTunnelPayload
 }
 
-func (r ApiStandardCreateWireguardTunnelRequest) CreateWireguardTunnelPayload(createWireguardTunnelPayload CreateWireguardTunnelPayload) ApiStandardCreateWireguardTunnelRequest {
-	r.createWireguardTunnelPayload = &createWireguardTunnelPayload
+func (r ApiStandardCreateWireGuardTunnelRequest) CreateWireGuardTunnelPayload(createWireGuardTunnelPayload CreateWireGuardTunnelPayload) ApiStandardCreateWireGuardTunnelRequest {
+	r.createWireGuardTunnelPayload = &createWireGuardTunnelPayload
 	return r
 }
 
-func (r ApiStandardCreateWireguardTunnelRequest) Execute() (*AsyncOperationResponse, *http.Response, error) {
-	return r.ApiService.StandardCreateWireguardTunnelExecute(r)
+func (r ApiStandardCreateWireGuardTunnelRequest) Execute() (*AsyncOperationResponse, *http.Response, error) {
+	return r.ApiService.StandardCreateWireGuardTunnelExecute(r)
 }
 
 /*
-StandardCreateWireguardTunnel Create a new Wireguard tunnel
+StandardCreateWireGuardTunnel Create a new WireGuard tunnel
 
 Required permissions: `["network:create"]`
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
- @return ApiStandardCreateWireguardTunnelRequest
+ @return ApiStandardCreateWireGuardTunnelRequest
 */
-func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnel(ctx context.Context, networkId string) ApiStandardCreateWireguardTunnelRequest {
-	return ApiStandardCreateWireguardTunnelRequest{
+func (a *StandardTunnelsAPIService) StandardCreateWireGuardTunnel(ctx context.Context, networkId string) ApiStandardCreateWireGuardTunnelRequest {
+	return ApiStandardCreateWireGuardTunnelRequest{
 		ApiService: a,
 		ctx: ctx,
 		networkId: networkId,
@@ -595,7 +529,7 @@ func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnel(ctx context.Co
 
 // Execute executes the request
 //  @return AsyncOperationResponse
-func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnelExecute(r ApiStandardCreateWireguardTunnelRequest) (*AsyncOperationResponse, *http.Response, error) {
+func (a *StandardTunnelsAPIService) StandardCreateWireGuardTunnelExecute(r ApiStandardCreateWireGuardTunnelRequest) (*AsyncOperationResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -603,7 +537,7 @@ func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnelExecute(r ApiSt
 		localVarReturnValue  *AsyncOperationResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardCreateWireguardTunnel")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardCreateWireGuardTunnel")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -614,8 +548,8 @@ func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnelExecute(r ApiSt
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.createWireguardTunnelPayload == nil {
-		return localVarReturnValue, nil, reportError("createWireguardTunnelPayload is required and must be specified")
+	if r.createWireGuardTunnelPayload == nil {
+		return localVarReturnValue, nil, reportError("createWireGuardTunnelPayload is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -636,7 +570,7 @@ func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnelExecute(r ApiSt
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.createWireguardTunnelPayload
+	localVarPostBody = r.createWireGuardTunnelPayload
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -671,18 +605,7 @@ func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 402 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -693,7 +616,7 @@ func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -704,17 +627,6 @@ func (a *StandardTunnelsAPIService) StandardCreateWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -843,7 +755,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteIPSecRedundantTunnelExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -854,7 +766,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteIPSecRedundantTunnelExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -865,17 +777,6 @@ func (a *StandardTunnelsAPIService) StandardDeleteIPSecRedundantTunnelExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -1004,7 +905,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteIPSecSingleTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1015,7 +916,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteIPSecSingleTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1026,17 +927,6 @@ func (a *StandardTunnelsAPIService) StandardDeleteIPSecSingleTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -1165,7 +1055,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteOpenVPNTunnelExecute(r ApiStan
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1176,7 +1066,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteOpenVPNTunnelExecute(r ApiStan
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1187,17 +1077,6 @@ func (a *StandardTunnelsAPIService) StandardDeleteOpenVPNTunnelExecute(r ApiStan
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -1222,29 +1101,29 @@ func (a *StandardTunnelsAPIService) StandardDeleteOpenVPNTunnelExecute(r ApiStan
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiStandardDeleteWireguardTunnelRequest struct {
+type ApiStandardDeleteWireGuardTunnelRequest struct {
 	ctx context.Context
 	ApiService *StandardTunnelsAPIService
 	networkId string
 	tunnelId string
 }
 
-func (r ApiStandardDeleteWireguardTunnelRequest) Execute() (*AsyncOperationResponse, *http.Response, error) {
-	return r.ApiService.StandardDeleteWireguardTunnelExecute(r)
+func (r ApiStandardDeleteWireGuardTunnelRequest) Execute() (*AsyncOperationResponse, *http.Response, error) {
+	return r.ApiService.StandardDeleteWireGuardTunnelExecute(r)
 }
 
 /*
-StandardDeleteWireguardTunnel Delete Wireguard tunnel
+StandardDeleteWireGuardTunnel Delete WireGuard tunnel
 
 Required permissions: `["network:delete"]`
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
  @param tunnelId
- @return ApiStandardDeleteWireguardTunnelRequest
+ @return ApiStandardDeleteWireGuardTunnelRequest
 */
-func (a *StandardTunnelsAPIService) StandardDeleteWireguardTunnel(ctx context.Context, networkId string, tunnelId string) ApiStandardDeleteWireguardTunnelRequest {
-	return ApiStandardDeleteWireguardTunnelRequest{
+func (a *StandardTunnelsAPIService) StandardDeleteWireGuardTunnel(ctx context.Context, networkId string, tunnelId string) ApiStandardDeleteWireGuardTunnelRequest {
+	return ApiStandardDeleteWireGuardTunnelRequest{
 		ApiService: a,
 		ctx: ctx,
 		networkId: networkId,
@@ -1254,7 +1133,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteWireguardTunnel(ctx context.Co
 
 // Execute executes the request
 //  @return AsyncOperationResponse
-func (a *StandardTunnelsAPIService) StandardDeleteWireguardTunnelExecute(r ApiStandardDeleteWireguardTunnelRequest) (*AsyncOperationResponse, *http.Response, error) {
+func (a *StandardTunnelsAPIService) StandardDeleteWireGuardTunnelExecute(r ApiStandardDeleteWireGuardTunnelRequest) (*AsyncOperationResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
@@ -1262,7 +1141,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteWireguardTunnelExecute(r ApiSt
 		localVarReturnValue  *AsyncOperationResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardDeleteWireguardTunnel")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardDeleteWireGuardTunnel")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1326,7 +1205,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1337,7 +1216,7 @@ func (a *StandardTunnelsAPIService) StandardDeleteWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1348,17 +1227,6 @@ func (a *StandardTunnelsAPIService) StandardDeleteWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -1476,7 +1344,7 @@ func (a *StandardTunnelsAPIService) StandardGetIPSecRedundantTunnelExecute(r Api
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1487,7 +1355,7 @@ func (a *StandardTunnelsAPIService) StandardGetIPSecRedundantTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1615,7 +1483,7 @@ func (a *StandardTunnelsAPIService) StandardGetIPSecSingleTunnelExecute(r ApiSta
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1626,7 +1494,7 @@ func (a *StandardTunnelsAPIService) StandardGetIPSecSingleTunnelExecute(r ApiSta
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1754,7 +1622,7 @@ func (a *StandardTunnelsAPIService) StandardGetOpenVPNTunnelExecute(r ApiStandar
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1765,7 +1633,7 @@ func (a *StandardTunnelsAPIService) StandardGetOpenVPNTunnelExecute(r ApiStandar
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1800,29 +1668,29 @@ func (a *StandardTunnelsAPIService) StandardGetOpenVPNTunnelExecute(r ApiStandar
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiStandardGetWireguardConfigUrlRequest struct {
+type ApiStandardGetWireGuardConfigUrlRequest struct {
 	ctx context.Context
 	ApiService *StandardTunnelsAPIService
 	networkId string
 	tunnelId string
 }
 
-func (r ApiStandardGetWireguardConfigUrlRequest) Execute() (*WireguardConfigUrl, *http.Response, error) {
-	return r.ApiService.StandardGetWireguardConfigUrlExecute(r)
+func (r ApiStandardGetWireGuardConfigUrlRequest) Execute() (*WireGuardConfigUrl, *http.Response, error) {
+	return r.ApiService.StandardGetWireGuardConfigUrlExecute(r)
 }
 
 /*
-StandardGetWireguardConfigUrl Get Wireguard config download URL
+StandardGetWireGuardConfigUrl Get WireGuard config download URL
 
 Required permissions: `["network:read"]`<br><br>Get the full WireGuard tunnel config download URL with a short-lived access token.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
  @param tunnelId
- @return ApiStandardGetWireguardConfigUrlRequest
+ @return ApiStandardGetWireGuardConfigUrlRequest
 */
-func (a *StandardTunnelsAPIService) StandardGetWireguardConfigUrl(ctx context.Context, networkId string, tunnelId string) ApiStandardGetWireguardConfigUrlRequest {
-	return ApiStandardGetWireguardConfigUrlRequest{
+func (a *StandardTunnelsAPIService) StandardGetWireGuardConfigUrl(ctx context.Context, networkId string, tunnelId string) ApiStandardGetWireGuardConfigUrlRequest {
+	return ApiStandardGetWireGuardConfigUrlRequest{
 		ApiService: a,
 		ctx: ctx,
 		networkId: networkId,
@@ -1831,16 +1699,16 @@ func (a *StandardTunnelsAPIService) StandardGetWireguardConfigUrl(ctx context.Co
 }
 
 // Execute executes the request
-//  @return WireguardConfigUrl
-func (a *StandardTunnelsAPIService) StandardGetWireguardConfigUrlExecute(r ApiStandardGetWireguardConfigUrlRequest) (*WireguardConfigUrl, *http.Response, error) {
+//  @return WireGuardConfigUrl
+func (a *StandardTunnelsAPIService) StandardGetWireGuardConfigUrlExecute(r ApiStandardGetWireGuardConfigUrlRequest) (*WireGuardConfigUrl, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *WireguardConfigUrl
+		localVarReturnValue  *WireGuardConfigUrl
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardGetWireguardConfigUrl")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardGetWireGuardConfigUrl")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1893,7 +1761,7 @@ func (a *StandardTunnelsAPIService) StandardGetWireguardConfigUrlExecute(r ApiSt
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1904,7 +1772,7 @@ func (a *StandardTunnelsAPIService) StandardGetWireguardConfigUrlExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -1940,29 +1808,29 @@ func (a *StandardTunnelsAPIService) StandardGetWireguardConfigUrlExecute(r ApiSt
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiStandardGetWireguardTunnelRequest struct {
+type ApiStandardGetWireGuardTunnelRequest struct {
 	ctx context.Context
 	ApiService *StandardTunnelsAPIService
 	networkId string
 	tunnelId string
 }
 
-func (r ApiStandardGetWireguardTunnelRequest) Execute() (*WireguardTunnel, *http.Response, error) {
-	return r.ApiService.StandardGetWireguardTunnelExecute(r)
+func (r ApiStandardGetWireGuardTunnelRequest) Execute() (*WireGuardTunnel, *http.Response, error) {
+	return r.ApiService.StandardGetWireGuardTunnelExecute(r)
 }
 
 /*
-StandardGetWireguardTunnel Get a Wireguard tunnel
+StandardGetWireGuardTunnel Get a WireGuard tunnel
 
 Required permissions: `["network:read"]`
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
  @param tunnelId
- @return ApiStandardGetWireguardTunnelRequest
+ @return ApiStandardGetWireGuardTunnelRequest
 */
-func (a *StandardTunnelsAPIService) StandardGetWireguardTunnel(ctx context.Context, networkId string, tunnelId string) ApiStandardGetWireguardTunnelRequest {
-	return ApiStandardGetWireguardTunnelRequest{
+func (a *StandardTunnelsAPIService) StandardGetWireGuardTunnel(ctx context.Context, networkId string, tunnelId string) ApiStandardGetWireGuardTunnelRequest {
+	return ApiStandardGetWireGuardTunnelRequest{
 		ApiService: a,
 		ctx: ctx,
 		networkId: networkId,
@@ -1971,16 +1839,16 @@ func (a *StandardTunnelsAPIService) StandardGetWireguardTunnel(ctx context.Conte
 }
 
 // Execute executes the request
-//  @return WireguardTunnel
-func (a *StandardTunnelsAPIService) StandardGetWireguardTunnelExecute(r ApiStandardGetWireguardTunnelRequest) (*WireguardTunnel, *http.Response, error) {
+//  @return WireGuardTunnel
+func (a *StandardTunnelsAPIService) StandardGetWireGuardTunnelExecute(r ApiStandardGetWireGuardTunnelRequest) (*WireGuardTunnel, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *WireguardTunnel
+		localVarReturnValue  *WireGuardTunnel
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardGetWireguardTunnel")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardGetWireGuardTunnel")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2033,7 +1901,7 @@ func (a *StandardTunnelsAPIService) StandardGetWireguardTunnelExecute(r ApiStand
 			error: localVarHTTPResponse.Status,
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2044,7 +1912,7 @@ func (a *StandardTunnelsAPIService) StandardGetWireguardTunnelExecute(r ApiStand
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2194,7 +2062,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateIPSecRedundantTunnelExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2205,7 +2073,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateIPSecRedundantTunnelExecute(r 
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2355,7 +2223,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateIPSecSingleTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2366,7 +2234,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateIPSecSingleTunnelExecute(r Api
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2505,7 +2373,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateOpenVPNTunnelExecute(r ApiStan
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2516,7 +2384,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateOpenVPNTunnelExecute(r ApiStan
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2551,35 +2419,35 @@ func (a *StandardTunnelsAPIService) StandardUpdateOpenVPNTunnelExecute(r ApiStan
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ApiStandardUpdateWireguardTunnelRequest struct {
+type ApiStandardUpdateWireGuardTunnelRequest struct {
 	ctx context.Context
 	ApiService *StandardTunnelsAPIService
 	networkId string
 	tunnelId string
-	wireGuradDetails *WireGuradDetails
+	wireGuardDetails *WireGuardDetails
 }
 
-func (r ApiStandardUpdateWireguardTunnelRequest) WireGuradDetails(wireGuradDetails WireGuradDetails) ApiStandardUpdateWireguardTunnelRequest {
-	r.wireGuradDetails = &wireGuradDetails
+func (r ApiStandardUpdateWireGuardTunnelRequest) WireGuardDetails(wireGuardDetails WireGuardDetails) ApiStandardUpdateWireGuardTunnelRequest {
+	r.wireGuardDetails = &wireGuardDetails
 	return r
 }
 
-func (r ApiStandardUpdateWireguardTunnelRequest) Execute() (*AsyncOperationResponse, *http.Response, error) {
-	return r.ApiService.StandardUpdateWireguardTunnelExecute(r)
+func (r ApiStandardUpdateWireGuardTunnelRequest) Execute() (*AsyncOperationResponse, *http.Response, error) {
+	return r.ApiService.StandardUpdateWireGuardTunnelExecute(r)
 }
 
 /*
-StandardUpdateWireguardTunnel Update a Wireguard tunnel
+StandardUpdateWireGuardTunnel Update a WireGuard tunnel
 
 Required permissions: `["network:create"]`
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param networkId
  @param tunnelId
- @return ApiStandardUpdateWireguardTunnelRequest
+ @return ApiStandardUpdateWireGuardTunnelRequest
 */
-func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnel(ctx context.Context, networkId string, tunnelId string) ApiStandardUpdateWireguardTunnelRequest {
-	return ApiStandardUpdateWireguardTunnelRequest{
+func (a *StandardTunnelsAPIService) StandardUpdateWireGuardTunnel(ctx context.Context, networkId string, tunnelId string) ApiStandardUpdateWireGuardTunnelRequest {
+	return ApiStandardUpdateWireGuardTunnelRequest{
 		ApiService: a,
 		ctx: ctx,
 		networkId: networkId,
@@ -2589,7 +2457,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnel(ctx context.Co
 
 // Execute executes the request
 //  @return AsyncOperationResponse
-func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnelExecute(r ApiStandardUpdateWireguardTunnelRequest) (*AsyncOperationResponse, *http.Response, error) {
+func (a *StandardTunnelsAPIService) StandardUpdateWireGuardTunnelExecute(r ApiStandardUpdateWireGuardTunnelRequest) (*AsyncOperationResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
@@ -2597,7 +2465,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnelExecute(r ApiSt
 		localVarReturnValue  *AsyncOperationResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardUpdateWireguardTunnel")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StandardTunnelsAPIService.StandardUpdateWireGuardTunnel")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -2609,8 +2477,8 @@ func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnelExecute(r ApiSt
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.wireGuradDetails == nil {
-		return localVarReturnValue, nil, reportError("wireGuradDetails is required and must be specified")
+	if r.wireGuardDetails == nil {
+		return localVarReturnValue, nil, reportError("wireGuardDetails is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -2631,7 +2499,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnelExecute(r ApiSt
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.wireGuradDetails
+	localVarPostBody = r.wireGuardDetails
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return localVarReturnValue, nil, err
@@ -2666,7 +2534,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
-			var v Error
+			var v UnauthorizedError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2677,7 +2545,7 @@ func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
-			var v Error
+			var v ForbiddenError
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
@@ -2688,17 +2556,6 @@ func (a *StandardTunnelsAPIService) StandardUpdateWireguardTunnelExecute(r ApiSt
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		if localVarHTTPResponse.StatusCode == 422 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {

@@ -18,12 +18,16 @@ import (
 // checks if the EnhancedIPSecSharedSettingsUpdate type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &EnhancedIPSecSharedSettingsUpdate{}
 
-// EnhancedIPSecSharedSettingsUpdate struct for EnhancedIPSecSharedSettingsUpdate
+// EnhancedIPSecSharedSettingsUpdate Settings shared by every member tunnel of a dynamic tunnel group, when updating the group. 
 type EnhancedIPSecSharedSettingsUpdate struct {
+	// Traffic selectors for the Check Point SASE side of the tunnel, meaning the subnets reachable *through* the SASE network. Must be CIDR notation. Only two values are accepted: either \"0.0.0.0/0\", to route all traffic through the tunnel, or the network's own subnet. 
 	P81GatewaySubnets []string `json:"p81GatewaySubnets"`
+	// Traffic selectors for the customer side of the tunnel, meaning the on-premises subnets reachable *behind* the remote gateway. Values must be in CIDR notation. 
 	RemoteGatewaySubnets []string `json:"remoteGatewaySubnets"`
-	P81ASN *int32 `json:"p81ASN,omitempty"`
 	Features *NetworkFeaturesCreate `json:"features,omitempty"`
+	// Deprecated: ignored for non-China regions. China regions still use this field. Expected peak throughput of the tunnel in Mbps. A typical connection is 1000. Consumes bandwidth licenses, so set it no higher than the tunnel needs. 
+	// Deprecated
+	PeakBandwidthMbps *int32 `json:"peakBandwidthMbps,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -37,6 +41,8 @@ func NewEnhancedIPSecSharedSettingsUpdate(p81GatewaySubnets []string, remoteGate
 	this := EnhancedIPSecSharedSettingsUpdate{}
 	this.P81GatewaySubnets = p81GatewaySubnets
 	this.RemoteGatewaySubnets = remoteGatewaySubnets
+	var peakBandwidthMbps int32 = 1000
+	this.PeakBandwidthMbps = &peakBandwidthMbps
 	return &this
 }
 
@@ -45,6 +51,8 @@ func NewEnhancedIPSecSharedSettingsUpdate(p81GatewaySubnets []string, remoteGate
 // but it doesn't guarantee that properties required by API are set
 func NewEnhancedIPSecSharedSettingsUpdateWithDefaults() *EnhancedIPSecSharedSettingsUpdate {
 	this := EnhancedIPSecSharedSettingsUpdate{}
+	var peakBandwidthMbps int32 = 1000
+	this.PeakBandwidthMbps = &peakBandwidthMbps
 	return &this
 }
 
@@ -96,38 +104,6 @@ func (o *EnhancedIPSecSharedSettingsUpdate) SetRemoteGatewaySubnets(v []string) 
 	o.RemoteGatewaySubnets = v
 }
 
-// GetP81ASN returns the P81ASN field value if set, zero value otherwise.
-func (o *EnhancedIPSecSharedSettingsUpdate) GetP81ASN() int32 {
-	if o == nil || IsNil(o.P81ASN) {
-		var ret int32
-		return ret
-	}
-	return *o.P81ASN
-}
-
-// GetP81ASNOk returns a tuple with the P81ASN field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *EnhancedIPSecSharedSettingsUpdate) GetP81ASNOk() (*int32, bool) {
-	if o == nil || IsNil(o.P81ASN) {
-		return nil, false
-	}
-	return o.P81ASN, true
-}
-
-// HasP81ASN returns a boolean if a field has been set.
-func (o *EnhancedIPSecSharedSettingsUpdate) HasP81ASN() bool {
-	if o != nil && !IsNil(o.P81ASN) {
-		return true
-	}
-
-	return false
-}
-
-// SetP81ASN gets a reference to the given int32 and assigns it to the P81ASN field.
-func (o *EnhancedIPSecSharedSettingsUpdate) SetP81ASN(v int32) {
-	o.P81ASN = &v
-}
-
 // GetFeatures returns the Features field value if set, zero value otherwise.
 func (o *EnhancedIPSecSharedSettingsUpdate) GetFeatures() NetworkFeaturesCreate {
 	if o == nil || IsNil(o.Features) {
@@ -160,6 +136,41 @@ func (o *EnhancedIPSecSharedSettingsUpdate) SetFeatures(v NetworkFeaturesCreate)
 	o.Features = &v
 }
 
+// GetPeakBandwidthMbps returns the PeakBandwidthMbps field value if set, zero value otherwise.
+// Deprecated
+func (o *EnhancedIPSecSharedSettingsUpdate) GetPeakBandwidthMbps() int32 {
+	if o == nil || IsNil(o.PeakBandwidthMbps) {
+		var ret int32
+		return ret
+	}
+	return *o.PeakBandwidthMbps
+}
+
+// GetPeakBandwidthMbpsOk returns a tuple with the PeakBandwidthMbps field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// Deprecated
+func (o *EnhancedIPSecSharedSettingsUpdate) GetPeakBandwidthMbpsOk() (*int32, bool) {
+	if o == nil || IsNil(o.PeakBandwidthMbps) {
+		return nil, false
+	}
+	return o.PeakBandwidthMbps, true
+}
+
+// HasPeakBandwidthMbps returns a boolean if a field has been set.
+func (o *EnhancedIPSecSharedSettingsUpdate) HasPeakBandwidthMbps() bool {
+	if o != nil && !IsNil(o.PeakBandwidthMbps) {
+		return true
+	}
+
+	return false
+}
+
+// SetPeakBandwidthMbps gets a reference to the given int32 and assigns it to the PeakBandwidthMbps field.
+// Deprecated
+func (o *EnhancedIPSecSharedSettingsUpdate) SetPeakBandwidthMbps(v int32) {
+	o.PeakBandwidthMbps = &v
+}
+
 func (o EnhancedIPSecSharedSettingsUpdate) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -172,11 +183,11 @@ func (o EnhancedIPSecSharedSettingsUpdate) ToMap() (map[string]interface{}, erro
 	toSerialize := map[string]interface{}{}
 	toSerialize["p81GatewaySubnets"] = o.P81GatewaySubnets
 	toSerialize["remoteGatewaySubnets"] = o.RemoteGatewaySubnets
-	if !IsNil(o.P81ASN) {
-		toSerialize["p81ASN"] = o.P81ASN
-	}
 	if !IsNil(o.Features) {
 		toSerialize["features"] = o.Features
+	}
+	if !IsNil(o.PeakBandwidthMbps) {
+		toSerialize["peakBandwidthMbps"] = o.PeakBandwidthMbps
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -224,8 +235,8 @@ func (o *EnhancedIPSecSharedSettingsUpdate) UnmarshalJSON(data []byte) (err erro
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "p81GatewaySubnets")
 		delete(additionalProperties, "remoteGatewaySubnets")
-		delete(additionalProperties, "p81ASN")
 		delete(additionalProperties, "features")
+		delete(additionalProperties, "peakBandwidthMbps")
 		o.AdditionalProperties = additionalProperties
 	}
 

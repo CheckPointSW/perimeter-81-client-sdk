@@ -21,7 +21,7 @@ var _ MappedNullable = &CreateIPSecRedundantPayload{}
 // CreateIPSecRedundantPayload struct for CreateIPSecRedundantPayload
 type CreateIPSecRedundantPayload struct {
 	// The name of the tunnel
-	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]*$"`
+	TunnelName string `json:"tunnelName" validate:"regexp=^[a-zA-Z0-9]+$"`
 	RegionID string `json:"regionID"`
 	Tunnel1 IPSecRedundantTunnelPayload `json:"tunnel1"`
 	Tunnel2 IPSecRedundantTunnelPayload `json:"tunnel2"`

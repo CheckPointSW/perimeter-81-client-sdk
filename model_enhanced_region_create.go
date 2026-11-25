@@ -20,7 +20,7 @@ var _ MappedNullable = &EnhancedRegionCreate{}
 
 // EnhancedRegionCreate struct for EnhancedRegionCreate
 type EnhancedRegionCreate struct {
-	// Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions).
+	// ID of the Check Point SASE region to deploy in. 
 	HarmonySaseRegionId string `json:"harmonySaseRegionId"`
 	// Number of scale units for the region. Scale units determine the capacity and performance level of the enhanced region. Higher values provide greater throughput and connection capacity. 
 	ScaleUnits *int32 `json:"scaleUnits,omitempty"`

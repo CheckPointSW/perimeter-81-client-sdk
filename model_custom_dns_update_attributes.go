@@ -22,7 +22,7 @@ var _ MappedNullable = &CustomDnsUpdateAttributes{}
 type CustomDnsUpdateAttributes struct {
 	// Private DNS servers. Required, and must contain at least one entry when enabled is true.
 	Servers []CustomDnsServer `json:"servers"`
-	// DNS search domains. Required — send an empty array if you have none. Omitting it on update is rejected with 400; a non-empty value fully replaces any existing search domains.
+	// DNS search domains. Required, so send an empty array if you have none. A non-empty value fully replaces any existing search domains.
 	SearchDomains []string `json:"searchDomains"`
 	DnsPolicy *DnsPolicy `json:"dnsPolicy,omitempty"`
 	AdditionalProperties map[string]interface{}

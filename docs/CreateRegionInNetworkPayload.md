@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**HarmonySaseRegionId** | **string** | Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions). | 
+**HarmonySaseRegionId** | **string** | ID of the Check Point SASE region to deploy in.  | 
 **Idle** | **bool** | Create the gateway as disabled if true. | [default to true]
 
 ## Methods

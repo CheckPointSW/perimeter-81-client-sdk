@@ -4,14 +4,16 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | Pointer to **string** |  | [optional] 
-**Message** | Pointer to **string** |  | [optional] 
+**Status** | **int32** | HTTP status code, repeated in the body. | 
+**Message** | **string** | Human-readable explanation of what went wrong. | 
+**MessageCode** | **string** | Machine-readable name of the HTTP status, for example &#x60;BAD_REQUEST&#x60;. | 
+**Data** | Pointer to **map[string]interface{}** | Additional context about the failure, present only for some errors.  | [optional] 
 
 ## Methods
 
 ### NewError
 
-`func NewError() *Error`
+`func NewError(status int32, message string, messageCode string, ) *Error`
 
 NewError instantiates a new Error object
 This constructor will assign default values to properties that have it defined,
@@ -26,30 +28,25 @@ NewErrorWithDefaults instantiates a new Error object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
-### GetId
+### GetStatus
 
-`func (o *Error) GetId() string`
+`func (o *Error) GetStatus() int32`
 
-GetId returns the Id field if non-nil, zero value otherwise.
+GetStatus returns the Status field if non-nil, zero value otherwise.
 
-### GetIdOk
+### GetStatusOk
 
-`func (o *Error) GetIdOk() (*string, bool)`
+`func (o *Error) GetStatusOk() (*int32, bool)`
 
-GetIdOk returns a tuple with the Id field if it's non-nil, zero value otherwise
+GetStatusOk returns a tuple with the Status field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetId
+### SetStatus
 
-`func (o *Error) SetId(v string)`
+`func (o *Error) SetStatus(v int32)`
 
-SetId sets Id field to given value.
+SetStatus sets Status field to given value.
 
-### HasId
-
-`func (o *Error) HasId() bool`
-
-HasId returns a boolean if a field has been set.
 
 ### GetMessage
 
@@ -70,11 +67,51 @@ and a boolean to check if the value has been set.
 
 SetMessage sets Message field to given value.
 
-### HasMessage
 
-`func (o *Error) HasMessage() bool`
+### GetMessageCode
 
-HasMessage returns a boolean if a field has been set.
+`func (o *Error) GetMessageCode() string`
+
+GetMessageCode returns the MessageCode field if non-nil, zero value otherwise.
+
+### GetMessageCodeOk
+
+`func (o *Error) GetMessageCodeOk() (*string, bool)`
+
+GetMessageCodeOk returns a tuple with the MessageCode field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMessageCode
+
+`func (o *Error) SetMessageCode(v string)`
+
+SetMessageCode sets MessageCode field to given value.
+
+
+### GetData
+
+`func (o *Error) GetData() map[string]interface{}`
+
+GetData returns the Data field if non-nil, zero value otherwise.
+
+### GetDataOk
+
+`func (o *Error) GetDataOk() (*map[string]interface{}, bool)`
+
+GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetData
+
+`func (o *Error) SetData(v map[string]interface{})`
+
+SetData sets Data field to given value.
+
+### HasData
+
+`func (o *Error) HasData() bool`
+
+HasData returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

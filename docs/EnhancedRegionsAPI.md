@@ -1,12 +1,12 @@
 # \EnhancedRegionsAPI
 
-All URIs are relative to *https://virtserver.swaggerhub.com/perimeter81/public-api-yaml/1.0.0*
+All URIs are relative to *https://public-apigw.us.sase.checkpoint.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreateEnhancedRegion**](EnhancedRegionsAPI.md#CreateEnhancedRegion) | **Post** /v3/networks/enhanced/{networkId}/regions | Create enhanced region
 [**DeleteEnhancedRegion**](EnhancedRegionsAPI.md#DeleteEnhancedRegion) | **Delete** /v3/networks/enhanced/{networkId}/regions/{regionId} | Delete enhanced region
-[**EnhancedNetworksControllerV2GetRegions**](EnhancedRegionsAPI.md#EnhancedNetworksControllerV2GetRegions) | **Get** /v3/networks/enhanced/harmony-sase-regions | List of available Harmony SASE regions that supports enhanced networks
+[**EnhancedNetworksControllerV2GetRegions**](EnhancedRegionsAPI.md#EnhancedNetworksControllerV2GetRegions) | **Get** /v3/networks/enhanced/harmony-sase-regions | List available Check Point SASE regions that support enhanced networks
 [**GetEnhancedRegion**](EnhancedRegionsAPI.md#GetEnhancedRegion) | **Get** /v3/networks/enhanced/{networkId}/regions/{regionId} | Get region
 [**IncreaseScaleUnit**](EnhancedRegionsAPI.md#IncreaseScaleUnit) | **Put** /v3/networks/enhanced/{networkId}/regions/{regionId}/scale-unit/increase | Increase scale units
 [**ListEnhancedRegions**](EnhancedRegionsAPI.md#ListEnhancedRegions) | **Get** /v3/networks/enhanced/{networkId}/regions | List regions
@@ -163,7 +163,7 @@ Name | Type | Description  | Notes
 
 > []HarmonySaseRegion EnhancedNetworksControllerV2GetRegions(ctx).Execute()
 
-List of available Harmony SASE regions that supports enhanced networks
+List available Check Point SASE regions that support enhanced networks
 
 
 

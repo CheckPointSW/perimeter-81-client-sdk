@@ -19,7 +19,8 @@ var _ MappedNullable = &GumUpdateCustomRoleRequest{}
 
 // GumUpdateCustomRoleRequest struct for GumUpdateCustomRoleRequest
 type GumUpdateCustomRoleRequest struct {
-	Name *string `json:"name,omitempty"`
+	// Must not contain the characters ! # $ % ^ & *
+	Name *string `json:"name,omitempty" validate:"regexp=^[^!#$%^&*]*$"`
 	Description *string `json:"description,omitempty"`
 	Categories []CategoryEntry `json:"categories,omitempty"`
 	AdditionalProperties map[string]interface{}

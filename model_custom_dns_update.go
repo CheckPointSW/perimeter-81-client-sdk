@@ -18,7 +18,7 @@ import (
 // checks if the CustomDnsUpdate type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &CustomDnsUpdate{}
 
-// CustomDnsUpdate Request body for updating private DNS (PUT). This is a full replacement: always send the complete desired configuration. Any field omitted from `attributes` is cleared, not preserved — to keep current values, resend the full object returned by the corresponding GET endpoint. `attributes` is required. When `enabled` is `true`, `attributes.servers` must contain at least one entry. Requests that violate these rules are rejected with 422 Unprocessable Entity. 
+// CustomDnsUpdate Request body for updating private DNS (PUT). This is a full replacement: always send the complete desired configuration. Any field omitted from `attributes` is cleared, not preserved. To keep current values, resend the full object returned by the corresponding GET endpoint. `attributes` is required. When `enabled` is `true`, `attributes.servers` must contain at least one entry. 
 type CustomDnsUpdate struct {
 	// Whether private DNS is enabled.
 	Enabled bool `json:"enabled"`

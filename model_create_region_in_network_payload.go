@@ -20,7 +20,7 @@ var _ MappedNullable = &CreateRegionInNetworkPayload{}
 
 // CreateRegionInNetworkPayload struct for CreateRegionInNetworkPayload
 type CreateRegionInNetworkPayload struct {
-	// Harmony SASE region ID, Take id from GET Harmony sases regions endpoint (/networks/enhanced/harmony-sase-regions).
+	// ID of the Check Point SASE region to deploy in. 
 	HarmonySaseRegionId string `json:"harmonySaseRegionId"`
 	// Create the gateway as disabled if true.
 	Idle bool `json:"idle"`

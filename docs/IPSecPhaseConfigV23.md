@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Auth** | **[]string** |  | 
 **Encryption** | **[]string** |  | 
-**KeyExchangeMethod** | **[]string** | Key exchange method encryption | 
+**KeyExchangeMethod** | **[]string** | Key exchange algorithms offered for this phase. If provided, must contain at least one algorithm, and the remote gateway must support one of the values listed.  | 
 
 ## Methods
 

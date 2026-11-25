@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**AuthType** | **string** | Authentication type for tunnel (psk for pre-shared key, cert for certificate) | 
-**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication (8-64 characters). Required when authType is psk. | [optional] 
-**CustomerRootCA** | Pointer to **string** | Customer root certificate authority. Required when authType is cert. | [optional] 
+**AuthType** | **string** | Authentication method for the tunnel. \&quot;psk\&quot; (pre-shared key) requires &#x60;passphrase&#x60; and forbids &#x60;customerRootCA&#x60;; \&quot;cert\&quot; (certificate) requires &#x60;customerRootCA&#x60; and forbids &#x60;passphrase&#x60;.  | 
+**Passphrase** | Pointer to **string** | Pre-shared key for tunnel authentication. Required when &#x60;authType&#x60; is \&quot;psk\&quot;, and must be omitted when &#x60;authType&#x60; is \&quot;cert\&quot;. 8-64 characters, using letters, digits, \&quot;.\&quot; and \&quot;_\&quot; only; the first character cannot be \&quot;0\&quot;.  | [optional] 
+**CustomerRootCA** | Pointer to **string** | ID of a CA certificate stored in the certificate store. Exactly 10 characters. Required when &#x60;authType&#x60; is \&quot;cert\&quot;, and must be omitted when &#x60;authType&#x60; is \&quot;psk\&quot;.  | [optional] 
 **RegionID** | **string** | Target region ID | 
 **TunnelName** | **string** | Name of the static tunnel | 
 **P81GatewaySubnets** | **[]string** | Harmony Sase gateway subnets | 
 **RemoteGatewaySubnets** | **[]string** | Remote gateway subnets | 
-**PeakBandwidthMbps** | Pointer to **int32** | Expected peak throughput of the tunnel communication in Mbps. Typical connection will be of 1000Mbps. | [optional] [default to 1000]
+**PeakBandwidthMbps** | Pointer to **int32** | Deprecated: ignored for non-China regions. China regions still use this field. Expected peak throughput of the tunnel in Mbps. A typical connection is 1000. Consumes bandwidth licenses, so set it no higher than the tunnel needs.  | [optional] [default to 1000]
 **KeyExchange** | **string** | IKE version for key exchange | [default to "ikev2"]
 **RoutingType** | Pointer to [**RoutingType**](RoutingType.md) |  | [optional] [default to ROUTINGTYPE_ROUTE]
 **IkeLifeTime** | Pointer to **string** |  | [optional] 
@@ -22,17 +22,17 @@ Name | Type | Description | Notes
 **Phase2** | Pointer to [**IPSecPhaseConfigV23**](IPSecPhaseConfigV23.md) |  | [optional] 
 **RemotePublicIP** | Pointer to **string** | Remote gateway public IP address | [optional] 
 **RemoteID** | Pointer to **string** | Remote gateway ID | [optional] 
-**Description** | Pointer to **string** | Optional tunnel description | [optional] 
-**IsHA** | Pointer to **bool** | Whether this tunnel is part of a high-availability pair | [optional] 
-**Id** | **string** | Enhanced tunnel ID | 
-**HaTunnelID** | **string** | Enhanced dynamic tunnel group ID (or tunnel ID for static tunnel) | 
-**DpdAction** | **string** | Enhanced tunnel DPDTime actions. | 
+**Description** | Pointer to **string** | Free-text description of the tunnel. | [optional] 
+**IsHA** | **bool** | Indicates if it&#39;s a redundant tunnel. | 
+**Id** | **string** | Unique ID of this tunnel, and the value to use in the route table payloads. For a static tunnel it is also the &#x60;tunnelId&#x60; path parameter. For a member of a dynamic tunnel group it identifies that single member, so it is the value to use in &#x60;removeTunnels&#x60; and &#x60;updateTunnels&#x60;, not the &#x60;dynamicTunnelId&#x60; path parameter.  | 
+**HaTunnelID** | **string** | ID of the tunnel group this tunnel belongs to. For a dynamic tunnel this is the ID of the group shared by all of its member tunnels, and it is the value to use as the &#x60;dynamicTunnelId&#x60; path parameter. For a static tunnel it is the tunnel&#39;s own ID.  | 
+**DpdAction** | **string** | Action taken when dead peer detection declares the peer unreachable. Always \&quot;restart\&quot;; the value is fixed and is not accepted on create or update.  | 
 
 ## Methods
 
 ### NewEnhancedTunnel
 
-`func NewEnhancedTunnel(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, id string, haTunnelID string, dpdAction string, ) *EnhancedTunnel`
+`func NewEnhancedTunnel(authType string, regionID string, tunnelName string, p81GatewaySubnets []string, remoteGatewaySubnets []string, keyExchange string, isHA bool, id string, haTunnelID string, dpdAction string, ) *EnhancedTunnel`
 
 NewEnhancedTunnel instantiates a new EnhancedTunnel object
 This constructor will assign default values to properties that have it defined,
@@ -511,11 +511,6 @@ and a boolean to check if the value has been set.
 
 SetIsHA sets IsHA field to given value.
 
-### HasIsHA
-
-`func (o *EnhancedTunnel) HasIsHA() bool`
-
-HasIsHA returns a boolean if a field has been set.
 
 ### GetId
 

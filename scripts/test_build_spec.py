@@ -27,14 +27,15 @@ def test_no_operation_declares_the_auth_param():
                     offenders.append(f"{method.upper()} {path}")
     assert offenders == [], offenders
 
-def test_upstream_lacks_the_security_scheme_the_overlay_adds():
-    """The upstream spec declares no securitySchemes at all — the key is ABSENT,
-    not present-but-empty — and no top-level security. That is the defect A1
-    corrects, so asserting it here also proves build_spec.py never mutates the
-    upstream file."""
+def test_upstream_now_declares_the_security_scheme_itself():
+    """The 2026-11 refresh is the point upstream started declaring bearer auth
+    centrally, which is why overlay entries A1a/A1b were deleted. Asserting the
+    upstream file directly also proves build_spec.py never mutates it."""
     d = yaml.safe_load(open(ROOT / "api" / "v3.upstream.yaml"))
-    assert "securitySchemes" not in d.get("components", {})
-    assert "security" not in d
+    assert d["components"]["securitySchemes"]["bearer"] == {
+        "type": "http", "scheme": "bearer", "bearerFormat": "JWT",
+    }
+    assert d["security"] == [{"bearer": []}]
 
 GUM_EXPECTED = {
     ("/v3/gum/custom-roles", "get"): "listCustomRoles",
@@ -81,30 +82,28 @@ def _declares_property_anywhere(schema, name, schemas, depth=0):
     return False
 
 def test_carried_forward_patches_are_applied():
-    """One assertion per CONFIRMED row in api/AUDIT-2026-08-10.md.
-    Delete an assertion only when its overlay entry is deleted.
+    """One assertion per CONFIRMED row in api/AUDIT-2026-08-10.md that still
+    has a live overlay entry. Delete an assertion only when its overlay entry
+    is deleted.
 
-    Fix round 1: A8 (peakBandwidth) and A6's other two schemas
-    (IPSecRedundantTunnel, NetworkTunnelIpsecRedundant) were first recorded
+    Fix round 1: A6's other two schemas (IPSecRedundantTunnel,
+    NetworkTunnelIpsecRedundant) and A8 (peakBandwidth) were first recorded
     ALREADY-FIXED by a buggy top-level-only audit check, then corrected to
     CONFIRMED once the audit became composition-aware (see
     api/AUDIT-2026-08-10.md). A9 (ASN/RemoteASN) is the one candidate that
-    stayed ALREADY-FIXED in both passes, so it still has no assertion here."""
+    stayed ALREADY-FIXED in both passes, so it still has no assertion here.
+
+    2026-11 spec refresh: the A4, A8 and A6:NetworkTunnelIpsecRedundant
+    assertions were deleted along with their entries — upstream now ships the
+    application-GET discriminator itself (on a named ApplicationResponse
+    schema rather than inline), renamed peakBandwidth to peakBandwidthMbps,
+    and collapsed NetworkTunnelIpsecRedundant into NetworkTunnelIpsecSingle.
+    The upstream side of those three is asserted by
+    test_upstream_adopted_the_corrections_the_refresh_deleted below, so the
+    deletions stay honest: if upstream ever regresses, that test fails rather
+    than the defect passing unnoticed."""
     d = build()
     s = d["components"]["schemas"]
-    # A4
-    disc = d["paths"]["/v3/applications/{applicationId}"]["get"]["responses"]["200"][
-        "content"]["application/json"]["schema"].get("discriminator")
-    assert disc == {
-        "propertyName": "type",
-        "mapping": {
-            "http": "#/components/schemas/HttpApplication",
-            "https": "#/components/schemas/HttpsApplication",
-            "rdp": "#/components/schemas/RdpApplication",
-            "ssh": "#/components/schemas/SshApplication",
-            "vnc": "#/components/schemas/VncApplication",
-        },
-    }
     # A5
     assert "authEnabled" not in (s["ApplicationAuth"].get("required") or [])
     # A6:IPSecSharedSettingsCreate
@@ -122,34 +121,47 @@ def test_carried_forward_patches_are_applied():
     assert "passphrase" in (s["IPSecRedundantTunnelDetails"].get("required") or []), (
         "the shared create-path ancestor must still require passphrase"
     )
-    # A6:NetworkTunnelIpsecRedundant — rightASN/rightPrivateIP/leftPrivateIP
-    # no longer required, haTunnelID still is, rightASN still present as an
-    # optional property. NetworkTunnelIpsecRedundant no longer has an allOf
-    # of its own to inspect a branch of: A17d (fix round 1 of 5, 2026-08-11)
-    # fully flattened it into a standalone flat object (decoupling it from
-    # NetworkTunnelBase's required-ness so A16's trim of NetworkTunnelBase
-    # doesn't cascade into it) — see that entry for why. A6's own
-    # required-trim still runs first and still matters: it's what makes
-    # haTunnelID (not rightASN/rightPrivateIP/leftPrivateIP) the one
-    # NetworkTunnelIpsecRedundant-specific field baked into A17d's explicit
-    # required list below.
-    assert "allOf" not in s["NetworkTunnelIpsecRedundant"]
-    assert "haTunnelID" in s["NetworkTunnelIpsecRedundant"]["required"]
-    assert "rightASN" not in s["NetworkTunnelIpsecRedundant"]["required"]
-    assert "rightPrivateIP" not in s["NetworkTunnelIpsecRedundant"]["required"]
-    assert "leftPrivateIP" not in s["NetworkTunnelIpsecRedundant"]["required"]
-    assert "rightASN" in s["NetworkTunnelIpsecRedundant"]["properties"]
-    # A8 — composition-aware: no schema declares peakBandwidth at any depth,
-    # and the two schemas that used to (EnhancedTunnelBase, StaticTunnelCreate)
-    # now declare peakBandwidthMbps instead.
-    for name, schema in s.items():
-        assert not _declares_property_anywhere(schema, "peakBandwidth", s), name
-    assert "peakBandwidthMbps" in s["EnhancedTunnelBase"]["allOf"][1]["properties"]
-    assert "peakBandwidthMbps" in s["StaticTunnelCreate"]["allOf"][1]["properties"]
     # A10
     assert s["EnhancedHealthCheckMeta"].get("required") == []
     # A11
     assert "id" in s["ObjectsServicesResponseObj"]["properties"]
+
+
+def test_upstream_adopted_the_corrections_the_refresh_deleted():
+    """The 2026-11 refresh deleted A1a/A1b, A4, A8 and the two
+    NetworkTunnelIpsecRedundant entries because upstream fixed each defect at
+    source. Assert that against the pristine upstream file, so a future
+    upstream regression reopens as a test failure instead of silently
+    reintroducing a defect no overlay entry covers any more."""
+    s = yaml.safe_load(open(ROOT / "api" / "v3.upstream.yaml"))["components"]["schemas"]
+    # A4: the application-GET oneOf is now a named schema carrying its own
+    # discriminator, rather than an inline oneOf with none.
+    assert s["ApplicationResponse"]["discriminator"] == {
+        "propertyName": "type",
+        "mapping": {
+            "http": "#/components/schemas/HttpApplication",
+            "https": "#/components/schemas/HttpsApplication",
+            "rdp": "#/components/schemas/RdpApplication",
+            "ssh": "#/components/schemas/SshApplication",
+            "vnc": "#/components/schemas/VncApplication",
+        },
+    }
+    # A8: no schema declares peakBandwidth at any depth any more, and the two
+    # schemas that used to now declare peakBandwidthMbps instead. Checked
+    # composition-aware rather than at a fixed allOf index: the refresh also
+    # reshaped EnhancedTunnelBase's branches (IPSecAdvancedSettingsV2_3
+    # became IPSecAdvancedFieldsV2_3), so an index-based assertion would be
+    # testing branch layout rather than the rename this entry is about.
+    for name, schema in s.items():
+        assert not _declares_property_anywhere(schema, "peakBandwidth", s), name
+    for name in ("EnhancedTunnelBase", "StaticTunnelCreate"):
+        assert _declares_property_anywhere(s[name], "peakBandwidthMbps", s), name
+    # A6/A17d: the redundant-tunnel read variant is gone; a redundant tunnel is
+    # reported as NetworkTunnelIpsecSingle with NetworkTunnelBase.isHA true.
+    assert "NetworkTunnelIpsecRedundant" not in s
+    assert [b["$ref"].rsplit("/", 1)[-1] for b in s["NetworkTunnel"]["oneOf"]] == [
+        "NetworkTunnelOpenvpn", "NetworkTunnelWireGuard", "NetworkTunnelIpsecSingle",
+    ]
 
 def test_a9_asn_and_remote_asn_have_no_redundant_oneof():
     """Fix round 2 (2026-08-11): A9 was mis-checked in both prior audit passes
@@ -265,106 +277,61 @@ def test_a12_harmony_sase_regions_list_items_have_no_sibling_additional_properti
     assert other_non_ref_with_properties != []
 
 
-def test_a15_network_tunnel_anyof_has_base_fallback_last():
-    """A15 appends NetworkTunnelBase to NetworkTunnel's anyOf so tunnel types
-    the spec doesn't enumerate (e.g. `connector`) have somewhere to land
-    instead of failing every branch of the generated decoder (see
-    api/overlay.yaml's A15 entry for the full story).
+def test_a25_tunnel_variants_drop_only_created_at_from_required():
+    """A25a-A25c (2026-11 spec refresh) replace the A15/A16/A17a-d family.
 
-    NetworkTunnelBase must be LAST: openapi-generator 7.24.0's Go codegen
-    collapses anyOf into a java.util.TreeSet<String> (alphabetical by Go type
-    name, confirmed via javap on CodegenModel.class), ignoring the order of
-    this list entirely — so this assertion on the spec-level list order does
-    NOT by itself guarantee try-order in the generated decoder. The actual
-    try-order guarantee comes from templates/model_anyof.mustache's
-    dash-first split (documented there), which depends on NetworkTunnelBase
-    sorting alphabetically first among these five names. This test still
-    asserts list order because op: set's whole-array replacement is the
-    overlay-level mechanism the entry uses, and a regression here (wrong
-    order or a missing member) is still worth catching early, even though
-    the Go-level ordering guarantee is enforced separately by
-    model_network_tunnel_base_fallback_test.go's
-    TestNetworkTunnel_ConcreteVariantDoesNotFallBackToBase."""
-    d = build()
-    any_of = d["components"]["schemas"]["NetworkTunnel"]["anyOf"]
-    refs = [b["$ref"] for b in any_of]
-    assert len(refs) == 5, refs
-    assert refs[-1] == "#/components/schemas/NetworkTunnelBase", refs
-    assert refs[:-1] == [
-        "#/components/schemas/NetworkTunnelOpenvpn",
-        "#/components/schemas/NetworkTunnelWireguard",
-        "#/components/schemas/NetworkTunnelIpsecSingle",
-        "#/components/schemas/NetworkTunnelIpsecRedundant",
-    ], refs
+    Upstream now models NetworkTunnel as a discriminated `oneOf` on `type`
+    with `connector` enumerated, so A15's catch-all NetworkTunnelBase member
+    (and A16's trim that made it usable, and A17a-d's re-pins that contained
+    the trim) are all moot — see api/overlay.yaml's replacement note.
 
-
-def test_a16_network_tunnel_base_required_is_id_only():
-    """A16 (fix round 1 of 5, 2026-08-11): NetworkTunnelBase's
-    composition-resolved required set was 9 fields (its own 8-field inline
-    branch, plus createdAt inherited via allOf -> BaseDates) — too strict
-    for its post-A15 role as NetworkTunnel's anyOf fallback member, since the
-    live API's undocumented tunnel types are observed to omit createdAt on
-    the wire (see api/overlay.yaml's A16 entry). This asserts the
-    flattened postcondition: no allOf left, required trimmed to exactly
-    [id], and every field BaseDates/its own inline branch used to require
-    (network, region, instance, interfaceName, type, isHA, tenantId,
-    createdAt, updatedAt) is still present as an (now-optional) property —
-    nothing was dropped, only required-ness."""
-    d = build()
-    base = d["components"]["schemas"]["NetworkTunnelBase"]
-    assert "allOf" not in base, base
-    assert base["required"] == ["id"], base["required"]
-    for prop in (
-        "id", "network", "region", "instance", "interfaceName", "type",
-        "isHA", "tenantId", "createdAt", "updatedAt",
-    ):
-        assert prop in base["properties"], prop
-
-
-def test_a17_concrete_tunnel_variants_required_sets_are_unchanged():
-    """A17a-A17d (fix round 1 of 5, 2026-08-11): A16 trims NetworkTunnelBase's
-    own required list to [id]. Because openapi-generator unions required
-    fields across all of a schema's allOf branches at generation time, and
-    NetworkTunnelOpenvpn/Wireguard/IpsecSingle/IpsecRedundant each compose
-    NetworkTunnelBase via allOf, A16 would otherwise silently cascade into
-    all four of their composed required sets too — the exact "no other
-    schema's required set changed" hazard flagged when this fix round was
-    reviewed. A17a-A17d flatten each of the four into a standalone object
-    with their exact pre-A16 composed required set restored explicitly,
-    decoupling them from NetworkTunnelBase's required-ness entirely. This
-    asserts each schema's flattened required set still matches ground truth
-    captured from the generated Go files before A16/A17a-A17d existed."""
+    What survives is the wire observation underneath them: these read
+    payloads are observed without createdAt, and with no catch-all member
+    left, a correctly-discriminated payload missing a required field now
+    fails the whole standard-network read. A25a-C flatten each variant and
+    restore its full composed required set MINUS createdAt. This asserts
+    both halves: createdAt is gone from required, every other field is still
+    required (so the rest of the model does not silently become pointers),
+    and createdAt survives as an optional property."""
     d = build()
     s = d["components"]["schemas"]
     expected = {
         "NetworkTunnelOpenvpn": {
             "id", "network", "region", "instance", "interfaceName", "type",
-            "isHA", "tenantId", "createdAt", "passphrase", "username",
+            "isHA", "tenantId", "passphrase", "username",
         },
-        "NetworkTunnelWireguard": {
+        "NetworkTunnelWireGuard": {
             "id", "network", "region", "instance", "interfaceName", "type",
-            "isHA", "tenantId", "createdAt", "leftAllowedIP", "leftEndpoint",
+            "isHA", "tenantId", "leftAllowedIP", "leftEndpoint",
             "vault", "requestConfigToken",
         },
         "NetworkTunnelIpsecSingle": {
             "id", "network", "region", "instance", "interfaceName", "type",
-            "isHA", "tenantId", "createdAt", "keyExchange", "ikeLifeTime",
+            "isHA", "tenantId", "keyExchange", "ikeLifeTime",
             "lifetime", "dpdDelay", "dpdTimeout", "phase1", "phase2",
             "right", "rightID", "passphrase", "dpdAction", "leftSubnets",
             "rightSubnets",
-        },
-        "NetworkTunnelIpsecRedundant": {
-            "id", "network", "region", "instance", "interfaceName", "type",
-            "isHA", "tenantId", "createdAt", "keyExchange", "ikeLifeTime",
-            "lifetime", "dpdDelay", "dpdTimeout", "phase1", "phase2",
-            "right", "rightID", "passphrase", "dpdAction", "leftSubnets",
-            "rightSubnets", "haTunnelID",
         },
     }
     for name, want in expected.items():
         schema = s[name]
         assert "allOf" not in schema, (name, schema)
         assert set(schema["required"]) == want, (name, set(schema["required"]) ^ want)
+        assert "createdAt" in schema["properties"], name
+
+
+def test_a26_fixed_host_value_oneof_branch_has_no_additional_properties():
+    """A26 (2026-11 spec refresh): the refresh added
+    `additionalProperties: true` to a FixedHost.value oneOf branch that
+    resolves to a plain string via allOf -> $ref FQDN. openapi-generator
+    concatenates the two into the literal Go type
+    `*string[string]interface{}`, which does not compile, so generation
+    aborts outright rather than degrading quietly. Asserting the built spec
+    keeps the branch otherwise intact — the allOf is what carries the type."""
+    d = build()
+    branch = d["components"]["schemas"]["FixedHost"]["properties"]["value"]["oneOf"][0]
+    assert "additionalProperties" not in branch, branch
+    assert branch["allOf"][0]["$ref"] == "#/components/schemas/FQDN", branch
 
 
 def test_a21_a22_user_and_group_declare_id():
@@ -457,6 +424,40 @@ def test_a24_profile_name_patterns_allow_uppercase():
             "node, so an added upstream key (a description, a format) would be "
             "dropped here without any other test noticing"
         )
+
+
+def test_a23_custom_url_write_request_is_flat_with_name_and_description():
+    """A23 removes the sibling oneOf from CustomUrlWriteRequest so Go codegen
+    emits a flat struct keeping required `name` and optional `description`
+    alongside `entryType`, `urls`, and `urlPatterns`."""
+    doc = build()
+    schema = doc["components"]["schemas"]["CustomUrlWriteRequest"]
+    assert "oneOf" not in schema, schema
+    assert schema["required"] == ["name"], schema
+    assert set(schema["properties"]) == {
+        "name", "description", "entryType", "urls", "urlPatterns",
+    }
+    assert schema["properties"]["urls"]["items"]["type"] == "string"
+    assert schema["properties"]["urlPatterns"]["items"]["type"] == "string"
+
+
+def test_a29_update_notification_pages_request_is_flat_with_typed_fields():
+    """A29 removes the sibling anyOf from UpdateNotificationPagesRequest so Go
+    codegen emits typed fields instead of collapsing to MapmapOfStringAny."""
+    doc = build()
+    schema = doc["components"]["schemas"]["UpdateNotificationPagesRequest"]
+    assert "anyOf" not in schema, schema
+    assert set(schema["properties"]) == {
+        "blockPageMessage",
+        "logoFile",
+        "blockPageIncludeUrl",
+        "blockPageIncludeRuleName",
+        "blockPageIncludeInternalDeviceIp",
+        "blockPageIncludeUserId",
+        "blockPageIncludeDeviceId",
+        "blockPageIncludeWebCategory",
+        "blockPageIncludeRestrictedResource",
+    }
 
 
 def test_upstream_still_has_the_defects_a21_a22_a24_correct():

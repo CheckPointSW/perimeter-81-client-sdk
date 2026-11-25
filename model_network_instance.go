@@ -32,6 +32,8 @@ type NetworkInstance struct {
 	InstanceType string `json:"instanceType"`
 	ImageType string `json:"imageType"`
 	ImageVersion string `json:"imageVersion"`
+	// Whether this gateway instance is idle (disabled for user traffic). Available in v3; omitted if its running mode is unavailable.
+	Idle *bool `json:"idle,omitempty"`
 	Dns string `json:"dns"`
 	Ip string `json:"ip"`
 	// List of network tunnels.
@@ -249,6 +251,38 @@ func (o *NetworkInstance) SetImageVersion(v string) {
 	o.ImageVersion = v
 }
 
+// GetIdle returns the Idle field value if set, zero value otherwise.
+func (o *NetworkInstance) GetIdle() bool {
+	if o == nil || IsNil(o.Idle) {
+		var ret bool
+		return ret
+	}
+	return *o.Idle
+}
+
+// GetIdleOk returns a tuple with the Idle field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NetworkInstance) GetIdleOk() (*bool, bool) {
+	if o == nil || IsNil(o.Idle) {
+		return nil, false
+	}
+	return o.Idle, true
+}
+
+// HasIdle returns a boolean if a field has been set.
+func (o *NetworkInstance) HasIdle() bool {
+	if o != nil && !IsNil(o.Idle) {
+		return true
+	}
+
+	return false
+}
+
+// SetIdle gets a reference to the given bool and assigns it to the Idle field.
+func (o *NetworkInstance) SetIdle(v bool) {
+	o.Idle = &v
+}
+
 // GetDns returns the Dns field value
 func (o *NetworkInstance) GetDns() string {
 	if o == nil {
@@ -388,6 +422,9 @@ func (o NetworkInstance) ToMap() (map[string]interface{}, error) {
 	toSerialize["instanceType"] = o.InstanceType
 	toSerialize["imageType"] = o.ImageType
 	toSerialize["imageVersion"] = o.ImageVersion
+	if !IsNil(o.Idle) {
+		toSerialize["idle"] = o.Idle
+	}
 	toSerialize["dns"] = o.Dns
 	toSerialize["ip"] = o.Ip
 	toSerialize["tunnels"] = o.Tunnels
@@ -453,6 +490,7 @@ func (o *NetworkInstance) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "instanceType")
 		delete(additionalProperties, "imageType")
 		delete(additionalProperties, "imageVersion")
+		delete(additionalProperties, "idle")
 		delete(additionalProperties, "dns")
 		delete(additionalProperties, "ip")
 		delete(additionalProperties, "tunnels")
